@@ -5,7 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\Setting as ModelsSetting;
 use Livewire\Component;
 
-class Setting extends Component
+class InvSetting extends Component
 {
     public $setting;
     public $settingId;
@@ -14,15 +14,14 @@ class Setting extends Component
 
     protected function getRules()
     {
-        $rules =  [
-            'setting.appName' => 'required',
-            // 'setting.fromGstin' => 'required',
+        $rules =   [
+            'setting.fromGstin' => 'required',
         ];
 
         return  $rules;
     }
 
-    public function storeDSetting()
+    public function storeSetting()
     {
         $this->resetErrorBag();
         $this->validate();
@@ -34,7 +33,7 @@ class Setting extends Component
 
         return redirect()->route('setting.index');
     }
-
+    
     public function mount()
     {
         $this->setting = ModelsSetting::find($this->settingId);
@@ -43,6 +42,6 @@ class Setting extends Component
 
     public function render()
     {
-        return view('livewire.setting');
+        return view('livewire.invoice-setting');
     }
 }

@@ -28,6 +28,8 @@ return new class extends Migration
             $table->string('logoPath',20);
             $table->string('appName',100);
             $table->string('timezone',15)->default('UTC');
+            $table->string('pColor',15)->default('#6777ef');
+            $table->string('sColor',15)->default('#fff');
             $table->enum('appEnv',['production','staging','local'])->default('local');
             $table->boolean('appDebug')->default(0)->comment('0 = debug-false , 1 = debug-true');
             $table->enum('dbConn',['mysql','mysqlLocal','sqlsrv'])->default('mysqlLocal');

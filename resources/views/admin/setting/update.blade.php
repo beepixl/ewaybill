@@ -8,7 +8,11 @@
     </x-slot>
 
     <div>
-        <livewire:setting action="storeSetting"/>
+        <livewire:setting action="storeSetting" />
+
+        <x-jet-section-border></x-jet-section-border>
+
+        <livewire:invoice-setting action="storeSetting" />
     </div>
 
 </x-app-layout>
