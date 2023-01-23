@@ -34,5 +34,5 @@ Route::group(["middleware" => ['auth:sanctum', 'verified']], function () {
    // Route::resource('roles', RoleController::class);
 
     //Setting
-    Route::resource('setting',SettingController::class)->only(['index','update']);
+    Route::resource('setting',SettingController::class)->only(['index']);
 });

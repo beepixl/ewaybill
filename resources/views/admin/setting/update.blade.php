@@ -8,7 +8,7 @@
     </x-slot>
 
     <div>
-        <livewire:setting action="setting.update" :settingId="1" />
+        <livewire:setting action="storeSetting"/>
     </div>
 
 </x-app-layout>
