@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ProductMaster;
+use Exception;
 use Illuminate\Http\Request;
 
 class ProductMasterController extends Controller
@@ -44,9 +45,17 @@ class ProductMasterController extends Controller
      * @param  \App\Models\ProductMaster  $productMaster
      * @return \Illuminate\Http\Response
      */
-    public function show(ProductMaster $productMaster)
+    public function show(Request $request, $search)
     {
-        //
+        if ($request->term) {
+            try {
+                return response()->json(['error' => false, 'message' => 'Data Fetched', 'data' => ProductMaster::where('productName', 'like', '%' . $request->term . '%')->toBase()->get(['id', 'productName as text'])]);
+            } catch (Exception $e) {
+                return response()->json(['error' => false, 'message' => $e->getMessage(), 'data' => NULL]);
+            }
+        }
+
+        return response()->json(['error' => false, 'message' =>'NULL', 'data' => NULL]);
     }
 
     /**

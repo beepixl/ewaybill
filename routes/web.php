@@ -35,7 +35,7 @@ Route::group(["middleware" => ['auth:sanctum', 'verified']], function () {
     Route::resource('setting', SettingController::class)->only(['index']);
 
     //Product Master
-    Route::resource('product-master', ProductMasterController::class)->only(['index', 'create', 'edit']);
+    Route::resource('product-master', ProductMasterController::class)->only(['index', 'create', 'edit','show']);
 
     //Customer
     Route::resource('customer', CustomerController::class)->only(['index', 'create', 'edit']);

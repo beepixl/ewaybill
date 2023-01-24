@@ -28,6 +28,25 @@
 
     <livewire:styles />
 
+    <style>
+        
+    .select2-container--open {
+        z-index: 9999999 !important;
+        width: 100% !important;
+    }
+
+    .select2-container {
+        width: 100% !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: #444;
+        width: 265px !important;
+        line-height: 28px;
+    }
+
+    </style>
+
     <!-- Scripts -->
     <script defer src="{{ asset('vendor/alpine.js') }}"></script>
 
@@ -80,9 +99,7 @@
     
     <script src="{{asset('js/app.js') }}" defer></script>
 
-    @isset($script)
-    {{ $script }}
-    @endisset
+   @stack('additional-sctipt')
 </body>
 
 </html>

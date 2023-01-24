@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Customer;
 use App\Models\Invoice;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Livewire\Component;
@@ -15,29 +16,39 @@ class CreateInvoice extends Component
     public $invoiceId;
     public $action;
     public $button;
+    public $pPrice;
 
-    protected $listeners = ["setCustomer" => "setCustomerId"];
+    protected $listeners = [
+        'setCustomerId',
+    ];
 
     protected function getRules()
     {
-        $rules = [];
-
-        // foreach ($this->columns as $col) {
-        //     if (!in_array($col, ['id', 'created_at', 'updated_at'])) {
-        //         $rules["customer.$col"] =  in_array(DB::getSchemaBuilder()->getColumnType('invoices', $col), ['integer']) ?  'required|numeric' : 'required';
-        //     }
-        // }
+        
+        $rules = [
+            'productId' => 'required'
+        ];
 
         return $rules;
     }
 
-    public function setCustomerId()
+    public function setCustomerId($id, $productId)
     {
-        Session::put('invSelectedCustomer',1);
+
+        if ($id !== 0) {
+            Session::put('invSelectedCustomer', $id);
+        }
+
+        if ($productId !== 0) {
+            $this->pPrice = $productId;
+        }
+
     }
 
-    public function createUser()
+    public function createInvoice()
     {
+        // dd($this->req);
+
         $this->resetErrorBag();
         $this->validate();
 
@@ -68,7 +79,10 @@ class CreateInvoice extends Component
             $this->invoice = Invoice::find($this->invoiceId);
         }
 
-        $this->customers = Customer::toBase()->get();
+        if (!Cache::has('customers')) {
+            Cache::add('customers', Customer::toBase()->get(), 5000);
+        }
+
         $this->button = create_button($this->action, "Invoice");
     }
 
