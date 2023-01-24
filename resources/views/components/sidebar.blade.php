@@ -2,6 +2,7 @@
 $links = [
 [
 "href" => "dashboard",
+"icon" => "fire",
 "text" => "Dashboard",
 "is_multi" => false,
 ],
@@ -19,11 +20,13 @@ $links = [
 ],
 [
 "href" => "users.index",
+"icon" => "users",
 "text" => "Users",
 "is_multi" => false,
 ],
 [
 "href" => "customer.index",
+"icon" => "users",
 "text" => "Customers",
 "is_multi" => false,
 ],
@@ -44,10 +47,10 @@ $navigation_links = array_to_object($links);
         </div>
         @foreach ($navigation_links as $link)
         <ul class="sidebar-menu">
-            <li class="menu-header">{{ $link->text }}</li>
+            {{-- <li class="menu-header">{{ $link->text }}</li> --}}
             @if (!$link->is_multi)
             <li class="{{ Request::routeIs($link->href) ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route($link->href) }}"><i class="fas fa-fire"></i><span>{{ $link->text }}</span></a>
+                <a class="nav-link" href="{{ route($link->href) }}"><i class="fas fa-{{ $link->icon }}"></i><span>{{ $link->text }}</span></a>
             </li>
             @else
             @foreach ($link->href as $section)

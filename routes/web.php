@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{CustomerController, ProductMasterController, UserController,SettingController};
+use App\Http\Controllers\{CustomerController, InvoiceController, ProductMasterController, UserController, SettingController};
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,14 +29,17 @@ Route::group(["middleware" => ['auth:sanctum', 'verified']], function () {
     Route::resource('users', UserController::class);
 
     //Roles
-   // Route::resource('roles', RoleController::class);
+    // Route::resource('roles', RoleController::class);
 
     //Setting
-    Route::resource('setting',SettingController::class)->only(['index']);
+    Route::resource('setting', SettingController::class)->only(['index']);
 
     //Product Master
-    Route::resource('product-master',ProductMasterController::class);
+    Route::resource('product-master', ProductMasterController::class)->only(['index', 'create', 'edit']);
 
     //Customer
-    Route::resource('customer',CustomerController::class);
+    Route::resource('customer', CustomerController::class)->only(['index', 'create', 'edit']);
+
+    //Invoice
+    Route::resource('invoice', InvoiceController::class)->only(['index', 'create']);
 });
