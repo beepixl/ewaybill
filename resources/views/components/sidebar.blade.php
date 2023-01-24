@@ -11,6 +11,8 @@ $links = [
 "section_text" => "Manage",
 "section_list" => [
 ["href" => "users.index", "text" => "Users"],
+["href" => "product-master.index", "text" => "Product Master"],
+["href" => "customer.index", "text" => "Customer"],
 ]
 ]
 ],

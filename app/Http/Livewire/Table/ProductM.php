@@ -6,7 +6,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Traits\WithDataTable;
 
-class Main extends Component
+class ProductM extends Component
 {
     use WithPagination, WithDataTable;
 
@@ -54,6 +54,7 @@ class Main extends Component
     {
         $data = $this->get_pagination_data();
 
+        
         return view($data['view'], $data);
     }
 }

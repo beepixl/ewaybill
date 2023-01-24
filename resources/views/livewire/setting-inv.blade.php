@@ -1,6 +1,5 @@
-
-<div id="form-create">
- 
+<div>
+   
     <x-jet-form-section :submit="$action" class="mb-4">
 
         <x-slot name="title">
@@ -9,7 +8,7 @@
 
         <x-slot name="form">
             <div class="form-group col-span-6 sm:col-span-3">
-                <x-jet-label for="fromGstin" value="{{ __('Gstin') }}" />
+                <x-jet-label for="fromGstin" value="{{ __('Gst No') }}" />
                 <x-jet-input id="fromGstin" type="text" class="mt-1 block w-full form-control shadow-none" 
                     wire:model.defer="setting.fromGstin" />
                 <x-jet-input-error for="setting.fromGstin" class="mt-2" />
@@ -17,9 +16,7 @@
 
             <div class="form-group col-span-6 sm:col-span-3">
                 <x-jet-label for="fromTrdName" value="{{ __('Trade Name') }}" />
-                <x-jet-input id="fromTrdName" type="text" class="mt-1 block w-full form-control shadow-none"
-                    wire:model.defer="setting.fromTrdName" />
-                <x-jet-input-error for="setting.fromTrdName" class="mt-2" />
+                <x-jet-input id="fromTrdName" type="text" class="mt-1 block w-full form-control shadow-none" wire:model.defer="setting.fromTrdName" />
             </div>
 
             <div class="form-group col-span-6 sm:col-span-3">

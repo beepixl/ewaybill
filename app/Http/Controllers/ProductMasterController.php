@@ -14,7 +14,7 @@ class ProductMasterController extends Controller
      */
     public function index()
     {
-        //
+        return view('admin.product-master.list', ['productMaster' => ProductMaster::class]);
     }
 
     /**
@@ -24,7 +24,7 @@ class ProductMasterController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.product-master.create');
     }
 
     /**
@@ -55,9 +55,9 @@ class ProductMasterController extends Controller
      * @param  \App\Models\ProductMaster  $productMaster
      * @return \Illuminate\Http\Response
      */
-    public function edit(ProductMaster $productMaster)
+    public function edit()
     {
-        //
+        return view('admin.product-master.edit');
     }
 
     /**

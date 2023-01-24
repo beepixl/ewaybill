@@ -15,12 +15,12 @@ return new class extends Migration
     {
         Schema::create('product_masters', function (Blueprint $table) {
             $table->id();
-            $table->string('productName',100);
-            $table->string('productDesc',100);
-            $table->integer('hsnCode');
-            $table->integer('cgst');
-            $table->integer('sgst');
-            $table->integer('igst');
+            $table->string('productName',100)->nullable();
+            $table->string('productDesc',100)->nullable();
+            $table->integer('hsnCode')->default(0);
+            $table->integer('cgst')->default(0);
+            $table->integer('sgst')->default(0);
+            $table->integer('igst')->default(0);
             $table->timestamps();
         });
     }

@@ -1,8 +1,6 @@
 <?php
 
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\SettingController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\{CustomerController, ProductMasterController, UserController,SettingController};
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -35,4 +33,10 @@ Route::group(["middleware" => ['auth:sanctum', 'verified']], function () {
 
     //Setting
     Route::resource('setting',SettingController::class)->only(['index']);
+
+    //Product Master
+    Route::resource('product-master',ProductMasterController::class);
+
+    //Customer
+    Route::resource('customer',CustomerController::class);
 });

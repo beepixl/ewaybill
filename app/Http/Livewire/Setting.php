@@ -22,22 +22,23 @@ class Setting extends Component
         return  $rules;
     }
 
-    public function storeDSetting()
+    public function storeSetting()
     {
         $this->resetErrorBag();
         $this->validate();
 
-        ModelsSetting::updateOrCreate(['id' => 1], $this->setting);
+        ModelsSetting::updateOrCreate(['id' => 1], [$this->setting]);
 
         $this->emit('saved');
-        $this->reset('setting');
-
-        return redirect()->route('setting.index');
+        // return redirect()->route('setting.index');
     }
 
     public function mount()
     {
-        $this->setting = ModelsSetting::find($this->settingId);
+        if (!$this->setting && $this->settingId) {
+            $this->setting = ModelsSetting::find($this->settingId);
+        }
+        
         $this->button = create_button($this->action, "Setting");
     }
 

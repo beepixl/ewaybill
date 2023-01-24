@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class ProductMaster extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'productName',
+        'productDesc',
+        'hsnCode',
+        'cgst',
+        'sgst',
+        'igst',
+    ];
 }

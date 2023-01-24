@@ -8,11 +8,12 @@
     </x-slot>
 
     <div>
-        <livewire:setting action="storeSetting" />
+        <livewire:setting action="storeSetting"  :settingId="1"/>
 
         <x-jet-section-border></x-jet-section-border>
+        
+        <livewire:setting-inv action="storeSetting" :settingId="1" />
 
-        <livewire:invoice-setting action="storeSetting" />
     </div>
 
 </x-app-layout>

@@ -15,18 +15,18 @@ return new class extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->string('fromGstin',15);
-            $table->string('fromTrdName',100);
-            $table->string('fromAddr1',120);
-            $table->string('fromAddr2',120);
-            $table->string('fromPlace',50);
-            $table->integer('fromPincode');
-            $table->integer('actFromStateCode');
-            $table->integer('fromStateCode');
-            $table->string('invPrefix',10);
-            $table->integer('invNoStart');
-            $table->string('logoPath',20);
-            $table->string('appName',100);
+            $table->string('fromGstin',15)->nullable();
+            $table->string('fromTrdName',100)->nullable();
+            $table->string('fromAddr1',120)->nullable();
+            $table->string('fromAddr2',120)->nullable();
+            $table->string('fromPlace',50)->nullable();
+            $table->integer('fromPincode')->default(0);
+            $table->integer('actFromStateCode')->default(0);
+            $table->integer('fromStateCode')->default(0);
+            $table->string('invPrefix',10)->nullable();
+            $table->integer('invNoStart')->default(0);
+            $table->string('logoPath',20)->nullable();
+            $table->string('appName',100)->nullable();
             $table->string('timezone',15)->default('UTC');
             $table->string('pColor',15)->default('#6777ef');
             $table->string('sColor',15)->default('#fff');
@@ -34,13 +34,13 @@ return new class extends Migration
             $table->boolean('appDebug')->default(0)->comment('0 = debug-false , 1 = debug-true');
             $table->enum('dbConn',['mysql','mysqlLocal','sqlsrv'])->default('mysqlLocal');
             $table->enum('storageDisk',['local','public','s3'])->default('public');
-            $table->string('mailHost',10);
-            $table->integer('mailPort');
+            $table->string('mailHost',10)->nullable();
+            $table->integer('mailPort')->default(0);
             $table->enum('mailEnc',['tls','ssl'])->default('tls');
-            $table->string('mailUnm',20);
-            $table->string('mailPwd',20);
-            $table->string('mailFrom',20);
-            $table->string('mailName',20);
+            $table->string('mailUnm',20)->nullable();
+            $table->string('mailPwd',20)->nullable();
+            $table->string('mailFrom',20)->nullable();
+            $table->string('mailName',20)->nullable();
             $table->timestamps();
         });
     }

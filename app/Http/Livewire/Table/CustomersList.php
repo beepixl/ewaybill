@@ -6,7 +6,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Traits\WithDataTable;
 
-class Main extends Component
+class CustomersList extends Component
 {
     use WithPagination, WithDataTable;
 
@@ -18,12 +18,12 @@ class Main extends Component
     public $sortAsc = false;
     public $search = '';
 
-    protected $listeners = [ "deleteItem" => "delete_item" ];
+    protected $listeners = ["deleteItem" => "delete_item"];
 
     public function sortBy($field)
     {
         if ($this->sortField === $field) {
-            $this->sortAsc = ! $this->sortAsc;
+            $this->sortAsc = !$this->sortAsc;
         } else {
             $this->sortAsc = true;
         }
@@ -31,7 +31,7 @@ class Main extends Component
         $this->sortField = $field;
     }
 
-    public function delete_item ($id)
+    public function delete_item($id)
     {
         $data = $this->model::find($id);
 
@@ -49,6 +49,7 @@ class Main extends Component
             "message" => "Data " . $this->name . " berhasil dihapus!"
         ]);
     }
+
 
     public function render()
     {
