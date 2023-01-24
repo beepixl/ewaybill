@@ -25,19 +25,19 @@
             </div>
 
             <div class="form-group col-span-6 sm:col-span-3">
-                <x-jet-label for="cgst" value="{{ __('C GST') }}" />
+                <x-jet-label for="cgst" value="{{ __('CGST') }}" />
                 <x-jet-input id="cgst" type="text" class="mt-1 block w-full form-control shadow-none" wire:model.defer="productMaster.cgst" />
                 <x-jet-input-error for="productMaster.cgst" class="mt-2" />
             </div>
 
             <div class="form-group col-span-6 sm:col-span-3">
-                <x-jet-label for="sgst" value="{{ __('S GST') }}" />
+                <x-jet-label for="sgst" value="{{ __('SGST') }}" />
                 <x-jet-input id="sgst" type="text" class="mt-1 block w-full form-control shadow-none" wire:model.defer="productMaster.sgst" />
                 <x-jet-input-error for="productMaster.sgst" class="mt-2" />
             </div>
 
             <div class="form-group col-span-6 sm:col-span-3">
-                <x-jet-label for="igst" value="{{ __('I GST') }}" />
+                <x-jet-label for="igst" value="{{ __('IGST') }}" />
                 <x-jet-input id="igst" type="text" class="mt-1 block w-full form-control shadow-none" wire:model.defer="productMaster.igst" />
                 <x-jet-input-error for="productMaster.igst" class="mt-2" />
             </div>

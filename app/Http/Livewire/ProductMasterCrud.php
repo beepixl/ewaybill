@@ -16,7 +16,7 @@ class ProductMasterCrud extends Component
     {
         $rules =  [
             'productMaster.productName' => 'required',
-            'productMaster.hsnCode' => 'numeric',
+            'productMaster.hsnCode' => 'required|numeric',
             'productMaster.productDesc' => 'required',
             'productMaster.cgst' => 'numeric',
             'productMaster.sgst' => 'numeric',
