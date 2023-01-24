@@ -3,6 +3,9 @@
 namespace App\Http\Livewire;
 
 use App\Models\Customer;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Livewire\Component;
 
 class CustomerCrud extends Component
@@ -11,28 +14,42 @@ class CustomerCrud extends Component
     public $customerId;
     public $action;
     public $button;
+    public $columns;
 
     protected function getRules()
     {
-        $rules =  [
-            'customer.toGstin' => 'required',
-            'customer.toTrdName' => 'required',
-            'customer.toAddr1' => 'required',
-            'customer.toAddr2' => 'required',
-            'customer.toPlace' => 'required',
-            'customer.toPincode' => 'required',
-            'customer.actToStateCode' => 'required',
-            'customer.actToStateCode' => 'required',
-            'customer.toStateCode' => 'required',
-        ];
+        $rules = [];
+
+        foreach ($this->columns as $col) {
+            if (!in_array($col, ['id', 'created_at', 'updated_at'])) {
+                $rules["customer.$col"] =  in_array(DB::getSchemaBuilder()->getColumnType('customers', $col), ['integer']) ?  'required|numeric' : 'required';
+            }
+        }
+
+        // $rules =  [
+        //     'customer.toGstin' => 'required',
+        //     'customer.toTrdName' => 'required',
+        //     'customer.toAddr1' => 'required',
+        //     'customer.toAddr2' => 'required',
+        //     'customer.toPlace' => 'required',
+        //     'customer.toPincode' => 'required',
+        //     'customer.actToStateCode' => 'required',
+        //     'customer.actToStateCode' => 'required',
+        //     'customer.toStateCode' => 'required',
+        // ];
 
         return $rules;
     }
 
     public function createCustomer()
     {
+
+        // dd($this->customer);
+
         $this->resetErrorBag();
         $this->validate();
+
+
 
         Customer::create($this->customer);
 
@@ -41,21 +58,11 @@ class CustomerCrud extends Component
         return redirect()->route('customer.index');
     }
 
-
     public function updateCustomer()
     {
         $this->resetErrorBag();
         $this->validate();
-
-        Customer::find($this->customerId)->update([
-            'productName' => $this->customer->productName,
-            'productDesc' => $this->customer->productDesc,
-            'hsnCode' => $this->customer->hsnCode,
-            'cgst' => $this->customer->cgst,
-            'sgst' => $this->customer->sgst,
-            'igst' => $this->customer->igst,
-        ]);
-
+        Customer::find($this->customerId)->update($this->customer->toArray());
         $this->emit('saved');
         return redirect()->route('customer.index');
     }
@@ -63,6 +70,8 @@ class CustomerCrud extends Component
 
     public function mount()
     {
+        $this->columns = Schema::getColumnListing('customers');
+
         if (!$this->customer && $this->customerId) {
             $this->customer = Customer::find($this->customerId);
         }
@@ -73,6 +82,10 @@ class CustomerCrud extends Component
 
     public function render()
     {
+
+        // dd(Schema::getColumnListing('customers'));
+        // dd(DB::getSchemaBuilder()->getColumnType('customers', 'toGstin'));
+
         return view('livewire.customer-crud');
     }
 }

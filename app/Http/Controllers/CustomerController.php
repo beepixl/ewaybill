@@ -35,7 +35,7 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+      
     }
 
     /**
@@ -55,9 +55,9 @@ class CustomerController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function edit(Customer $customer)
+    public function edit()
     {
-        //
+        return view('admin.customer.edit');
     }
 
     /**

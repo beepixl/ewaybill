@@ -6,19 +6,19 @@
                         ID
                         @include('components.sort-icon', ['field' => 'id'])
                     </a></th>
-                <th><a wire:click.prevent="sortBy('name')" role="button" href="#">
+                <th><a wire:click.prevent="sortBy('toGstin')" role="button" href="#">
                         GST NO
                         @include('components.sort-icon', ['field' => 'toGstin'])
                     </a></th>
-                <th><a wire:click.prevent="sortBy('email')" role="button" href="#">
+                <th><a wire:click.prevent="sortBy('toTrdName')" role="button" href="#">
                         Trade Name
                         @include('components.sort-icon', ['field' => 'toTrdName'])
                     </a></th>
-                <th><a wire:click.prevent="sortBy('email')" role="button" href="#">
+                <th><a wire:click.prevent="sortBy('toAddr1')" role="button" href="#">
                         Address 1
                         @include('components.sort-icon', ['field' => 'toAddr1'])
                     </a></th>
-                <th><a wire:click.prevent="sortBy('email')" role="button" href="#">
+                <th><a wire:click.prevent="sortBy('toPlace')" role="button" href="#">
                         Place
                         @include('components.sort-icon', ['field' => 'toPlace'])
                     </a></th>

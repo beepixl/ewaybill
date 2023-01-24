@@ -6,15 +6,15 @@
                         ID
                         @include('components.sort-icon', ['field' => 'id'])
                     </a></th>
-                <th><a wire:click.prevent="sortBy('name')" role="button" href="#">
+                <th><a wire:click.prevent="sortBy('productName')" role="button" href="#">
                     Product Name
                         @include('components.sort-icon', ['field' => 'productName'])
                     </a></th>
-                <th><a wire:click.prevent="sortBy('email')" role="button" href="#">
+                <th><a wire:click.prevent="sortBy('productDesc')" role="button" href="#">
                     Product Desc
                         @include('components.sort-icon', ['field' => 'productDesc'])
                     </a></th>
-                <th><a wire:click.prevent="sortBy('email')" role="button" href="#">
+                <th><a wire:click.prevent="sortBy('hsnCode')" role="button" href="#">
                     Hsn Code
                         @include('components.sort-icon', ['field' => 'hsnCode'])
                     </a></th>
