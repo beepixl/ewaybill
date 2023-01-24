@@ -38,7 +38,7 @@ class CustomersList extends Component
         if (!$data) {
             $this->emit("deleteResult", [
                 "status" => false,
-                "message" => "Gagal menghapus data " . $this->name
+                "message" =>"No Such Record Found In " . $this->name
             ]);
             return;
         }
@@ -46,7 +46,7 @@ class CustomersList extends Component
         $data->delete();
         $this->emit("deleteResult", [
             "status" => true,
-            "message" => "Data " . $this->name . " berhasil dihapus!"
+            "message" => "Record Deleted Successfull !"
         ]);
     }
 
