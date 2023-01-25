@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Route::group(["middleware" => ['auth:sanctum', 'verified']], function () {
@@ -36,10 +36,12 @@ Route::group(["middleware" => ['auth:sanctum', 'verified']], function () {
 
     //Product Master
     Route::resource('product-master', ProductMasterController::class)->only(['index', 'create', 'edit','show']);
+    Route::post('product-detail',[ProductMasterController::class, "productDetail"])->name('product-detail');
 
     //Customer
     Route::resource('customer', CustomerController::class)->only(['index', 'create', 'edit']);
 
     //Invoice
     Route::resource('invoice', InvoiceController::class)->only(['index', 'create']);
+    Route::post('addItem', [ProductMasterController::class, "addItem"])->name('addToCart');
 });

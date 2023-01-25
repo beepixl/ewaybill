@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\ProductMaster;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Session;
 
 class ProductMasterController extends Controller
 {
@@ -55,7 +58,7 @@ class ProductMasterController extends Controller
             }
         }
 
-        return response()->json(['error' => false, 'message' =>'NULL', 'data' => NULL]);
+        return response()->json(['error' => false, 'message' => 'NULL', 'data' => NULL]);
     }
 
     /**
@@ -90,5 +93,56 @@ class ProductMasterController extends Controller
     public function destroy(ProductMaster $productMaster)
     {
         //
+    }
+
+    public function productDetail(Request $request)
+    {
+
+        if ($request->ajax()) {
+            $product =  ProductMaster::find($request->productId);
+
+            if (!Session::has('invSelectedCustomer')) {
+                return response()->json(['error' => true, 'message' => 'Please Select Customer', 'data' => NULL]);
+            }
+
+            if ($product)
+                return response()->json(['error' => false, 'message' => 'Data Fetched', 'data' => $product]);
+            else
+                return response()->json(['error' => true, 'message' => 'No Product', 'data' => NULL]);
+                
+        }
+    }
+
+    public function addItem(Request $request)
+    {
+        if ($request->ajax()) {
+            // dd($request->all());
+            $product =  ProductMaster::find($request->productId);
+            $customerId = Session::get('invSelectedCustomer');
+
+            if (!Session::has('invSelectedCustomer')) {
+                return response()->json(['error' => true, 'message' => 'Please Select Customer', 'data' => NULL]);
+            }
+            
+            if (Cache::has("$customerId-invProducts")) {
+                $customerProducts = Cache::get("$customerId-invProducts");
+                $customerProducts->put($request->productId, ['productName' => $product->productName, 'productPrice' => $request->price, 'qty' => $request->qty, 'unit' => $request->unit, 'notes' => $request->notes, 'hsnCode' => $product->hsnCode,'cgst'=> $product->cgst,'sgst'=> $product->sgst,'igst'=> $product->igst]);
+                Cache::put("$customerId-invProducts", $customerProducts, 6000);
+            } else {
+                $customerProducts = collect();
+                $customerProducts->put($request->productId, ['productName' => $product->productName, 'productPrice' => $request->price, 'qty' => $request->qty, 'unit' => $request->unit, 'notes' => $request->notes, 'hsnCode' => $product->hsnCode,'cgst'=> $product->cgst,'sgst'=> $product->sgst,'igst'=> $product->igst]);
+                Cache::put("$customerId-invProducts", $customerProducts, 6000);
+            }
+
+            $products = collect();
+
+            if (Cache::has("$customerId-invProducts")) {
+                $products = Cache::get("$customerId-invProducts");
+            }
+
+            $data = view('livewire.invoice-temp-product', ['products' => $products->all()])->render();
+
+            return response()->json(['error' => false, 'message' => 'Item Added', 'data' => $data]);
+        }
     }
 }

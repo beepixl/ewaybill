@@ -10,6 +10,7 @@
 
     <div>
         <livewire:create-invoice action="createInvoice" />
+
     </div>
 
     @push('additional-sctipt')
@@ -21,10 +22,6 @@
                     livewire.emit('setCustomerId', e.target.value, 0)
                 });
 
-                $('select[name="productId"]').on('change', function(e) {
-                    livewire.emit('setCustomerId', 0, e.target.value)
-                });
-
                 $('select[name="productId"]').select2({
                     ajax: {
                         url: `${path}/product-master/0`,
@@ -34,37 +31,66 @@
                                 results: data.data
                             };
                         }
-                    
                     }
                 });
 
-                // $('select[name="productId"]').on('change', function() {
+                $('select[name="productId"]').on('change', function(e) {
+                    const productId = $(this).val();
 
-                //     var cat_id = $(this).val();
-                //     const categoryEle = $(this);
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('product-detail') }}",
+                        headers: {
+                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                        },
+                        data: {
+                            productId: productId
+                        },
+                        dataType: "json",
+                        success: function(response) {
+                            if (response.error == false) {
+                                // console.log(response);
+                                $('input[id="pPrice"]').val(response.data.productPrice);
+                            }
 
-                //     $.ajax({
-                //         url: `${path}/product-master/${cat_id}`,
-                //         success: function(data) {
+                        }
+                    });
 
-                //             var subCatEle = categoryEle.closest('div').next('div').children(
-                //                 'select[name="sub_category_id"]');
-                //             if (subCatEle.length == 0)
-                //                 var subCatEle = categoryEle.closest('div').next('div').children(
-                //                     'select[id="sub_category_id"]');
-                //             //  console.log(subCatEle);
+                });
 
-                //             subCatEle.empty().trigger('change');
-                //             subCatEle.select2({
-                //                 allowClear: true,
-                //                 placeholder: "Select a Sub Category",
-                //                 data: JSON.parse(data),
-                //                 width: "100%"
-                //             }).trigger('change');
-                //         }
-                //     });
+                $('#addItemToCart').on('click', function() {
 
-                // });
+                    const productId = $('select[name="productId"]').val();
+                    const price = $('input[id="pPrice"]').val();
+                    const qty = $('input[id="qty"]').val();
+                    const notes = $('input[id="notes"]').val();
+                    const unit = $('select[name="unit"]').val();
+
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('addToCart') }}",
+                        headers: {
+                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                        },
+                        data: {
+                            productId: productId,
+                            qty: qty,
+                            price: price,
+                            unit: unit,
+                            notes: notes,
+                        },
+                        dataType: "json",
+                        success: function(response) {
+                            // console.log(response);
+                            $('.productsPage').html(response.data);
+                            $('#maiForm')[0].reset();
+                            $('select[name="productId"]').val(null).trigger('change');
+                            $('select[name="unit"]').val(null).trigger('change');
+                        }
+                    });
+
+                });
+
             });
         </script>
     @endpush

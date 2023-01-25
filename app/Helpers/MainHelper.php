@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Setting;
+use Illuminate\Support\Facades\Config;
+
 if (!function_exists('array_to_object')) {
 
     /**
@@ -21,7 +24,7 @@ if (!function_exists('empty_fallback')) {
      *
      * @return string
      */
-    function empty_fallback ($data)
+    function empty_fallback($data)
     {
         return ($data) ? $data : "-";
     }
@@ -29,14 +32,22 @@ if (!function_exists('empty_fallback')) {
 
 if (!function_exists('create_button')) {
 
-    function create_button ($action, $model)
+    function create_button($action, $model)
     {
         $action = str_replace($model, "", $action);
 
         return [
             'submit_text' => ($action == "update") ? "Update" : "Submit",
             'submit_response' => ($action == "update") ? "Updated." : "Submited.",
-            'submit_response_notyf' => ($action == "update") ? "Data ".$model." updated successfully" : "Data ".$model." added successfully"
+            'submit_response_notyf' => ($action == "update") ? "Data " . $model . " updated successfully" : "Data " . $model . " added successfully"
         ];
+    }
+}
+
+if (!function_exists('settingData')) {
+    function settingData( )
+    {
+        return Setting::toBase()->find(1);
+
     }
 }

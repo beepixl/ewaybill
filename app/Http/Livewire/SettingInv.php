@@ -15,7 +15,14 @@ class SettingInv extends Component
     protected function getRules()
     {
         $rules =  [
-            'settings.fromGstin' => 'required',
+            'setting.fromGstin' => 'required|numeric',
+            'setting.fromTrdName' => 'required',
+            'setting.fromAddr1' => 'required',
+            'setting.fromAddr2' => 'required',
+            'setting.fromPlace' => 'required',
+            'setting.fromPincode' => 'required|numeric',
+            'setting.actFromStateCode' => 'required|numeric',
+            'setting.fromStateCode' => 'required',
         ];
 
         return  $rules;
@@ -26,8 +33,8 @@ class SettingInv extends Component
         $this->resetErrorBag();
         $this->validate();
 
-        
-        ModelsSetting::find(1)->upadte([$this->setting]);
+        dd($this->setting);
+        ModelsSetting::updateOrCreate(['id' => 1], [$this->setting]);
 
         $this->emit('saved');
         //  return redirect()->route('setting.index');

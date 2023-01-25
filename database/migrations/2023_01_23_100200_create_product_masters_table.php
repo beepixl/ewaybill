@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('product_masters', function (Blueprint $table) {
             $table->id();
             $table->string('productName',100)->nullable();
+            $table->decimal('productPrice',10,2)->default(0.00);
             $table->string('productDesc',100)->nullable();
             $table->integer('hsnCode')->default(0);
             $table->integer('cgst')->default(0);

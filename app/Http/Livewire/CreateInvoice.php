@@ -24,7 +24,7 @@ class CreateInvoice extends Component
 
     protected function getRules()
     {
-        
+
         $rules = [
             'productId' => 'required'
         ];
@@ -37,12 +37,15 @@ class CreateInvoice extends Component
 
         if ($id !== 0) {
             Session::put('invSelectedCustomer', $id);
+            $customerId = Session::get('invSelectedCustomer');
+            if (Cache::has("$customerId-invProducts")) {
+               Cache::delete("$customerId-invProducts");
+            }
         }
 
         if ($productId !== 0) {
             $this->pPrice = $productId;
         }
-
     }
 
     public function createInvoice()

@@ -12,6 +12,7 @@ class ProductMaster extends Model
     protected $fillable = [
         'productName',
         'productDesc',
+        'productPrice',
         'hsnCode',
         'cgst',
         'sgst',

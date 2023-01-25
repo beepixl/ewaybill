@@ -21,6 +21,9 @@
             </div>
 
             <div class="form-group col-span-6 sm:col-span-3">
+                <x-jet-label for="name" value="{{ __('Invoice Date') }}" />
+                <input type="date" name="invoice_date" class="mt-1 block w-full form-control shadow-none"
+                    value="{{ date('Y-m-d') }}" id="invoice_date">
             </div>
 
             <div class="form-group col-span-2 sm:col-span-2 productDiv" wire:ignore>
@@ -28,13 +31,20 @@
                 <select name="productId" id="" class="mt-1 block w-full form-control shadow-none">
                     <option value="">Search Product</option>
                 </select>
-                <span class="help-text" wire:model="pPrice"></span>
+                <span class="help-text" id="productPrice"></span>
                 <x-jet-input-error for="productId" class="mt-2" />
             </div>
 
             <div class="form-group col-span-1 sm:col-span-1">
+                <x-jet-label for="price" value="{{ __('Price') }}" />
+                <x-jet-input min="1" type="text" id="pPrice"
+                    class="mt-1 block w-full form-control shadow-none" />
+            </div>
+
+            <div class="form-group col-span-1 sm:col-span-1">
                 <x-jet-label for="qty" value="{{ __('Quantity') }}" />
-                <x-jet-input id="qty" type="number" class="mt-1 block w-full form-control shadow-none"  />
+                <x-jet-input id="qty" value="1" min="1" type="number"
+                    class="mt-1 block w-full form-control shadow-none" />
             </div>
 
             <div class="form-group col-span-1 sm:col-span-1" wire:ignore>
@@ -89,13 +99,9 @@
                 </select>
             </div>
 
-            <div class="form-group col-span-2 sm:col-span-2">
-                <x-jet-label for="qty" value="{{ __('Notes') }}" />
-                <x-jet-input id="qty" type="text" class="mt-1 block w-full form-control shadow-none"  wire:model="pPrice"/>
-            </div>
-
-            <div class="form-group col-span-6 sm:col-span-6">
-                <x-jet-label for="qty" value="{{ __('Notes') }}" />
+            <div class="form-group col-span-1 sm:col-span-1">
+                <x-jet-label for="notes" value="{{ __('Notes') }}" />
+                <x-jet-input id="notes" type="text" class="mt-1 block w-full form-control shadow-none" />
             </div>
 
         </x-slot>
@@ -105,7 +111,7 @@
                 {{ __($button['submit_response']) }}
             </x-jet-action-message>
 
-            <button type="button"
+            <button type="button" id="addItemToCart"
                 class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25 transition ease-in-out duration-150">
                 <i class="fas fa-plus" aria-hidden="true"></i> Add To Order</button>
         </x-slot>
@@ -113,4 +119,13 @@
     </x-jet-form-section>
 
     <x-notify-message on="saved" type="success" :message="__($button['submit_response_notyf'])" />
+
+    <x-jet-section-title>
+        <x-slot name="title"> Products</x-slot>
+    </x-jet-section-title>
+
+    <div class="productsPage">
+        <livewire:invoice-temp-product />
+    </div>
+
 </div>

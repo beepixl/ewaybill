@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Admin Panel Laravel 9'),
+    'name' => env('APP_NAME','Rajesh'),
 
     /*
     |--------------------------------------------------------------------------

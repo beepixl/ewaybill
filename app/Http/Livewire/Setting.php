@@ -15,8 +15,14 @@ class Setting extends Component
     protected function getRules()
     {
         $rules =  [
-            'setting.appName' => 'required',
-            // 'setting.fromGstin' => 'required',
+            'setting.fromGstin' => 'required|numeric',
+            'setting.fromTrdName' => 'required',
+            'setting.fromAddr1' => 'required',
+            'setting.fromAddr2' => 'required',
+            'setting.fromPlace' => 'required',
+            'setting.fromPincode' => 'required|numeric',
+            'setting.actFromStateCode' => 'required|numeric',
+            'setting.fromStateCode' => 'required',
         ];
 
         return  $rules;
@@ -26,7 +32,7 @@ class Setting extends Component
     {
         $this->resetErrorBag();
         $this->validate();
-
+        dd($this->setting);
         ModelsSetting::updateOrCreate(['id' => 1], [$this->setting]);
 
         $this->emit('saved');
@@ -38,7 +44,7 @@ class Setting extends Component
         if (!$this->setting && $this->settingId) {
             $this->setting = ModelsSetting::find($this->settingId);
         }
-        
+
         $this->button = create_button($this->action, "Setting");
     }
 

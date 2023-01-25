@@ -7,9 +7,9 @@
     </x-jet-section-title>
 
     <div class=" md:mt-0 md:col-span-2">
-        <form wire:submit.prevent="{{ $submit }}">
+        <form wire:submit.prevent="{{ $submit }}" id="maiForm">
             <div class="shadow overflow-hidden sm:rounded-md" {{ $submit }}>
-                <div class="px-4 py-5 bg-white sm:p-6">
+                <div class="px-4 bg-white sm:p-6">
 
                     <div class="grid grid-cols-6 gap-6">
                         {{ $form }}

@@ -3,6 +3,8 @@
 namespace App\Http\Livewire;
 
 use App\Models\ProductMaster;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Session;
 use Livewire\Component;
 
 class ProductMasterCrud extends Component
@@ -16,6 +18,7 @@ class ProductMasterCrud extends Component
     {
         $rules =  [
             'productMaster.productName' => 'required',
+            'productMaster.productPrice' => 'required|numeric',
             'productMaster.hsnCode' => 'required|numeric',
             'productMaster.productDesc' => 'required',
             'productMaster.cgst' => 'numeric',
@@ -46,6 +49,7 @@ class ProductMasterCrud extends Component
 
         ProductMaster::find($this->productMasterId)->update([
             'productName' => $this->productMaster->productName,
+            'productPrice' => $this->productMaster->productPrice,
             'productDesc' => $this->productMaster->productDesc,
             'hsnCode' => $this->productMaster->hsnCode,
             'cgst' => $this->productMaster->cgst,

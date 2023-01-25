@@ -11,6 +11,11 @@
                 <x-jet-input id="productName" type="text" class="mt-1 block w-full form-control shadow-none" wire:model.defer="productMaster.productName" />
                 <x-jet-input-error for="productMaster.productName" class="mt-2" />
             </div>
+            <div class="form-group col-span-6 sm:col-span-3">
+                <x-jet-label for="productPrice" value="{{ __('Product Price') }}" />
+                <x-jet-input id="productPrice" type="text" class="mt-1 block w-full form-control shadow-none" wire:model.defer="productMaster.productPrice" />
+                <x-jet-input-error for="productMaster.productPrice" class="mt-2" />
+            </div>
 
             <div class="form-group col-span-6 sm:col-span-3">
                 <x-jet-label for="productDesc" value="{{ __('Product Desc') }}" />

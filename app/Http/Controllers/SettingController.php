@@ -14,7 +14,6 @@ class SettingController extends Controller
      */
     public function index()
     {
-        //  $setting =
         return view('admin.setting.update', ['setting' => Setting::toBase()->first()]);
     }
 

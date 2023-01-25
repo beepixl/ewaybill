@@ -30,6 +30,12 @@ $links = [
 "text" => "Customers",
 "is_multi" => false,
 ],
+[
+"href" => "invoice.create",
+"icon" => "file",
+"text" => "Invoice",
+"is_multi" => false,
+],
 ];
 $navigation_links = array_to_object($links);
 
