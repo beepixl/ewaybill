@@ -6,12 +6,11 @@
         <x-slot name="title">{{ $title }}</x-slot>
     </x-jet-section-title>
 
-    <div class=" md:mt-0 md:col-span-2">
-        <form wire:submit.prevent="{{ $submit }}" id="maiForm">
+    <div class="md:mt-0 md:col-span-2">
+        <form wire:submit.prevent="{{ $submit }}">
             <div class="shadow overflow-hidden sm:rounded-md" {{ $submit }}>
                 <div class="px-4 bg-white sm:p-6">
-
-                    <div class="grid grid-cols-6 gap-6">
+                    <div class="col-auto md:grid grid-cols-2 gap-2">
                         {{ $form }}
                     </div>
                 </div>

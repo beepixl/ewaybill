@@ -50,6 +50,10 @@ class CreateInvoice extends Component
 
     public function createInvoice()
     {
+
+        $this->emit('failed');
+
+        exit;
         // dd($this->req);
 
         $this->resetErrorBag();

@@ -9,7 +9,7 @@
         <x-slot name="form">
             @foreach ($columns as $col)
                 @if (!in_array($col, ['id', 'created_at', 'updated_at']))
-                    <div class="form-group col-span-6 sm:col-span-3">
+                    <div class="form-group ">
                         <x-jet-label for="" value="{{ ucfirst(str_replace('to', ' ', $col)) }}" />
                         <x-jet-input id="" type="text" class="mt-1 block w-full form-control shadow-none"
                             wire:model.defer="customer.{{ $col }}" />

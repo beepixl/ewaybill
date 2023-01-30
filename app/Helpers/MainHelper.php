@@ -48,6 +48,12 @@ if (!function_exists('settingData')) {
     function settingData( )
     {
         return Setting::toBase()->find(1);
+    }
+}
 
+if (!function_exists('comJsRes')) {
+    function comJsRes($type, $message, $data = null)
+    {
+        return response()->json(['error' => $type, 'message' => $message, 'data' => $data], $type == true ? 500 : 200);
     }
 }

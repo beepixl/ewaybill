@@ -3,7 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Invoice;
+use App\Models\Product;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class InvoiceController extends Controller
 {
@@ -14,7 +19,9 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-       return view('admin.invoice.list',['invoice'=>Invoice::class]);
+        
+  
+        return view('admin.invoice.list', ['invoice' => Invoice::class]);
     }
 
     /**
@@ -24,6 +31,11 @@ class InvoiceController extends Controller
      */
     public function create()
     {
+        $pdf = Pdf::loadView('admin.invoice.invoice-pdf');
+
+        return $pdf->stream('invoice.pdf');
+  
+
         return view('admin.invoice.create');
     }
 
@@ -35,7 +47,55 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // 
+
+        $validator = Validator::make($request->all(), [
+            'customerId' => 'required|numeric',
+            'invNo' => 'required|numeric',
+            'invoice_date' => 'required|date',
+            'supplyType' => 'required'
+        ]);
+
+        if ($validator->fails())
+            return comJsRes(true, $validator->messages()->first());
+
+        try {
+            $customerId = $request->customerId;
+
+            $inv  =  Invoice::create($request->all());
+
+            if (Cache::has("$customerId-invProducts")) {
+                $products = Cache::get("$customerId-invProducts");
+
+                foreach ($products as $product) {
+                    $newProduct =  new Product();
+                    $newProduct->invID = $inv->id;
+                    $newProduct->productId = $product['productId'];
+                    $newProduct->productName = $product['productName'];
+                    $newProduct->productPrice = $product['productPrice'];
+                    $newProduct->quantity = $product['qty'];
+                    $newProduct->qtyUnit = $product['unit'];
+                    $newProduct->productNotes = $product['notes'];
+                    $newProduct->hsnCode = $product['hsnCode'];
+                    $newProduct->cgstRate = $product['cgst'];
+                    $newProduct->sgstRate = $product['sgst'];
+                    $newProduct->igstRate = $product['igst'];
+
+                    $newProduct->cessRate = 0;
+                    $newProduct->cessNonadvol = 0;
+                    $newProduct->save();
+                }
+
+                Cache::forget("$customerId-invProducts");
+            } else {
+                return comJsRes(true, 'No Products Found In Cart');
+            }
+        } catch (Exception $e) {
+
+            return comJsRes(true, $e->getMessage());
+        }
+
+        return comJsRes(false, 'invoice Created Successfully');
     }
 
     /**

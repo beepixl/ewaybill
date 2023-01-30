@@ -2,12 +2,16 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\ProductMaster;
 use Livewire\Component;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 
 class InvoiceTempProduct extends Component
 {
+    
+
+    
 
     public function render()
     {
