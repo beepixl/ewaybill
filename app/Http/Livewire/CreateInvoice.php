@@ -16,6 +16,7 @@ class CreateInvoice extends Component
     public $invoiceId;
     public $action;
     public $button;
+    public $invNo;
     public $pPrice;
 
     protected $listeners = [
@@ -39,12 +40,8 @@ class CreateInvoice extends Component
             Session::put('invSelectedCustomer', $id);
             $customerId = Session::get('invSelectedCustomer');
             if (Cache::has("$customerId-invProducts")) {
-               Cache::delete("$customerId-invProducts");
+                Cache::delete("$customerId-invProducts");
             }
-        }
-
-        if ($productId !== 0) {
-            $this->pPrice = $productId;
         }
     }
 
@@ -87,15 +84,17 @@ class CreateInvoice extends Component
         }
 
         if (!Cache::has('customers')) {
-            Cache::add('customers', Customer::toBase()->get(), 5000);
+            Cache::add('customers', Customer::toBase()->get(), 6000);
         }
 
+        $this->invNo = settingData()->invNoStart  + Invoice::count();
         $this->button = create_button($this->action, "Invoice");
     }
 
 
     public function render()
     {
+    
         return view('livewire.create-invoice');
     }
 }

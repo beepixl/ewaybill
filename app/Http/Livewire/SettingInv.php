@@ -33,11 +33,11 @@ class SettingInv extends Component
         $this->resetErrorBag();
         $this->validate();
 
-        dd($this->setting);
-        ModelsSetting::updateOrCreate(['id' => 1], [$this->setting]);
+       // dd($this->setting->toArray());
+        ModelsSetting::updateOrCreate(['id' => 1],$this->setting->toArray());
 
         $this->emit('saved');
-        //  return redirect()->route('setting.index');
+     // return redirect()->route('setting.index');
     }
 
     public function mount()

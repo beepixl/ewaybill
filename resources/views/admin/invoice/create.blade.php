@@ -2,6 +2,7 @@
     <x-slot name="header_content">
         <h1>{{ __('cruds.create') }} {{ __('cruds.new') }} {{ __('Invoice') }}</h1>
         <div class="section-header-breadcrumb">
+            {{ Breadcrumbs::render() }}
         </div>
     </x-slot>
 
@@ -24,7 +25,7 @@
                     livewire.emit('setCustomerId', e.target.value, 0)
                 });
 
-                $('select[name="productId"]').select2({
+                $('select[id="productId"]').select2({
                     ajax: {
                         url: `${path}/product-master/0`,
                         dataType: 'json',
@@ -36,7 +37,7 @@
                     }
                 });
 
-                $('select[name="productId"]').on('change', function(e) {
+                $('select[id="productId"]').on('change', function(e) {
                     const productId = $(this).val();
 
                     $.ajax({
@@ -76,6 +77,7 @@
                         dataType: "json",
                         success: function(response) {
                             notyf['success'](response.message);
+                            window.location.href = "{{ route('invoice.index') }}";
                         },
                         error: function(xhr) {
                             const response = xhr.responseJSON;
@@ -92,7 +94,7 @@
                 setTimeout(() => {
 
                     if (type == 1) {
-                        var productId = $('select[name="productId"]').val();
+                        var productId = $('select[id="productId"]').val();
                         var price = $('input[id="pPrice"]').val();
                         var qty = $('input[id="qty"]').val();
                         var notes = $('input[id="notes"]').val();
@@ -124,18 +126,19 @@
                         success: function(response) {
                             $('.productsPage').html(response.data);
                            // $('#maiForm')[0].reset();
+                          // console.log($('input[id="notes"]'));
+                            $('select[id="productId"]').val(null).trigger('change');
+                            $('select[id="unit"]').val(null).trigger('change');
+                            $('.productPrice').val('');
+                            $('input[id="qty"]').val(1);
+                            $('input[id="notes"]').val('');
 
-                            $('select[name="productId"]').val(null).trigger('change');
-                            $('select[name="unit"]').val(null).trigger('change');
-                            $('input[id="pPrice"]').val();
-                            $('input[id="qty"]').val();
-                            $('input[id="notes"]').val();
                             notyf['success'](response.message);
                         },
                         error: function(xhr) {
                             const response = xhr.responseJSON;
                             notyf['error'](response.message);
-                            location.hash = 'invSection'
+                           // location.hash = 'invSection'
                         }
                     });
 

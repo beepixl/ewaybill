@@ -2,6 +2,7 @@
 
 use App\Models\Setting;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Schema;
 
 if (!function_exists('array_to_object')) {
 
@@ -45,9 +46,11 @@ if (!function_exists('create_button')) {
 }
 
 if (!function_exists('settingData')) {
-    function settingData( )
+    function settingData()
     {
-        return Setting::toBase()->find(1);
+        if (Schema::hasTable('settings')) {
+            return Setting::toBase()->find(1);
+        }
     }
 }
 

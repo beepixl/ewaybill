@@ -1,8 +1,8 @@
 <x-app-layout>
     <x-slot name="header_content">
-        <h1>{{ __('Products Master') }} {{ __('cruds.lists') }}</h1>
+        <h1>{{ __('Invoices') }} {{ __('cruds.lists') }}</h1>
         <div class="section-header-breadcrumb">
-
+            {{ Breadcrumbs::render() }}
         </div>
     </x-slot>
 

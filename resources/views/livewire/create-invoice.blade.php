@@ -20,14 +20,14 @@
                         </div>
 
                         <div class="form-group">
-                            <x-jet-label for="name" value="{{ __('Invoice No') }}" />
-                            <x-jet-input type="text" class="mt-1 block w-full form-control shadow-none" name="invNo" />
+                            <x-jet-label for="invNo" value="{{ __('Invoice No') }}" />
+                            <input type="number" name="invNo" class="mt-1 block w-full form-control shadow-none" value="{{ $invNo }}" id="invNo">
                         </div>
 
                         <div class="form-group">
                             <x-jet-label for="name" value="{{ __('Invoice Date') }}" />
-                            <input type="date" name="invoice_date" class="mt-1 block w-full form-control shadow-none"
-                                value="{{ date('Y-m-d') }}" id="invoice_date">
+                            <input type="date" name="invDate" class="mt-1 block w-full form-control shadow-none"
+                                value="{{ date('Y-m-d') }}" id="invDate">
                         </div>
 
                         <div class="form-group">
@@ -137,13 +137,14 @@
         <div class="md:grid md:grid-cols-2">
             <div class=" md:mt-0 md:col-span-2">
                 <div class="shadow overflow-hidden sm:rounded-md">
+
                     <div class="px-4 bg-white sm:p-6">
                         <div class="col-auto md:grid grid-cols-2 gap-2">
 
                             <div class="form-group  productDiv" wire:ignore>
                                 <x-jet-label for="name" value="{{ __('Select Product') }}" />
-                                <select name="productId" id=""
-                                    class="mt-1 block w-full form-control shadow-none">
+                                <select id="productId"
+                                    class="mt-1 block w-full form-control shadow-none select2">
                                     <option value="">Search Product</option>
                                 </select>
                                 <span class="help-text" id="productPrice"></span>
@@ -152,8 +153,7 @@
 
                             <div class="form-group md:col-1">
                                 <x-jet-label for="price" value="{{ __('Price') }}" />
-                                <x-jet-input min="1" type="text" id="pPrice"
-                                    class="mt-1 block w-full form-control shadow-none" />
+                                <x-jet-input min="1" type="text" id="pPrice" class="mt-1 block w-full form-control shadow-none productPrice" />
                             </div>
 
                             <div class="form-group md:col-1">
@@ -163,7 +163,7 @@
 
                             <div class="form-group col-span-1 sm:col-span-1" wire:ignore>
                                 <x-jet-label for="unit" value="{{ __('Unit') }}" />
-                                <select name="unit" id=""
+                                <select id="unit"
                                     class="mt-1 block w-full form-control shadow-none select2">
                                     <option value="">Select Unit</option>
                                     <option value="BAG">Bag</option>
@@ -216,8 +216,7 @@
 
                             <div class="form-group col-span-1 sm:col-span-1">
                                 <x-jet-label for="notes" value="{{ __('Notes') }}" />
-                                <x-jet-input id="notes" type="text"
-                                    class="mt-1 block w-full form-control shadow-none" />
+                                <x-jet-input id="notes" type="text" class="mt-1 block w-full form-control shadow-none" />
                             </div>
 
                             <div class="form-group col-span-2 sm:col-span-2">
@@ -228,6 +227,7 @@
 
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>

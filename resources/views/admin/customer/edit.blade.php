@@ -3,6 +3,7 @@
         <h1>{{ __('Edit Customer') }}</h1>
 
         <div class="section-header-breadcrumb">
+            {{ Breadcrumbs::render('customer.edit',request()->customer) }}
         </div>
     </x-slot>
 

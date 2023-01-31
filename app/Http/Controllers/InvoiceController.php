@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\Product;
 use Exception;
@@ -19,8 +20,6 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        
-  
         return view('admin.invoice.list', ['invoice' => Invoice::class]);
     }
 
@@ -31,10 +30,6 @@ class InvoiceController extends Controller
      */
     public function create()
     {
-        $pdf = Pdf::loadView('admin.invoice.invoice-pdf');
-
-        return $pdf->stream('invoice.pdf');
-  
 
         return view('admin.invoice.create');
     }
@@ -48,31 +43,75 @@ class InvoiceController extends Controller
     public function store(Request $request)
     {
         // 
-
         $validator = Validator::make($request->all(), [
             'customerId' => 'required|numeric',
-            'invNo' => 'required|numeric',
-            'invoice_date' => 'required|date',
-            'supplyType' => 'required'
+            'invNo' => 'required|unique:invoices',
+            'invDate' => 'required|date',
+            'supplyType' => 'required',
+            'docType' => 'required',
         ]);
 
         if ($validator->fails())
             return comJsRes(true, $validator->messages()->first());
 
         try {
+
             $customerId = $request->customerId;
 
-            $inv  =  Invoice::create($request->all());
-
             if (Cache::has("$customerId-invProducts")) {
+
+                $customer =   Customer::find($customerId);
+                $setting = settingData();
                 $products = Cache::get("$customerId-invProducts");
+                $productsSubTot = $products->sum('subTot');
+
+                $productsigstValue = 0;
+                $productscgstValue =  0;
+                $productssGstVal = 0;
+
+                if ($customer->toStateCode == $setting->fromStateCode) {
+                    $productscgstValue =  $products->sum('cGstVal');
+                    $productssGstVal = $products->sum('sGstVal');
+                } else {
+                    $productsigstValue = $products->sum('iGstVal');
+                }
+
+                $data = $request->all();
+                $data['totalValue'] = $productsSubTot;
+                $data['cgstValue'] = $productscgstValue;
+                $data['sgstValue'] = $productssGstVal;
+                $data['igstValue'] = $productsigstValue;
+
+                $data['totInvValue'] = $productsSubTot + $productscgstValue + $productssGstVal + $productsigstValue;
+
+                $data['fromGstin'] = $setting->fromGstin;
+                $data['fromTrdName'] = $setting->fromTrdName;
+                $data['fromAddr1'] = $setting->fromAddr1;
+                $data['fromAddr2'] = $setting->fromAddr2;
+                $data['fromPlace'] = $setting->fromPlace;
+                $data['fromPincode'] = $setting->fromPincode;
+                $data['actFromStateCode'] = $setting->actFromStateCode;
+                $data['fromStateCode'] = $setting->fromStateCode;
+
+                $data['toGstin'] = $customer->toGstin;
+                $data['toTrdName'] = $customer->toTrdName;
+                $data['toAddr1'] = $customer->toAddr1;
+                $data['toAddr2'] = $customer->toAddr2;
+                $data['toPlace'] = $customer->toPlace;
+                $data['toPincode'] = $customer->toPincode;
+                $data['actToStateCode'] = $customer->actToStateCode;
+                $data['toStateCode'] = $customer->toStateCode;
+
+                // dd($data);
+
+                $inv  =  Invoice::create($data);
 
                 foreach ($products as $product) {
                     $newProduct =  new Product();
                     $newProduct->invID = $inv->id;
                     $newProduct->productId = $product['productId'];
                     $newProduct->productName = $product['productName'];
-                    $newProduct->productPrice = $product['productPrice'];
+                    $newProduct->taxableAmount = $product['productPrice'];
                     $newProduct->quantity = $product['qty'];
                     $newProduct->qtyUnit = $product['unit'];
                     $newProduct->productNotes = $product['notes'];
@@ -106,7 +145,10 @@ class InvoiceController extends Controller
      */
     public function show(Invoice $invoice)
     {
-        //
+       // dd($invoice);
+
+        $pdf = Pdf::loadView('admin.invoice.invoice-pdf',['invoice'=> $invoice->toArray(),'setting'=>settingData()]);
+        return $pdf->stream('invoice.pdf');
     }
 
     /**

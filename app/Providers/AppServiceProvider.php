@@ -24,8 +24,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        
-            Config::set('app.name',settingData()->appName);
-   
+
+        Config::set('app.name', settingData()->appName ?? 'Rajeshwari International');
     }
 }

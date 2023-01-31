@@ -134,13 +134,15 @@ class ProductMasterController extends Controller
 
             // dd($product);
 
+            $subTot = $request->price * $request->qty;
+
             if (Cache::has("$customerId-invProducts")) {
                 $customerProducts = Cache::get("$customerId-invProducts");
-                $customerProducts->put($request->productId, ['productId' => $request->productId, 'productName' => $product->productName, 'productPrice' => $request->price, 'qty' => $request->qty, 'unit' => $request->unit, 'notes' => $request->notes, 'hsnCode' => $product->hsnCode, 'cgst' => $product->cgst, 'sgst' => $product->sgst, 'igst' => $product->igst]);
+                $customerProducts->put($request->productId, ['productId' => $request->productId, 'productName' => $product->productName, 'productPrice' => $request->price, 'qty' => $request->qty, 'unit' => $request->unit, 'notes' => $request->notes, 'hsnCode' => $product->hsnCode, 'cgst' => $product->cgst, 'sgst' => $product->sgst, 'igst' => $product->igst, 'subTot' => $subTot, 'cGstVal' => (($subTot * $product->cgst) / 100),'iGstVal'=>(($subTot * $product->igst) / 100)]);
                 Cache::put("$customerId-invProducts", $customerProducts, 6000);
             } else {
                 $customerProducts = collect();
-                $customerProducts->put($request->productId, ['productId' => $request->productId, 'productName' => $product->productName, 'productPrice' => $request->price, 'qty' => $request->qty, 'unit' => $request->unit, 'notes' => $request->notes, 'hsnCode' => $product->hsnCode, 'cgst' => $product->cgst, 'sgst' => $product->sgst, 'igst' => $product->igst]);
+                $customerProducts->put($request->productId, ['productId' => $request->productId, 'productName' => $product->productName, 'productPrice' => $request->price, 'qty' => $request->qty, 'unit' => $request->unit, 'notes' => $request->notes, 'hsnCode' => $product->hsnCode, 'cgst' => $product->cgst, 'sgst' => $product->sgst, 'igst' => $product->igst, 'subTot' => $subTot,'cGstVal' => (($subTot * $product->cgst) / 100),'iGstVal'=>(($subTot * $product->igst) / 100)]);
                 Cache::put("$customerId-invProducts", $customerProducts, 6000);
             }
 

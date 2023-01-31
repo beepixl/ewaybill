@@ -169,9 +169,7 @@
             
             <div class="form-group col-span-6 sm:col-span-3">
                 <x-jet-label for="mailName" value="{{ __('Mail From Name') }}" />
-                <x-jet-input id="mailName" type="text" class="mt-1 block w-full form-control shadow-none"
-                    wire:model.defer="setting.mailName" />
-                <x-jet-input-error for="setting.mailName" class="mt-2" />
+                <x-jet-input id="mailName" type="text" class="mt-1 block w-full form-control shadow-none" />
             </div>
 
 

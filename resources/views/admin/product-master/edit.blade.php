@@ -3,6 +3,7 @@
         <h1>{{ __('Edit User') }}</h1>
 
         <div class="section-header-breadcrumb">
+            {{ Breadcrumbs::render('product-master.edit',request()->product_master) }}
         </div>
     </x-slot>
 

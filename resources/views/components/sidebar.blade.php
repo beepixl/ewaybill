@@ -31,9 +31,9 @@ $links = [
 "is_multi" => false,
 ],
 [
-"href" => "invoice.create",
+"href" => "invoice.index",
 "icon" => "file",
-"text" => "Invoice",
+"text" => "Invoices",
 "is_multi" => false,
 ],
 ];
@@ -48,7 +48,7 @@ $navigation_links = array_to_object($links);
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
             <a href="{{ route('dashboard') }}">
-                <img class="d-inline-block" width="32px" height="30.61px" src="" alt="">
+                <img class="d-inline-block" width="32px" height="30.61px" src="{{ asset('globe.png') }}" alt="">
             </a>
         </div>
         @foreach ($navigation_links as $link)

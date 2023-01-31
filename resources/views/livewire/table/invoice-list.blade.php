@@ -34,8 +34,7 @@
                     <td>{{ $invoice->vehicleNo }}</td>
                     <td>{{ $invoice->created_at->format('d M Y h:i') }}</td>
                     <td class="whitespace-no-wrap row-action--icon">
-                        <a role="button" href="{{ route('invoice.edit', [$invoice->id]) }}" class="mr-3"><i
-                                class="fa fa-16px fa-pen"></i></a>
+                        <a role="button" href="{{ route('invoice.show', [$invoice->id]) }}" class="mr-3"><i class="fa fa-16px fa-print"></i></a>
                         <a role="button" x-on:click.prevent="deleteItem"><i
                                 class="fa fa-16px fa-trash text-red-500"></i></a>
                     </td>
