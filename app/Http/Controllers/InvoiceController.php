@@ -30,6 +30,10 @@ class InvoiceController extends Controller
      */
     public function create()
     {
+        // $pdf = Pdf::loadView('admin.invoice.invoice-pdf');
+
+        // return $pdf->stream('invoice.pdf');
+  
 
         return view('admin.invoice.create');
     }
