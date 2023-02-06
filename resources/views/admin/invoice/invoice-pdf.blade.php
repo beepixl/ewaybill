@@ -142,12 +142,12 @@
                     <tr>
                         <td><strong>Invoice Date</strong></td>
                         <td>:</td>
-                        <td>{{ $invoice['invDate'] }}</td>
+                        <td>{{ date('M d,Y',strtotime($invoice['invDate']))  }}</td>
                     </tr>
                     <tr>
                         <td><strong>Payment Due</strong></td>
                         <td>:</td>
-                        <td>{{ date('M d,Y') }}</td>
+                        <td>{{ date('M d,Y',strtotime($invoice['invDate'])) }}</td>
                     </tr>
                     <tr>
                         <td><strong>Amount Due(INR)</strong></td>
