@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\Customer;
 use App\Models\Invoice;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -80,13 +81,15 @@ class CreateInvoice extends Component
     public function mount()
     {
         if (!$this->invoice && $this->invoiceId) {
-            $this->invoice = Invoice::find($this->invoiceId);
+            $this->invoice = Invoice::with('billProducts')->find($this->invoiceId);
+
         }
 
-        if (!Cache::has('customers')) {
-            Cache::add('customers', Customer::toBase()->get(), 6000);
-        }
+        // if (!Cache::has('customers')) {
+        //     Cache::add('customers', Customer::toBase()->get(), 2000);
+        // }
 
+        $this->customers =  Customer::get()->toArray();
         $this->invNo = settingData()->invNoStart  + Invoice::count();
         $this->button = create_button($this->action, "Invoice");
     }
@@ -94,7 +97,8 @@ class CreateInvoice extends Component
 
     public function render()
     {
-    
+
+        Artisan::call('optimize:clear');
         return view('livewire.create-invoice');
     }
 }

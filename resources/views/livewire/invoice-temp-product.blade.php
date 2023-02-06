@@ -15,6 +15,7 @@
                                     <th>Notes</th>
                                     <th>Hsn Code</th>
                                     <th>Sub Tot</th>
+                                    <th> Action</th>
                                 </thead>
                                 <tbody>
 
@@ -47,6 +48,10 @@
                                             <td>{{ $product['notes'] }}</td>
                                             <td>{{ $product['hsnCode'] ?? '' }}</td>
                                             <td>{{ number_format($subTot, 2) }}</td>
+                                            <td> 
+                                                <button type="button" onclick="removeItem({{ $product['productId'] }})" class="inline-flex items-center px-2 py-2 bg-red-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 active:bg-red-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25 transition ease-in-out duration-150">
+                                                    <i class="fas fa-trash" aria-hidden="true"></i></button>
+                                            </td>
                                         </tr>
 
                                     @endforeach
@@ -65,7 +70,7 @@
                                     <tr>
                                         <td colspan="5"></td>
                                         <td colspan="1" class="font-bold">Final Total</td>
-                                        <td colspan="1" class="font-bold">₹ {{ $fTot + $cGstVal + $sGstVal }}</td>
+                                        <td colspan="1" class="font-bold">₹ {{  number_format($fTot + $cGstVal + $sGstVal,2) }}</td>
                                     </tr>
                                 </tfoot>
                             </table>

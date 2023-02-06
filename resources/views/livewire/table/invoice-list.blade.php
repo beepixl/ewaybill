@@ -15,7 +15,7 @@
                         @include('components.sort-icon', ['field' => 'supplyType'])
                     </a></th>
                 <th><a wire:click.prevent="sortBy('vehicleNo')" role="button" href="#">
-                    Vehicle No
+                        Vehicle No
                         @include('components.sort-icon', ['field' => 'vehicleNo'])
                     </a></th>
                 <th><a wire:click.prevent="sortBy('created_at')" role="button" href="#">
@@ -34,9 +34,12 @@
                     <td>{{ $invoice->vehicleNo }}</td>
                     <td>{{ $invoice->created_at->format('d M Y h:i') }}</td>
                     <td class="whitespace-no-wrap row-action--icon">
-                        <a role="button" href="{{ route('invoice.show', [$invoice->id]) }}" class="mr-3"><i class="fa fa-16px fa-print"></i></a>
-                        <a role="button" x-on:click.prevent="deleteItem"><i
+                        <a role="button" target="_blank" href="{{ route('invoice.show', [$invoice->id]) }}"
+                            class="mr-3 text-black"><i class="fa fa-16px fa-print"></i></a>
+                        <a  class="mr-3" role="button" x-on:click.prevent="deleteItem"><i
                                 class="fa fa-16px fa-trash text-red-500"></i></a>
+                        <a role="button" class="text-warning"  href="{{ route('invoice.edit', [$invoice->id]) }}"
+                           ><i class="fa fa-16px fa-edit"></i></a>
                     </td>
                 </tr>
             @endforeach

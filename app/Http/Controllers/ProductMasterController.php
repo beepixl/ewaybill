@@ -138,11 +138,11 @@ class ProductMasterController extends Controller
 
             if (Cache::has("$customerId-invProducts")) {
                 $customerProducts = Cache::get("$customerId-invProducts");
-                $customerProducts->put($request->productId, ['productId' => $request->productId, 'productName' => $product->productName, 'productPrice' => $request->price, 'qty' => $request->qty, 'unit' => $request->unit, 'notes' => $request->notes, 'hsnCode' => $product->hsnCode, 'cgst' => $product->cgst, 'sgst' => $product->sgst, 'igst' => $product->igst, 'subTot' => $subTot, 'cGstVal' => (($subTot * $product->cgst) / 100),'iGstVal'=>(($subTot * $product->igst) / 100)]);
+                $customerProducts->put($request->productId, ['productId' => $request->productId, 'productName' => $product->productName, 'productPrice' => $request->price, 'qty' => $request->qty, 'unit' => $request->unit, 'notes' => $request->notes, 'hsnCode' => $product->hsnCode, 'cgst' => $product->cgst, 'sgst' => $product->sgst, 'igst' => $product->igst, 'subTot' => $subTot, 'cGstVal' => (($subTot * $product->cgst) / 100), 'iGstVal' => (($subTot * $product->igst) / 100)]);
                 Cache::put("$customerId-invProducts", $customerProducts, 6000);
             } else {
                 $customerProducts = collect();
-                $customerProducts->put($request->productId, ['productId' => $request->productId, 'productName' => $product->productName, 'productPrice' => $request->price, 'qty' => $request->qty, 'unit' => $request->unit, 'notes' => $request->notes, 'hsnCode' => $product->hsnCode, 'cgst' => $product->cgst, 'sgst' => $product->sgst, 'igst' => $product->igst, 'subTot' => $subTot,'cGstVal' => (($subTot * $product->cgst) / 100),'iGstVal'=>(($subTot * $product->igst) / 100)]);
+                $customerProducts->put($request->productId, ['productId' => $request->productId, 'productName' => $product->productName, 'productPrice' => $request->price, 'qty' => $request->qty, 'unit' => $request->unit, 'notes' => $request->notes, 'hsnCode' => $product->hsnCode, 'cgst' => $product->cgst, 'sgst' => $product->sgst, 'igst' => $product->igst, 'subTot' => $subTot, 'cGstVal' => (($subTot * $product->cgst) / 100), 'iGstVal' => (($subTot * $product->igst) / 100)]);
                 Cache::put("$customerId-invProducts", $customerProducts, 6000);
             }
 
@@ -155,6 +155,41 @@ class ProductMasterController extends Controller
             $data = view('livewire.invoice-temp-product', ['products' => $products->all()])->render();
             //  return response()->json(['error' => false, 'message' => 'Item Added', 'data' => $data]);
             return comJsRes(false, 'Item Added Successfully', $data);
+        }
+    }
+
+    public function removeItem(Request $request)
+    {
+
+        if ($request->ajax()) {
+            if (!Session::has('invSelectedCustomer')) {
+                return comJsRes(true, 'Please Select Customer');
+            }
+
+            $validator = Validator::make($request->all(), [
+                'productId' => 'required|numeric',
+            ]);
+
+            if ($validator->fails())
+                return comJsRes(true, $validator->messages()->first());
+
+            $customerId = Session::get('invSelectedCustomer');
+
+            if (Cache::has("$customerId-invProducts")) {
+                $customerProducts = Cache::get("$customerId-invProducts");
+                $customerProducts->forget($request->productId);
+                Cache::put("$customerId-invProducts", $customerProducts, 6000);
+            }
+
+            $products = collect();
+
+            if (Cache::has("$customerId-invProducts")) {
+                $products = Cache::get("$customerId-invProducts");
+            }
+
+            $data = view('livewire.invoice-temp-product', ['products' => $products->all()])->render();
+
+            return comJsRes(false, 'Item Removed Successfully', $data);
         }
     }
 }

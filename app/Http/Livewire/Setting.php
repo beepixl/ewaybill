@@ -16,11 +16,6 @@ class Setting extends Component
     {
         $rules =  [
             'setting.appName' => 'required',
-            'setting.timezone' => 'required',
-            'setting.pColor' => 'required',
-            'setting.sColor' => 'required',
-            'setting.appEnv' => 'required',
-            'setting.appDebug' => 'required',
             'setting.invPrefix' => 'required|string',
             'setting.invNoStart' => 'required|numeric',
         ];
@@ -33,7 +28,9 @@ class Setting extends Component
         $this->resetErrorBag();
         $this->validate();
 
-       // dd($this->setting->toArray());
+    
+
+     //   dd($this->setting->toArray());
         ModelsSetting::updateOrCreate(['id' => 1],$this->setting->toArray());
 
         $this->emit('saved');

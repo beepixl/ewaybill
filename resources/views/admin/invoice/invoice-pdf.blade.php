@@ -1,13 +1,15 @@
-<?php 
- $inrSym =  '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
+<?php
+$inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
 ?>
 
 <!doctype html>
 <html lang="en">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Aloha!</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>{{ $setting->invPrefix }}-{{ $invoice['invNo'] }}-{{ $invoice['customer']['toTrdName'] }}-{{ $status }}
+    </title>
+
     <style type="text/css">
         * {
             font-family: Verdana, Arial, sans-serif;
@@ -73,7 +75,7 @@
 
         }
 
-        .mainBody td{
+        .mainBody td {
             padding: 4px;
         }
 
@@ -82,6 +84,7 @@
             borde
         } */
     </style>
+
 </head>
 
 <body>
@@ -142,12 +145,12 @@
                     <tr>
                         <td><strong>Invoice Date</strong></td>
                         <td>:</td>
-                        <td>{{ date('M d,Y',strtotime($invoice['invDate']))  }}</td>
+                        <td>{{ date('M d,Y', strtotime($invoice['invDate'])) }}</td>
                     </tr>
                     <tr>
                         <td><strong>Payment Due</strong></td>
                         <td>:</td>
-                        <td>{{ date('M d,Y',strtotime($invoice['invDate'])) }}</td>
+                        <td>{{ date('M d,Y', strtotime($invoice['invDate'])) }}</td>
                     </tr>
                     <tr>
                         <td><strong>Amount Due(INR)</strong></td>
@@ -176,13 +179,13 @@
             @endphp
             @foreach ($invoice['bill_products'] as $item)
                 <tr>
-                    <td align="left"> <b>{{ $item['productName'] }}</b>  </td>
-                    <td align="left"> <span class="fontGrey">{{ $item['hsnCode'] }}</span>  </td>
+                    <td align="left"> <b>{{ $item['productName'] }}</b> </td>
+                    <td align="left"> <span class="fontGrey">{{ $item['hsnCode'] }}</span> </td>
                     <td align="center">{{ $item['quantity'] }}</td>
                     <td align="center">{!! $inrSym !!} {{ $item['taxableAmount'] }}</td>
-                    <td align="center">{!! $inrSym !!} {{ $item['taxableAmount'] }}</td>
+                    <td align="center">{!! $inrSym !!} {{ $item['taxableAmount'] * $item['quantity'] }}</td>
                     @php
-                        $mainTot += $item['taxableAmount'];
+                        $mainTot += $item['taxableAmount'] * $item['quantity'];
                     @endphp
                 </tr>
             @endforeach
@@ -199,6 +202,9 @@
                     <td align="right">CGST 9%</td>
                     <td align="center">{!! $inrSym !!} {{ number_format($invoice['cgstValue'], 2) }}</td>
                 </tr>
+                @php
+                    $mainTot += $invoice['cgstValue'];
+                @endphp
             @endif
             @if ($invoice['sgstValue'] > 0)
                 <tr>
@@ -206,6 +212,9 @@
                     <td align="right">SGST 9%</td>
                     <td align="center">{!! $inrSym !!} {{ number_format($invoice['sgstValue'], 2) }}</td>
                 </tr>
+                @php
+                    $mainTot += $invoice['sgstValue'];
+                @endphp
             @endif
             @if ($invoice['igstValue'] > 0)
                 <tr>
@@ -213,7 +222,11 @@
                     <td align="right">IGST 18%</td>
                     <td align="center">{!! $inrSym !!} {{ number_format($invoice['igstValue'], 2) }}</td>
                 </tr>
+                @php
+                    $mainTot += $invoice['igstValue'];
+                @endphp
             @endif
+
             <tr>
                 <td colspan="3"></td>
                 <td align="right" class="mainTotTr">Total </td>

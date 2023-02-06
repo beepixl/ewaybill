@@ -10,7 +10,7 @@
         @csrf
 
         <div>
-            <livewire:create-invoice action="createInvoice" />
+            <livewire:create-invoice   action="createInvoice"  :invoiceId="request()->invoice" />
         </div>
 
     </form>
@@ -76,8 +76,11 @@
                         data: new FormData(this),
                         dataType: "json",
                         success: function(response) {
+                            //  console.log(response);
                             notyf['success'](response.message);
-                            window.location.href = "{{ route('invoice.index') }}";
+                            // window.location.href = "{{ route('invoice.index') }}";
+
+                            window.open(`${path}/invoice/${response.data}`, '_blank');
                         },
                         error: function(xhr) {
                             const response = xhr.responseJSON;
@@ -90,7 +93,7 @@
             });
 
             function updateTbl(ele, type = null) {
-                
+
                 setTimeout(() => {
 
                     if (type == 1) {
@@ -125,8 +128,8 @@
                         dataType: "json",
                         success: function(response) {
                             $('.productsPage').html(response.data);
-                           // $('#maiForm')[0].reset();
-                          // console.log($('input[id="notes"]'));
+                            // $('#maiForm')[0].reset();
+                            // console.log($('input[id="notes"]'));
                             $('select[id="productId"]').val(null).trigger('change');
                             $('select[id="unit"]').val(null).trigger('change');
                             $('.productPrice').val('');
@@ -138,11 +141,39 @@
                         error: function(xhr) {
                             const response = xhr.responseJSON;
                             notyf['error'](response.message);
-                           // location.hash = 'invSection'
+                            // location.hash = 'invSection'
                         }
                     });
 
                 }, 200);
+            }
+
+            function removeItem(itemId) {
+              //  alert(itemId);
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('removeItem') }}",
+                    headers: {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                    },
+                    data: {
+                        productId: itemId,
+                    },
+                    dataType: "json",
+                    success: function(response) {
+                        console.log(response);
+                        $('.productsPage').html(response.data);
+                        notyf['success'](response.message);
+                    },
+                    error: function(xhr) {
+                        const response = xhr.responseJSON;
+                        notyf['error'](response.message);
+                        // location.hash = 'invSection'
+                    }
+                });
+
+
             }
         </script>
     @endpush

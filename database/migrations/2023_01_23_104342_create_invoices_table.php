@@ -57,6 +57,7 @@ return new class extends Migration
             $table->date('transDocDate')->nullable();;;
             $table->string('vehicleNo', 15)->nullable();;;
             $table->string('vehicleType')->nullable();
+            $table->string('status')->default(0)->comment('0 = pending,1 = paid,2 = partial')->nullable();
             $table->timestamps();
         });
     }

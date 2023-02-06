@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Table;
 
+use App\Models\Product;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Traits\WithDataTable;
@@ -42,6 +43,8 @@ class InvoiceList extends Component
             ]);
             return;
         }
+
+        Product::where('invID',$id)->delete();
 
         $data->delete();
         $this->emit("deleteResult", [

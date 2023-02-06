@@ -33,7 +33,7 @@ class InvoiceController extends Controller
         // $pdf = Pdf::loadView('admin.invoice.invoice-pdf');
 
         // return $pdf->stream('invoice.pdf');
-  
+
 
         return view('admin.invoice.create');
     }
@@ -53,6 +53,7 @@ class InvoiceController extends Controller
             'invNo' => 'required|unique:invoices',
             'invDate' => 'required|date',
             'supplyType' => 'required',
+            'subSupplyType' => 'required',
             'docType' => 'required',
         ]);
 
@@ -68,6 +69,7 @@ class InvoiceController extends Controller
                 $customer =   Customer::find($customerId);
                 $setting = settingData();
                 $products = Cache::get("$customerId-invProducts");
+
                 $productsSubTot = $products->sum('subTot');
 
                 $productsigstValue = 0;
@@ -82,6 +84,7 @@ class InvoiceController extends Controller
                 }
 
                 $data = $request->all();
+                $data['invNo'] = settingData()->invNoStart  + Invoice::count();
                 $data['totalValue'] = $productsSubTot;
                 $data['cgstValue'] = $productscgstValue;
                 $data['sgstValue'] = $productssGstVal;
@@ -139,7 +142,7 @@ class InvoiceController extends Controller
             return comJsRes(true, $e->getMessage());
         }
 
-        return comJsRes(false, 'invoice Created Successfully');
+        return comJsRes(false, 'invoice Created Successfully', $inv->id);
     }
 
     /**
@@ -151,12 +154,25 @@ class InvoiceController extends Controller
     public function show($id)
     {
 
-        $invoice =  Invoice::with('billProducts')->find($id)->toArray();
-        // dd( storage_path('fonts/pdf-fonts.ttf'));
-// return view('admin.invoice.invoice-pdf', ['invoice' => $invoice, 'setting' => settingData()]);
+        $invoice =  Invoice::with('billProducts', 'customer')->find($id)->toArray();
+
+        $status = 'Pending';
+
+        if ($invoice['status'] == 0) {
+            $status =  'Pending';
+        } elseif ($invoice['status'] == 1) {
+            $status =    'Paid';
+        } else {
+            $status =  'Partial';
+        }
+
         // dd($invoice);
 
-        $pdf = Pdf::loadView('admin.invoice.invoice-pdf', ['invoice' => $invoice, 'setting' => settingData()]);
+        // dd( storage_path('fonts/pdf-fonts.ttf'));
+        // return view('admin.invoice.invoice-pdf', ['invoice' => $invoice, 'setting' => settingData()]);
+        // dd($invoice);
+
+        $pdf = Pdf::loadView('admin.invoice.invoice-pdf', ['invoice' => $invoice, 'setting' => settingData(), 'status' => $status]);
         return $pdf->stream('invoice.pdf');
     }
 
@@ -166,9 +182,11 @@ class InvoiceController extends Controller
      * @param  \App\Models\Invoice  $invoice
      * @return \Illuminate\Http\Response
      */
-    public function edit(Invoice $invoice)
+    public function edit( $id)
     {
-        //
+
+     // $editInvoice = Invoice::with('billProducts')->find($id);
+        return view('admin.invoice.create');
     }
 
     /**

@@ -11,31 +11,29 @@
                             <select name="customerId" id=""
                                 class="mt-1 block w-full form-control shadow-none select2">
                                 <option value="">Select Customer</option>
-                                @foreach (Cache::get('customers') as $customer)
-                                    <option value="{{ $customer->id }}"
-                                        {{ Session::has('invSelectedCustomer') ? (Session::get('invSelectedCustomer') == $customer->id ? 'selected' : 0) : 0 }}>
-                                        {{ $customer->toTrdName }}</option>
+                                @foreach ($customers as $customer)
+                                    <option value="{{ $customer['id'] }}" @isset($invoice) {{ $invoice->customerId == $customer['id'] ? 'selected'  : '' }}  @endisset > {{ $customer['toTrdName'] }}</option>
                                 @endforeach
                             </select>
                         </div>
 
                         <div class="form-group">
                             <x-jet-label for="invNo" value="{{ __('Invoice No') }}" />
-                            <input type="number" name="invNo" class="mt-1 block w-full form-control shadow-none" value="{{ $invNo }}" id="invNo">
+                            <input type="number" name="invNo" class="mt-1 block w-full form-control shadow-none" readonly @isset($invoice) value="{{ $invoice->invNo }}" @else value="{{ $invNo }}" @endif id="invNo">
                         </div>
 
                         <div class="form-group">
                             <x-jet-label for="name" value="{{ __('Invoice Date') }}" />
                             <input type="date" name="invDate" class="mt-1 block w-full form-control shadow-none"
-                                value="{{ date('Y-m-d') }}" id="invDate">
+                            @isset($invoice) value="{{ $invoice->invDate }}" @else value="{{ date('Y-m-d') }}" @endisset id="invDate">
                         </div>
 
                         <div class="form-group">
                             <x-jet-label for="supplyType" value="{{ __('Select Supply Type') }}" />
                             <select name="supplyType" class="mt-1 block w-full form-control shadow-none">
                                 <option value="">Select Supply Type</option>
-                                <option value="I">Inward</option>
-                                <option value="O">Outward</option>
+                                <option value="I" @isset($invoice) {{ $invoice->supplyType == 'I' ? 'selected' : '' }}  @endisset>Inward</option>
+                                <option value="O" @isset($invoice)  {{ $invoice->supplyType == 'O' ? 'selected' : '' }} @endisset > Outward</option>
                             </select>
                         </div>
 
@@ -43,49 +41,48 @@
                             <x-jet-label for="subSupplyType" value="{{ __('Select Sub Supply Type') }}" />
                             <select name="subSupplyType" class="mt-1 block w-full form-control shadow-none">
                                 <option value="">Select Sub Supply Type</option>
-                                <option value="1">Supply</option>
-                                <option value="2">Import</option>
-                                <option value="3">Export</option>
-                                <option value="4">Job Work</option>
-                                <option value="5">For Own Use</option>
-                                <option value="6">Job work Returns</option>
-                                <option value="7">Sales Return</option>
-                                <option value="8">Others</option>
-                                <option value="9">SKD/CKD/Lots</option>
-                                <option value="10">Line Sales</option>
-                                <option value="11">Recipient Not Known</option>
-                                <option value="12">Exhibition or Fairs</option>
+                                <option value="1" @isset($invoice) {{ $invoice->subSupplyType == 1 ? 'selected' : '' }}  @endisset >Supply</option>
+                                <option value="2" @isset($invoice) {{ $invoice->subSupplyType == 2 ? 'selected' : '' }}  @endisset >Import</option>
+                                <option value="3" @isset($invoice) {{ $invoice->subSupplyType == 3 ? 'selected' : '' }}  @endisset >Export</option>
+                                <option value="4" @isset($invoice) {{ $invoice->subSupplyType == 4 ? 'selected' : '' }}  @endisset >Job Work</option>
+                                <option value="5" @isset($invoice) {{ $invoice->subSupplyType == 5 ? 'selected' : '' }}  @endisset >For Own Use</option>
+                                <option value="6" @isset($invoice) {{ $invoice->subSupplyType == 6 ? 'selected' : '' }}  @endisset >Job work Returns</option>
+                                <option value="7" @isset($invoice) {{ $invoice->subSupplyType == 7 ? 'selected' : '' }}  @endisset >Sales Return</option>
+                                <option value="8" @isset($invoice) {{ $invoice->subSupplyType == 8 ? 'selected' : '' }}  @endisset >Others</option>
+                                <option value="9" @isset($invoice) {{ $invoice->subSupplyType == 9 ? 'selected' : '' }}  @endisset >SKD/CKD/Lots</option>
+                                <option value="10" @isset($invoice) {{ $invoice->subSupplyType == 10 ? 'selected' : '' }}  @endisset >Line Sales</option>
+                                <option value="11" @isset($invoice) {{ $invoice->subSupplyType == 11 ? 'selected' : '' }}  @endisset >Recipient Not Known</option>
+                                <option value="12" @isset($invoice) {{ $invoice->subSupplyType == 12 ? 'selected' : '' }}  @endisset >Exhibition or Fairs</option>
                             </select>
                         </div>
 
                         <div class="form-group">
                             <x-jet-label for="subSupplyDesc" value="{{ __('Sub Supply Desc') }}" />
-                            <textarea name="subSupplyDesc" id="" class="mt-1 block w-full form-control shadow-none" cols="5"
-                                rows="1"></textarea>
+                            <textarea name="subSupplyDesc" id="" class="mt-1 block w-full form-control shadow-none" cols="5" rows="1">@isset($invoice) {{ $invoice->subSupplyDesc }} @endisset</textarea>
                         </div>
 
                         <div class="form-group">
                             <x-jet-label for="docType" value="{{ __('Select Document Type') }}" />
                             <select name="docType" class="mt-1 block w-full form-control shadow-none">
                                 <option value="">Select Document Type</option>
-                                <option value="INV">Tax Invoice</option>
-                                <option value="BIL">Bill of Supply</option>
-                                <option value="BOE">Bill of Entry</option>
-                                <option value="CHL">Delivery Challan</option>
-                                <option value="OTH">Others</option>
+                                <option value="INV"  @isset($invoice) {{ $invoice->subSupplyType == 'INV' ? 'selected' : '' }}  @endisset >Tax Invoice</option>
+                                <option value="BIL"  @isset($invoice) {{ $invoice->subSupplyType == 'BIL' ? 'selected' : '' }}  @endisset >Bill of Supply</option>
+                                <option value="BOE"  @isset($invoice) {{ $invoice->subSupplyType == 'BOE' ? 'selected' : '' }}  @endisset >Bill of Entry</option>
+                                <option value="CHL"  @isset($invoice) {{ $invoice->subSupplyType == 'CHL' ? 'selected' : '' }}  @endisset >Delivery Challan</option>
+                                <option value="OTH"  @isset($invoice) {{ $invoice->subSupplyType == 'OTH' ? 'selected' : '' }}  @endisset >Others</option>
                             </select>
                         </div>
 
                         <div class="form-group">
                             <x-jet-label for="docNo" value="{{ __('Document No') }}" />
-                            <x-jet-input type="text" class="mt-1 block w-full form-control shadow-none"
+                            <x-jet-input type="text" class="mt-1 block w-full form-control shadow-none"  @isset($invoice) value="{{ $invoice->docNo }}"  @endisset 
                                 name="docNo" />
                         </div>
 
                         <div class="form-group">
                             <x-jet-label for="docDate" value="{{ __('Document Date') }}" />
                             <x-jet-input type="date" class="mt-1 block w-full form-control shadow-none"
-                                value="{{ date('Y-m-d') }}" name="docDate" />
+                            @isset($invoice) value="{{ $invoice->docDate }}"  @else value="{{ date('Y-m-d') }}"  @endisset name="docDate" />
                         </div>
 
                         <div class="form-group">
@@ -113,7 +110,7 @@
 
                         <div class="form-group">
                             <x-jet-label for="vehicleNo" value="{{ __('Vehicle No') }}" />
-                            <x-jet-input type="text" class="mt-1 block w-full form-control shadow-none"
+                            <x-jet-input type="text" class="mt-1 block w-full form-control shadow-none"  @isset($invoice) value="{{ $invoice->vehicleNo }}"  @endisset 
                                 name="vehicleNo" />
                         </div>
 
