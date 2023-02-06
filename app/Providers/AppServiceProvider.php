@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 
@@ -25,6 +26,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
 
-        Config::set('app.name', settingData()->appName ?? 'Rajeshwari International');
+        Config::set('app.name', settingData()->appName ?? strtoupper('Rajeshwari International'));
+        Config::set('app.timezone', settingData()->timezone ?? 'UTC');
+
     }
 }

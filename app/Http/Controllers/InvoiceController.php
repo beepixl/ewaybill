@@ -40,6 +40,7 @@ class InvoiceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
     public function store(Request $request)
     {
         // 
@@ -143,11 +144,15 @@ class InvoiceController extends Controller
      * @param  \App\Models\Invoice  $invoice
      * @return \Illuminate\Http\Response
      */
-    public function show(Invoice $invoice)
+    public function show($id)
     {
-       // dd($invoice);
 
-        $pdf = Pdf::loadView('admin.invoice.invoice-pdf',['invoice'=> $invoice->toArray(),'setting'=>settingData()]);
+        $invoice =  Invoice::with('billProducts')->find($id)->toArray();
+        // dd( storage_path('fonts/pdf-fonts.ttf'));
+// return view('admin.invoice.invoice-pdf', ['invoice' => $invoice, 'setting' => settingData()]);
+        // dd($invoice);
+
+        $pdf = Pdf::loadView('admin.invoice.invoice-pdf', ['invoice' => $invoice, 'setting' => settingData()]);
         return $pdf->stream('invoice.pdf');
     }
 

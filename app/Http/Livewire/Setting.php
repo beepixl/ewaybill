@@ -15,14 +15,14 @@ class Setting extends Component
     protected function getRules()
     {
         $rules =  [
-            'setting.fromGstin' => 'required|numeric',
-            'setting.fromTrdName' => 'required',
-            'setting.fromAddr1' => 'required',
-            'setting.fromAddr2' => 'required',
-            'setting.fromPlace' => 'required',
-            'setting.fromPincode' => 'required|numeric',
-            'setting.actFromStateCode' => 'required|numeric',
-            'setting.fromStateCode' => 'required',
+            'setting.appName' => 'required',
+            'setting.timezone' => 'required',
+            'setting.pColor' => 'required',
+            'setting.sColor' => 'required',
+            'setting.appEnv' => 'required',
+            'setting.appDebug' => 'required',
+            'setting.invPrefix' => 'required|string',
+            'setting.invNoStart' => 'required|numeric',
         ];
 
         return  $rules;
@@ -32,7 +32,8 @@ class Setting extends Component
     {
         $this->resetErrorBag();
         $this->validate();
-        dd($this->setting->toArray());
+
+       // dd($this->setting->toArray());
         ModelsSetting::updateOrCreate(['id' => 1],$this->setting->toArray());
 
         $this->emit('saved');
@@ -52,4 +53,6 @@ class Setting extends Component
     {
         return view('livewire.setting');
     }
+    
 }
+
