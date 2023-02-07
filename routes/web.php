@@ -45,5 +45,6 @@ Route::group(["middleware" => ['auth:sanctum', 'verified']], function () {
     Route::resource('invoice', InvoiceController::class)->only(['index','show','create','edit','update','store']);
     Route::post('addItem', [ProductMasterController::class, "addItem"])->name('addToCart');
     Route::post('removeItem', [ProductMasterController::class, "removeItem"])->name('removeItem');
+    Route::post('reloadProductsTbl', [ProductMasterController::class, "reloadProductsTbl"])->name('reloadProductsTbl');
 
 });

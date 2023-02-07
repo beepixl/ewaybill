@@ -9,9 +9,6 @@ use Illuminate\Support\Facades\Session;
 
 class InvoiceTempProduct extends Component
 {
-    
-
-    
 
     public function render()
     {
@@ -22,7 +19,7 @@ class InvoiceTempProduct extends Component
         if (Cache::has("$customerId-invProducts")) {
             $products = Cache::get("$customerId-invProducts");
         }
-
+        
         return view('livewire.invoice-temp-product', ['products' => $products->all()]);
     }
 }

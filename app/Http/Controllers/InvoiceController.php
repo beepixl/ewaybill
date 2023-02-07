@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Session;
 
 class InvoiceController extends Controller
 {
@@ -50,7 +51,7 @@ class InvoiceController extends Controller
         // 
         $validator = Validator::make($request->all(), [
             'customerId' => 'required|numeric',
-            'invNo' => 'required|unique:invoices',
+            'invNo' => "required|unique:invoices" . $request->type == 'update' ? ',' . $request->invId : '',
             'invDate' => 'required|date',
             'supplyType' => 'required',
             'subSupplyType' => 'required',
@@ -63,6 +64,12 @@ class InvoiceController extends Controller
         try {
 
             $customerId = $request->customerId;
+            $type = $request->type;
+            $invId = $request->invId;
+            $request->request->remove('type');
+            $request->request->remove('invId');
+
+            //  dd(Cache::get("$customerId-invProducts"));
 
             if (Cache::has("$customerId-invProducts")) {
 
@@ -112,7 +119,16 @@ class InvoiceController extends Controller
 
                 // dd($data);
 
-                $inv  =  Invoice::create($data);
+                if (is_numeric($invId)) {
+                    $inv  =  Invoice::find($invId);
+                    $orgInv = $inv;
+                    $inv->update($data);
+                    Product::where('invID',$invId)->delete();;
+                } else {
+                    $inv  =  Invoice::create($data);
+                }
+
+               // dd($orgInv);
 
                 foreach ($products as $product) {
                     $newProduct =  new Product();
@@ -182,11 +198,36 @@ class InvoiceController extends Controller
      * @param  \App\Models\Invoice  $invoice
      * @return \Illuminate\Http\Response
      */
-    public function edit( $id)
+    public function edit($id)
     {
 
-     // $editInvoice = Invoice::with('billProducts')->find($id);
-        return view('admin.invoice.create');
+        $invoice =  Invoice::with('billProducts')->find($id);
+        Session::put('invSelectedCustomer', $invoice->customerId);
+        $customerId = Session::get('invSelectedCustomer');
+
+        if (Cache::has("$customerId-invProducts")) {
+            Cache::delete("$customerId-invProducts");
+        }
+
+        if (isset($invoice->billProducts) && count($invoice->billProducts) > 0) {
+            foreach ($invoice->billProducts as $product) {
+                $subTot = $product->taxableAmount * $product->quantity;
+                if (Cache::has("$customerId-invProducts")) {
+                    $customerProducts = Cache::get("$customerId-invProducts");
+                    $customerProducts->put($product->productId, ['productId' => $product->productId, 'productName' => $product->productName, 'productPrice' => $product->taxableAmount, 'qty' => $product->quantity, 'unit' => $product->qtyUnit, 'notes' => $product->productNotes, 'hsnCode' => $product->hsnCode, 'cgst' => $product->cgstRate, 'sgst' => $product->sgstRate, 'igst' => $product->igstRate, 'subTot' => ($product->taxableAmount * $product->quantity), 'cGstVal' => (($subTot * $product->cgstRate) / 100), 'sGstVal' => (($subTot * $product->sgstRate) / 100), 'iGstVal' => (($subTot * $product->igstRate) / 100)]);
+                    Cache::put("$customerId-invProducts", $customerProducts, 6000);
+                } else {
+                    $customerProducts = collect();
+                    $customerProducts->put($product->productId, ['productId' => $product->productId, 'productName' => $product->productName, 'productPrice' => $product->taxableAmount, 'qty' => $product->quantity, 'unit' => $product->qtyUnit, 'notes' => $product->productNotes, 'hsnCode' => $product->hsnCode, 'cgst' => $product->cgstRate, 'sgst' => $product->sgstRate, 'igst' => $product->igstRate, 'subTot' => ($product->taxableAmount * $product->quantity), 'cGstVal' => (($subTot * $product->cgstRate) / 100), 'sGstVal' => (($subTot * $product->sgstRate) / 100), 'iGstVal' => (($subTot * $product->igstRate) / 100)]);
+                    Cache::put("$customerId-invProducts", $customerProducts, 6000);
+                }
+            }
+        }
+
+        // dd(Cache::get("$customerId-invProducts"));
+
+        // $editInvoice = Invoice::with('billProducts')->find($id);
+        return view('admin.invoice.create', ['invoice' => $invoice]);
     }
 
     /**

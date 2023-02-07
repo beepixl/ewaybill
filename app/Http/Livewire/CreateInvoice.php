@@ -36,7 +36,6 @@ class CreateInvoice extends Component
 
     public function setCustomerId($id, $productId)
     {
-
         if ($id !== 0) {
             Session::put('invSelectedCustomer', $id);
             $customerId = Session::get('invSelectedCustomer');
@@ -81,8 +80,14 @@ class CreateInvoice extends Component
     public function mount()
     {
         if (!$this->invoice && $this->invoiceId) {
+            //dd(Cache::get("2-invProducts"));
             $this->invoice = Invoice::with('billProducts')->find($this->invoiceId);
-
+        } else {
+            $customerId = Session::get('invSelectedCustomer');
+            if (Cache::has("$customerId-invProducts")) {
+                Cache::delete("$customerId-invProducts");
+            }
+            //  Artisan::call('optimize:clear');
         }
 
         // if (!Cache::has('customers')) {
@@ -98,7 +103,7 @@ class CreateInvoice extends Component
     public function render()
     {
 
-        Artisan::call('optimize:clear');
+        //
         return view('livewire.create-invoice');
     }
 }

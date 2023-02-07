@@ -10,7 +10,7 @@
         @csrf
 
         <div>
-            <livewire:create-invoice   action="createInvoice"  :invoiceId="request()->invoice" />
+            <livewire:create-invoice action="createInvoice" :invoiceId="request()->invoice" />
         </div>
 
     </form>
@@ -22,7 +22,28 @@
             $(document).ready(function() {
 
                 $('select[name="customerId"]').on('change', function(e) {
-                    livewire.emit('setCustomerId', e.target.value, 0)
+                    livewire.emit('setCustomerId', e.target.value, 0);
+                    
+                    setTimeout(() => {
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ route('reloadProductsTbl') }}",
+                            headers: {
+                                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                            },
+                            dataType: "json",
+                            success: function(response) {
+                                $('.productsPage').html(response.data);
+                                // notyf['success'](response.message);
+                            },
+                            error: function(xhr) {
+                                const response = xhr.responseJSON;
+                                notyf['error'](response.message);
+                                // location.hash = 'invSection'
+                            }
+                        });
+                    }, 300)
+
                 });
 
                 $('select[id="productId"]').select2({
@@ -89,7 +110,6 @@
                         }
                     });
                 });
-
             });
 
             function updateTbl(ele, type = null) {
@@ -104,7 +124,7 @@
                         var unit = $('select[name="unit"]').val();
                         //  console.log(productId);
                     } else {
-                        console.log('else');
+                        //console.log('else');
                         var productId = $(ele).attr('productId');
                         var price = $(ele).attr('productPrice');
                         var qty = $(ele).val();
@@ -149,7 +169,7 @@
             }
 
             function removeItem(itemId) {
-              //  alert(itemId);
+                //  alert(itemId);
 
                 $.ajax({
                     type: "POST",
