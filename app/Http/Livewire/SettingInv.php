@@ -15,7 +15,7 @@ class SettingInv extends Component
     protected function getRules()
     {
         $rules =  [
-            'setting.fromGstin' => 'required|numeric',
+            'setting.fromGstin' => 'required',
             'setting.fromTrdName' => 'required',
             'setting.fromAddr1' => 'required',
             'setting.fromAddr2' => 'required',

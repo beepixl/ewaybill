@@ -2,6 +2,9 @@
 
 namespace App\Traits;
 
+use App\Models\Banks;
+use App\Models\Invoice;
+
 
 trait WithDataTable
 {
@@ -79,7 +82,7 @@ trait WithDataTable
                 ];
                 break;
             case 'invoices':
-                $invoices = $this->model::orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
+                $invoices = $this->model::with('customer', 'payments')->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage);
 
                 return [
@@ -95,7 +98,41 @@ trait WithDataTable
                     ])
                 ];
                 break;
+            case 'invoicePayments':
+                $payments = $this->model::where('order_id', $this->orderId)->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
+                    ->paginate($this->perPage);
 
+                return [
+                    "view" => 'livewire.table.invoice-payments-list',
+                    "payments" => $payments,
+                    "data" => array_to_object([
+                        'showBtn' => number_format($payments->sum('amount'), 2) >= number_format(Invoice::find($this->orderId)->totInvValue,2) ? false : true,
+                        'href' => [
+                            'create_new' => route('inv-payment.create', ['invId' => $this->orderId]),
+                            'create_new_text' => 'Add Payment',
+                            'export' => '#',
+                            'export_text' => 'Export'
+                        ]
+                    ])
+                ];
+                break;
+                case 'banks':
+                    $banks = Banks::orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
+                        ->paginate($this->perPage);
+    
+                    return [
+                        "view" => 'livewire.table.banks-list',
+                        "banks" => $banks,
+                        "data" => array_to_object([
+                            'href' => [
+                                'create_new' => route('banks.create'),
+                                'create_new_text' => 'Add Bank',
+                                'export' => '#',
+                                'export_text' => 'Export'
+                            ]
+                        ])
+                    ];
+                    break;
             default:
                 # code...
                 break;

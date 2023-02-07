@@ -1,6 +1,7 @@
 <x-app-layout>
+    
     <x-slot name="header_content">
-        <h1>{{ __('cruds.create') }} {{ __('cruds.new') }} {{ __('Invoice') }}</h1>
+        <h1> @if(Route::currentRouteName() == 'showInv') {{ __('View') }} @elseif(Route::currentRouteName() == 'invoice.edit') {{ __('Edit') }}  @else {{ __('cruds.create') }} {{ __('cruds.new') }} @endif {{ __('Invoice') }}</h1>
         <div class="section-header-breadcrumb">
             {{ Breadcrumbs::render() }}
         </div>
@@ -8,6 +9,8 @@
 
     <form id="invoiceForm" method="post">
         @csrf
+        <input type="hidden" id="redirectType">
+
 
         <div>
             <livewire:create-invoice action="createInvoice" :invoiceId="request()->invoice" />
@@ -23,7 +26,7 @@
 
                 $('select[name="customerId"]').on('change', function(e) {
                     livewire.emit('setCustomerId', e.target.value, 0);
-                    
+                    console.log('called');
                     setTimeout(() => {
                         $.ajax({
                             type: "POST",
@@ -101,7 +104,12 @@
                             notyf['success'](response.message);
                             // window.location.href = "{{ route('invoice.index') }}";
 
-                            window.open(`${path}/invoice/${response.data}`, '_blank');
+                            if ($('input[id="redirectType"]').val() == 'print') {
+                                window.open(`${path}/invoice/${response.data}`, '_blank');
+                                window.location.href = `${path}/invoice`;
+                            } else
+                                window.location.href = `${path}/invoice`;
+
                         },
                         error: function(xhr) {
                             const response = xhr.responseJSON;
@@ -110,6 +118,7 @@
                         }
                     });
                 });
+
             });
 
             function updateTbl(ele, type = null) {
@@ -121,7 +130,7 @@
                         var price = $('input[id="pPrice"]').val();
                         var qty = $('input[id="qty"]').val();
                         var notes = $('input[id="notes"]').val();
-                        var unit = $('select[name="unit"]').val();
+                        var unit = $('select[id="unit"]').val();
                         //  console.log(productId);
                     } else {
                         //console.log('else');
@@ -193,6 +202,17 @@
                     }
                 });
 
+
+            }
+
+            function submitInvForm(type = null) {
+                $('#invoiceForm').submit();
+
+                if (type == 'print') {
+                    $('input[id="redirectType"]').val('print');
+                } else {
+                    $('input[id="redirectType"]').val('back');
+                }
 
             }
         </script>

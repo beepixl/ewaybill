@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use App\Models\Invoice;
+use App\Models\InvoicePayments;
 use App\Models\Product;
 use Exception;
 use Illuminate\Http\Request;
@@ -48,7 +49,7 @@ class InvoiceController extends Controller
 
     public function store(Request $request)
     {
-        // 
+
         $validator = Validator::make($request->all(), [
             'customerId' => 'required|numeric',
             'invNo' => "required|unique:invoices" . $request->type == 'update' ? ',' . $request->invId : '',
@@ -123,12 +124,12 @@ class InvoiceController extends Controller
                     $inv  =  Invoice::find($invId);
                     $orgInv = $inv;
                     $inv->update($data);
-                    Product::where('invID',$invId)->delete();;
+                    Product::where('invID', $invId)->delete();;
                 } else {
                     $inv  =  Invoice::create($data);
                 }
 
-               // dd($orgInv);
+                // dd($orgInv);
 
                 foreach ($products as $product) {
                     $newProduct =  new Product();
@@ -171,7 +172,7 @@ class InvoiceController extends Controller
     {
 
         $invoice =  Invoice::with('billProducts', 'customer')->find($id)->toArray();
-
+        $paidAmt =  InvoicePayments::where('order_id', $id)->sum('amount');
         $status = 'Pending';
 
         if ($invoice['status'] == 0) {
@@ -182,13 +183,16 @@ class InvoiceController extends Controller
             $status =  'Partial';
         }
 
+        $svg = view('admin.invoice.payments.signimg')->render();
+        $sign = '<img src="data:image/svg+xml;base64,' . base64_encode($svg) . '"  width="350"  />';
+
         // dd($invoice);
 
         // dd( storage_path('fonts/pdf-fonts.ttf'));
-        // return view('admin.invoice.invoice-pdf', ['invoice' => $invoice, 'setting' => settingData()]);
+       // return view('admin.invoice.invoice-pdf', ['invoice' => $invoice, 'setting' => settingData(), 'status' => $status, 'paidAmt' => $paidAmt,'sign'=>$sign]);
         // dd($invoice);
 
-        $pdf = Pdf::loadView('admin.invoice.invoice-pdf', ['invoice' => $invoice, 'setting' => settingData(), 'status' => $status]);
+        $pdf = Pdf::loadView('admin.invoice.invoice-pdf', ['invoice' => $invoice, 'setting' => settingData(), 'status' => $status, 'paidAmt' => $paidAmt,'sign'=>$sign]);
         return $pdf->stream('invoice.pdf');
     }
 
@@ -251,5 +255,37 @@ class InvoiceController extends Controller
     public function destroy(Invoice $invoice)
     {
         //
+    }
+
+    public function showInv($id)
+    {
+        $invoice =  Invoice::with('billProducts')->find($id);
+
+        if (!isset($invoice))
+            return back();
+
+        Session::put('invSelectedCustomer', $invoice->customerId);
+        $customerId = Session::get('invSelectedCustomer');
+
+        if (Cache::has("$customerId-invProducts")) {
+            Cache::delete("$customerId-invProducts");
+        }
+
+        if (isset($invoice->billProducts) && count($invoice->billProducts) > 0) {
+            foreach ($invoice->billProducts as $product) {
+                $subTot = $product->taxableAmount * $product->quantity;
+                if (Cache::has("$customerId-invProducts")) {
+                    $customerProducts = Cache::get("$customerId-invProducts");
+                    $customerProducts->put($product->productId, ['productId' => $product->productId, 'productName' => $product->productName, 'productPrice' => $product->taxableAmount, 'qty' => $product->quantity, 'unit' => $product->qtyUnit, 'notes' => $product->productNotes, 'hsnCode' => $product->hsnCode, 'cgst' => $product->cgstRate, 'sgst' => $product->sgstRate, 'igst' => $product->igstRate, 'subTot' => ($product->taxableAmount * $product->quantity), 'cGstVal' => (($subTot * $product->cgstRate) / 100), 'sGstVal' => (($subTot * $product->sgstRate) / 100), 'iGstVal' => (($subTot * $product->igstRate) / 100)]);
+                    Cache::put("$customerId-invProducts", $customerProducts, 6000);
+                } else {
+                    $customerProducts = collect();
+                    $customerProducts->put($product->productId, ['productId' => $product->productId, 'productName' => $product->productName, 'productPrice' => $product->taxableAmount, 'qty' => $product->quantity, 'unit' => $product->qtyUnit, 'notes' => $product->productNotes, 'hsnCode' => $product->hsnCode, 'cgst' => $product->cgstRate, 'sgst' => $product->sgstRate, 'igst' => $product->igstRate, 'subTot' => ($product->taxableAmount * $product->quantity), 'cGstVal' => (($subTot * $product->cgstRate) / 100), 'sGstVal' => (($subTot * $product->sgstRate) / 100), 'iGstVal' => (($subTot * $product->igstRate) / 100)]);
+                    Cache::put("$customerId-invProducts", $customerProducts, 6000);
+                }
+            }
+        }
+
+        return view('admin.invoice.create', ['invoice' => $invoice]);
     }
 }

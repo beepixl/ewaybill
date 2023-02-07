@@ -155,7 +155,7 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
                     <tr>
                         <td><strong>Amount Due(INR)</strong></td>
                         <td>:</td>
-                        <td></td>
+                        <td>{!! $inrSym !!} {{ number_format($invoice['totInvValue'] - $paidAmt, 2) }}</td>
                     </tr>
                 </table>
             </td>
@@ -170,7 +170,7 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
                 <th>HSN</th>
                 <th>Quantity</th>
                 <th>Unit Price</th>
-                <th>Total</th>
+                <th align="right">Total</tha>
             </tr>
         </thead>
         <tbody class="borderBottom mainBody">
@@ -179,11 +179,16 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
             @endphp
             @foreach ($invoice['bill_products'] as $item)
                 <tr>
-                    <td align="left"> <b>{{ $item['productName'] }}</b> </td>
+                    <td align="left"> <b>{{ $item['productName'] }}</b> <br>
+                        @isset($item['productNotes']) <span class="fontGrey"> ({{ $item['productNotes'] }}) </span> @endif
+                    </td>
                     <td align="left"> <span class="fontGrey">{{ $item['hsnCode'] }}</span> </td>
-                    <td align="center">{{ $item['quantity'] }}</td>
+                    <td align="center">{{ $item['quantity'] }} @isset($item['qtyUnit'])
+                            ({{ $item['qtyUnit'] }})
+                        @endisset
+                    </td>
                     <td align="center">{!! $inrSym !!} {{ $item['taxableAmount'] }}</td>
-                    <td align="center">{!! $inrSym !!} {{ $item['taxableAmount'] * $item['quantity'] }}</td>
+                    <td align="right">{!! $inrSym !!} {{ $item['taxableAmount'] * $item['quantity'] }}</td>
                     @php
                         $mainTot += $item['taxableAmount'] * $item['quantity'];
                     @endphp
@@ -194,13 +199,13 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
             <tr>
                 <td colspan="3"></td>
                 <td align="right">Subtotal </td>
-                <td align="center">{!! $inrSym !!} {{ number_format($mainTot, 2) }}</td>
+                <td align="right">{!! $inrSym !!} {{ number_format($mainTot, 2) }}</td>
             </tr>
             @if ($invoice['cgstValue'] > 0)
                 <tr>
                     <td colspan="3"></td>
                     <td align="right">CGST 9%</td>
-                    <td align="center">{!! $inrSym !!} {{ number_format($invoice['cgstValue'], 2) }}</td>
+                    <td align="right">{!! $inrSym !!} {{ number_format($invoice['cgstValue'], 2) }}</td>
                 </tr>
                 @php
                     $mainTot += $invoice['cgstValue'];
@@ -210,7 +215,7 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
                 <tr>
                     <td colspan="3"></td>
                     <td align="right">SGST 9%</td>
-                    <td align="center">{!! $inrSym !!} {{ number_format($invoice['sgstValue'], 2) }}</td>
+                    <td align="right">{!! $inrSym !!} {{ number_format($invoice['sgstValue'], 2) }}</td>
                 </tr>
                 @php
                     $mainTot += $invoice['sgstValue'];
@@ -220,7 +225,7 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
                 <tr>
                     <td colspan="3"></td>
                     <td align="right">IGST 18%</td>
-                    <td align="center">{!! $inrSym !!} {{ number_format($invoice['igstValue'], 2) }}</td>
+                    <td align="right">{!! $inrSym !!} {{ number_format($invoice['igstValue'], 2) }}</td>
                 </tr>
                 @php
                     $mainTot += $invoice['igstValue'];
@@ -230,47 +235,67 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
             <tr>
                 <td colspan="3"></td>
                 <td align="right" class="mainTotTr">Total </td>
-                <td align="center" class="gray mainTotTr">{!! $inrSym !!} {{ number_format($mainTot, 2) }}</td>
+                <td align="right" class="gray mainTotTr">{!! $inrSym !!} {{ number_format($mainTot, 2) }}</td>
             </tr>
         </tfoot>
     </table>
+    <table width="100%">
+        <tr>
+            <td width="90%">
+                <table width="50%" style="padding-top: 70px;">
+                    <tr>
+                        <td valign="top"><strong>Notes/Terms</strong></td>
+                    </tr>
+                    <tr>
+                        <td align="left">
+                            <span class="fontGrey">INCOTERMS :- Factory Delivered Rajkot</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left">
+                            <span class="fontGrey">Please Make Payments To :- </span>
+                        </td>
+                        <td align="right">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left">
+                            <span class="fontGrey">A/C Name - {{ config('app.name') }}</span>
+                        </td>
 
-    <table width="100%" style="padding-top: 70px;">
-        <tr>
-            <td valign="top"><strong>Notes/Terms</strong></td>
-        </tr>
-        <tr>
-            <td align="left">
-                <span class="fontGrey">INCOTERMS :- Factory Delivered Rajkot</span>
-            </td>
-        </tr>
-        <tr>
-            <td align="left">
-                <span class="fontGrey">Please Make Payments To :- </span>
-            </td>
-            <td align="right">For. {{ config('app.name') }}</td>
-        </tr>
-        <tr>
-            <td align="left">
-                <span class="fontGrey">A/C Name - {{ config('app.name') }}</span>
-            </td>
+                    </tr>
+                    <tr>
+                        <td align="left">
+                            <span class="fontGrey">A/c - 50200073812590</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left">
+                            <span class="fontGrey">IFSC Code - HDFC0009335</span>
+                        </td>
+                        <td>
 
-        </tr>
-        <tr>
-            <td align="left">
-                <span class="fontGrey">A/c - 50200073812590</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left">
+                            <span class="fontGrey">Bank :- HDFC Bank (Navsari Desctrict)</span>
+                        </td>
+                        <td align="right">
+                        </td>
+                    </tr>
+                </table>
             </td>
-        </tr>
-        <tr>
-            <td align="left">
-                <span class="fontGrey">IFSC Code - HDFC0009335</span>
+            <td width="100px">
+                <table style="padding-top: 150px;">
+                    <tr>
+                        <td  style="text-align: right;align-content:flex-end">
+                            {!! $sign !!}
+                        </td>
+
+                    </tr>
+                </table>
             </td>
-        </tr>
-        <tr>
-            <td align="left">
-                <span class="fontGrey">Bank :- HDFC Bank (Navsari Desctrict)</span>
-            </td>
-            <td align="right">Proprietor</td>
         </tr>
     </table>
 

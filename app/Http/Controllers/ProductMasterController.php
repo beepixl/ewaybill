@@ -133,10 +133,7 @@ class ProductMasterController extends Controller
             if ($validator->fails())
                 return comJsRes(true, $validator->messages()->first());
 
-            // dd($product);
-
             $subTot = $request->price * $request->qty;
-
             if (Cache::has("$customerId-invProducts")) {
                 $customerProducts = Cache::get("$customerId-invProducts");
                 $customerProducts->put($request->productId, ['productId' => $request->productId, 'productName' => $product->productName, 'productPrice' => $request->price, 'qty' => $request->qty, 'unit' => $request->unit, 'notes' => $request->notes, 'hsnCode' => $product->hsnCode, 'cgst' => $product->cgst, 'sgst' => $product->sgst, 'igst' => $product->igst, 'subTot' => $subTot, 'sGstVal' => (($subTot * $product->sgst) / 100), 'cGstVal' => (($subTot * $product->cgst) / 100), 'iGstVal' => (($subTot * $product->igst) / 100)]);

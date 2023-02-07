@@ -1,12 +1,13 @@
 <?php
 
 use DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs;
+use Illuminate\Support\Facades\Request;
 
 Breadcrumbs::for('dashboard', function ($trail) {
     $trail->push('Dashboard', route('dashboard'));
 });
 
-$modelsArray = ['users','customer','invoice','product-master','setting'];
+$modelsArray = ['users', 'customer', 'invoice', 'product-master', 'setting','banks'];
 $breadCrumbsArray = ['index', 'create', 'show', 'edit'];
 
 foreach ($modelsArray as $model) {
@@ -33,3 +34,12 @@ foreach ($modelsArray as $model) {
         });
     }
 }
+
+Breadcrumbs::for('showInv', function ($trail, $id) {
+    $trail->parent('invoice.index');
+    $trail->push('View Invoice', route('showInv', [$id]));
+});
+
+Breadcrumbs::for('inv-payment.create', function ($trail, $invId) {
+    dd('dd');;
+});

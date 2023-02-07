@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{CustomerController, InvoiceController, ProductMasterController, UserController, SettingController};
+use App\Http\Controllers\{BanksController, CustomerController, InvoiceController, ProductMasterController, UserController, SettingController,InvoicePaymentsController};
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -46,5 +46,12 @@ Route::group(["middleware" => ['auth:sanctum', 'verified']], function () {
     Route::post('addItem', [ProductMasterController::class, "addItem"])->name('addToCart');
     Route::post('removeItem', [ProductMasterController::class, "removeItem"])->name('removeItem');
     Route::post('reloadProductsTbl', [ProductMasterController::class, "reloadProductsTbl"])->name('reloadProductsTbl');
+    Route::get('showInv/{invoice}', [InvoiceController::class, "showInv"])->name('showInv');
+
+    //Inv Payments
+    Route::resource('inv-payment', InvoicePaymentsController::class);
+
+    //Banks
+    Route::resource('banks', BanksController::class);
 
 });

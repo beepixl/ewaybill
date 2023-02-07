@@ -2,14 +2,12 @@
 
 namespace App\Http\Livewire\Table;
 
-use App\Models\InvoicePayments;
-use App\Models\Product;
+use App\Traits\WithDataTable;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Traits\WithDataTable;
 
-class InvoiceList extends Component
-{  
+class BanksList extends Component
+{
     use WithPagination, WithDataTable;
 
     public $model;
@@ -46,9 +44,6 @@ class InvoiceList extends Component
             return;
         }
         
-        Product::where('invID',$id)->delete();
-        InvoicePayments::where('order_id',$id)->delete();
-        
         $data->delete();
         $this->emit("deleteResult", [
             "status" => true,
@@ -60,6 +55,7 @@ class InvoiceList extends Component
     {
         $data = $this->get_pagination_data();
 
+        
         return view($data['view'], $data);
     }
 }

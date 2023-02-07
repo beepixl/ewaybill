@@ -2,9 +2,9 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\ProductMaster;
 use Livewire\Component;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 
 class InvoiceTempProduct extends Component
@@ -19,7 +19,11 @@ class InvoiceTempProduct extends Component
         if (Cache::has("$customerId-invProducts")) {
             $products = Cache::get("$customerId-invProducts");
         }
-        
+
+        if (Route::currentRouteName() == 'showInv') {
+            return view('livewire.invoice-temp-product', ['products' => $products->all(),'show' => true]);
+        }
+
         return view('livewire.invoice-temp-product', ['products' => $products->all()]);
     }
 }

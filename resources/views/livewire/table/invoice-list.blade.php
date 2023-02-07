@@ -7,39 +7,56 @@
                         @include('components.sort-icon', ['field' => 'id'])
                     </a></th>
                 <th><a wire:click.prevent="sortBy('invNo')" role="button" href="#">
-                        Inv No
+                        Customer
                         @include('components.sort-icon', ['field' => 'invNo'])
                     </a></th>
-                <th><a wire:click.prevent="sortBy('supplyType')" role="button" href="#">
-                        Supply Type
-                        @include('components.sort-icon', ['field' => 'supplyType'])
-                    </a></th>
                 <th><a wire:click.prevent="sortBy('vehicleNo')" role="button" href="#">
-                        Vehicle No
+                        Status
                         @include('components.sort-icon', ['field' => 'vehicleNo'])
                     </a></th>
-                <th><a wire:click.prevent="sortBy('created_at')" role="button" href="#">
-                        Registered Date
-                        @include('components.sort-icon', ['field' => 'created_at'])
+                <th><a wire:click.prevent="sortBy('transactionType')" role="button" href="#">
+                        Total Amount
+                        @include('components.sort-icon', ['field' => 'transactionType'])
+                    </a></th>
+                <th><a wire:click.prevent="sortBy('transactionType')" role="button" href="#">
+                        Paid Amount
+                        @include('components.sort-icon', ['field' => 'transactionType'])
+                    </a></th>
+                <th><a wire:click.prevent="sortBy('invDate')" role="button" href="#">
+                        Inv date
+                        @include('components.sort-icon', ['field' => 'invDate'])
                     </a></th>
                 <th>Action</th>
             </tr>
         </x-slot>
+
         <x-slot name="body">
             @foreach ($invoices as $invoice)
                 <tr x-data="window.__controller.dataTableController({{ $invoice->id }})">
                     <td>{{ $invoice->id }}</td>
-                    <td>{{ $invoice->invNo }}</td>
-                    <td>{{ $invoice->supplyType }}</td>
-                    <td>{{ $invoice->vehicleNo }}</td>
-                    <td>{{ $invoice->created_at->format('d M Y h:i') }}</td>
+                    <td>{{ optional($invoice->customer)->toTrdName }}</td>
+                    <td>
+                        @if ($invoice->status == 0)
+                            {{ __('Pending') }}
+                        @elseif($invoice->status == 2)
+                            {{ __('Partial') }}
+                        @else
+                            {{ __('Paid') }}
+                        @endif
+                    </td>
+                    <td>{{ number_format($invoice->totInvValue, 2) }}</td>
+                    <td>{{ number_format( optional($invoice->payments)->sum('amount'), 2) }}</td>
+       
+                    <td>{{ date('d M Y', strtotime($invoice->invDate)) }}</td>
                     <td class="whitespace-no-wrap row-action--icon">
                         <a role="button" target="_blank" href="{{ route('invoice.show', [$invoice->id]) }}"
                             class="mr-3 text-black"><i class="fa fa-16px fa-print"></i></a>
-                        <a  class="mr-3" role="button" x-on:click.prevent="deleteItem"><i
-                                class="fa fa-16px fa-trash text-red-500"></i></a>
-                        <a role="button" class="text-warning"  href="{{ route('invoice.edit', [$invoice->id]) }}"
-                           ><i class="fa fa-16px fa-edit"></i></a>
+                        <a role="button" x-on:click.prevent="deleteItem"><i
+                                class="fa fa-16px fa-trash text-red-500 mr-3"></i></a>
+                        <a role="button" class="text-warning" href="{{ route('invoice.edit', [$invoice->id]) }}"><i
+                                class="fa fa-16px fa-edit mr-3"></i></a>
+                        <a role="button" class="text-info" href="{{ route('showInv', [$invoice->id]) }}"><i
+                                class="fa fa-16px fa-credit-card"></i></a>
                     </td>
                 </tr>
             @endforeach
