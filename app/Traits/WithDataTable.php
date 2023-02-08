@@ -102,7 +102,7 @@ trait WithDataTable
                 $payments = $this->model::where('order_id', $this->orderId)->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage);
 
-                if (round($payments->sum('amount')) < round(Invoice::find($this->orderId)->totInvValue)) {
+                if ((float)$payments->sum('amount') < (float)Invoice::find($this->orderId)->totInvValue) {
                     return [
                         "view" => 'livewire.table.invoice-payments-list',
                         "payments" => $payments,
@@ -113,13 +113,12 @@ trait WithDataTable
                             ]
                         ])
                     ];
-                }else{
+                } else {
                     return [
                         "view" => 'livewire.table.invoice-payments-list',
                         "payments" => $payments,
-                        "data" => array_to_object([
-                        ])
-                    ];  
+                        "data" => array_to_object([])
+                    ];
                 }
 
                 break;

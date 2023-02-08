@@ -11,7 +11,6 @@
         @csrf
         <input type="hidden" id="redirectType">
 
-
         <div>
             <livewire:create-invoice action="createInvoice" :invoiceId="request()->invoice" />
         </div>

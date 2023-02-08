@@ -22,9 +22,10 @@ class BanksController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function create()
     {
-        //
+       return view('admin.banks.create');
     }
 
     /**
@@ -57,7 +58,7 @@ class BanksController extends Controller
      */
     public function edit(Banks $banks)
     {
-        //
+               return view('admin.banks.edit');
     }
 
     /**

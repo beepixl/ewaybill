@@ -23,9 +23,13 @@ class InvoicePaymentCrud extends Component
     {
         $rules = [
             'amount' => ['required', 'numeric', function ($attribute, $value, $fail) {
-                if (($this->paymentSum + (is_numeric($value) ? $value : 0)) >  $this->inv->totInvValue || $value <= 0) {
+              //  dd(number_format($this->inv->totInvValue - $this->paymentSum,2));
+                if (!is_numeric($value) || $value <= 0 || ($value > number_format($this->inv->totInvValue - $this->paymentSum,2))) {
                     $fail("The :attribute must be less then or equal to " . (number_format($this->inv->totInvValue - $this->paymentSum, 2)));
                 }
+                // if ((($this->paymentSum + (is_numeric($value) ? $value : 0)) >  $this->inv->totInvValue) || $value <= 0) {
+                //     $fail("The :attribute must be less then or equal to " . (number_format($this->inv->totInvValue - $this->paymentSum, 2)));
+                // }
             }],
             'rec_date' => 'required|date',
         ];

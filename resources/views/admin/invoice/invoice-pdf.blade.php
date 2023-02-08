@@ -83,6 +83,16 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
         .mainTotTr{
             borde
         } */
+        footer {
+            position: fixed;
+            bottom: -60px;
+            left: 0px;
+            right: 0px;
+            height: 50px;
+            color: #000;
+            text-align: center;
+            line-height: 35px;
+        }
     </style>
 
 </head>
@@ -180,125 +190,136 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
             @foreach ($invoice['bill_products'] as $item)
                 <tr>
                     <td align="left"> <b>{{ $item['productName'] }}</b> <br>
-                        @isset($item['productNotes']) <span class="fontGrey"> ({{ $item['productNotes'] }}) </span> @endif
-                    </td>
-                    <td align="left"> <span class="fontGrey">{{ $item['hsnCode'] }}</span> </td>
-                    <td align="center">{{ $item['quantity'] }} @isset($item['qtyUnit'])
-                            ({{ $item['qtyUnit'] }})
-                        @endisset
-                    </td>
-                    <td align="center">{!! $inrSym !!} {{ $item['taxableAmount'] }}</td>
-                    <td align="right">{!! $inrSym !!} {{ $item['taxableAmount'] * $item['quantity'] }}</td>
+                        @isset($item['productNotes']) <span class="fontGrey"> ({{ $item['productNotes'] }})
+                            </span>
+                @endif
+                </td>
+                <td align="left"> <span class="fontGrey">{{ $item['hsnCode'] }}</span> </td>
+                <td align="center">{{ $item['quantity'] }} @isset($item['qtyUnit'])
+                        ({{ $item['qtyUnit'] }})
+                    @endisset
+                </td>
+                <td align="center">{!! $inrSym !!} {{ $item['taxableAmount'] }}</td>
+                <td align="right">{!! $inrSym !!} {{ $item['taxableAmount'] * $item['quantity'] }}</td>
+                @php
+                    $mainTot += $item['taxableAmount'] * $item['quantity'];
+                @endphp
+                </tr>
+                @endforeach
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3"></td>
+                    <td align="right">Subtotal </td>
+                    <td align="right">{!! $inrSym !!} {{ number_format($mainTot, 2) }}</td>
+                </tr>
+                @if ($invoice['cgstValue'] > 0)
+                    <tr>
+                        <td colspan="3"></td>
+                        <td align="right">CGST 9%</td>
+                        <td align="right">{!! $inrSym !!} {{ number_format($invoice['cgstValue'], 2) }}</td>
+                    </tr>
                     @php
-                        $mainTot += $item['taxableAmount'] * $item['quantity'];
+                        $mainTot += $invoice['cgstValue'];
                     @endphp
+                @endif
+                @if ($invoice['sgstValue'] > 0)
+                    <tr>
+                        <td colspan="3"></td>
+                        <td align="right">SGST 9%</td>
+                        <td align="right">{!! $inrSym !!} {{ number_format($invoice['sgstValue'], 2) }}</td>
+                    </tr>
+                    @php
+                        $mainTot += $invoice['sgstValue'];
+                    @endphp
+                @endif
+                @if ($invoice['igstValue'] > 0)
+                    <tr>
+                        <td colspan="3"></td>
+                        <td align="right">IGST 18%</td>
+                        <td align="right">{!! $inrSym !!} {{ number_format($invoice['igstValue'], 2) }}</td>
+                    </tr>
+                    @php
+                        $mainTot += $invoice['igstValue'];
+                    @endphp
+                @endif
+
+                <tr>
+                    <td colspan="3"></td>
+                    <td align="right" class="mainTotTr">Total </td>
+                    <td align="right" class="gray mainTotTr">{!! $inrSym !!} {{ number_format($mainTot, 2) }}</td>
                 </tr>
-            @endforeach
-        </tbody>
-        <tfoot>
+            </tfoot>
+        </table>
+        <table width="100%">
             <tr>
-                <td colspan="3"></td>
-                <td align="right">Subtotal </td>
-                <td align="right">{!! $inrSym !!} {{ number_format($mainTot, 2) }}</td>
+                <td width="90%">
+                    <table width="50%" style="padding-top: 70px;">
+                        <tr>
+                            <td valign="top"><strong>Notes/Terms</strong></td>
+                        </tr>
+                        <tr>
+                            <td align="left">
+                                <span class="fontGrey">INCOTERMS :- Factory Delivered Rajkot</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">
+                                <span class="fontGrey">Please Make Payments To :- </span>
+                            </td>
+                            <td align="right">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">
+                                <span class="fontGrey">A/C Name - {{ optional($invoice['bank'])['account_name'] }}</span>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td align="left">
+                                <span class="fontGrey">A/c - {{ optional($invoice['bank'])['account_no'] }}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">
+                                <span class="fontGrey">IFSC Code - {{ optional($invoice['bank'])['ifsc_code'] }}</span>
+                            </td>
+                            <td>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left">
+                                <span class="fontGrey">Bank :- {{ optional($invoice['bank'])['branch_name'] }}</span>
+                            </td>
+                            <td align="right">
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td width="100px">
+                    <table style="padding-top: 150px;">
+                        <tr>
+                            <td style="text-align: right;align-content:flex-end">
+                                {!! $sign !!}
+                            </td>
+
+                        </tr>
+                    </table>
+                </td>
             </tr>
-            @if ($invoice['cgstValue'] > 0)
-                <tr>
-                    <td colspan="3"></td>
-                    <td align="right">CGST 9%</td>
-                    <td align="right">{!! $inrSym !!} {{ number_format($invoice['cgstValue'], 2) }}</td>
-                </tr>
-                @php
-                    $mainTot += $invoice['cgstValue'];
-                @endphp
-            @endif
-            @if ($invoice['sgstValue'] > 0)
-                <tr>
-                    <td colspan="3"></td>
-                    <td align="right">SGST 9%</td>
-                    <td align="right">{!! $inrSym !!} {{ number_format($invoice['sgstValue'], 2) }}</td>
-                </tr>
-                @php
-                    $mainTot += $invoice['sgstValue'];
-                @endphp
-            @endif
-            @if ($invoice['igstValue'] > 0)
-                <tr>
-                    <td colspan="3"></td>
-                    <td align="right">IGST 18%</td>
-                    <td align="right">{!! $inrSym !!} {{ number_format($invoice['igstValue'], 2) }}</td>
-                </tr>
-                @php
-                    $mainTot += $invoice['igstValue'];
-                @endphp
-            @endif
+        </table>
 
-            <tr>
-                <td colspan="3"></td>
-                <td align="right" class="mainTotTr">Total </td>
-                <td align="right" class="gray mainTotTr">{!! $inrSym !!} {{ number_format($mainTot, 2) }}</td>
-            </tr>
-        </tfoot>
-    </table>
-    <table width="100%">
-        <tr>
-            <td width="90%">
-                <table width="50%" style="padding-top: 70px;">
-                    <tr>
-                        <td valign="top"><strong>Notes/Terms</strong></td>
-                    </tr>
-                    <tr>
-                        <td align="left">
-                            <span class="fontGrey">INCOTERMS :- Factory Delivered Rajkot</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="left">
-                            <span class="fontGrey">Please Make Payments To :- </span>
-                        </td>
-                        <td align="right">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="left">
-                            <span class="fontGrey">A/C Name - {{ config('app.name') }}</span>
-                        </td>
 
-                    </tr>
-                    <tr>
-                        <td align="left">
-                            <span class="fontGrey">A/c - 50200073812590</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="left">
-                            <span class="fontGrey">IFSC Code - HDFC0009335</span>
-                        </td>
-                        <td>
 
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="left">
-                            <span class="fontGrey">Bank :- HDFC Bank (Navsari Desctrict)</span>
-                        </td>
-                        <td align="right">
-                        </td>
-                    </tr>
-                </table>
-            </td>
-            <td width="100px">
-                <table style="padding-top: 150px;">
-                    <tr>
-                        <td  style="text-align: right;align-content:flex-end">
-                            {!! $sign !!}
-                        </td>
+        <footer>
+            This is computer
+            generated invoice no
+            signature required.
+        </footer>
 
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
 
-</body>
+    </body>
 
-</html>
+    </html>

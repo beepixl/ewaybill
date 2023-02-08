@@ -51,6 +51,16 @@
                         </div>
 
                         <div class="form-group">
+                            <x-jet-label for="bankId" value="{{ __('Select Bank') }}" />
+                            <select name="bankId" class="mt-1 block w-full form-control shadow-none">
+                                <option value="">Select Bank</option>
+                                @foreach($banks as $bank)
+                                <option value="{{ $bank['id'] }}" @isset($invoice) {{ $invoice->bankId == $bank['id'] ? 'selected' : '' }}  @endisset>{{ $bank['account_name'] }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group">
                             <x-jet-label for="subSupplyType" value="{{ __('Select Sub Supply Type') }}" />
                             <select name="subSupplyType" class="mt-1 block w-full form-control shadow-none">
                                 <option value="">Select Sub Supply Type</option>
@@ -95,7 +105,12 @@
 
                         <div class="form-group">
                             <x-jet-label for="subSupplyDesc" value="{{ __('Sub Supply Desc') }}" />
-                            <textarea name="subSupplyDesc" id="" class="mt-1 block w-full form-control shadow-none"cols="5"rows="1">@isset($invoice){{ $invoice->subSupplyDesc }}@endisset</textarea>
+                            <textarea name="subSupplyDesc" id=""
+                                class="mt-1 block w-full form-control shadow-none"cols="5"rows="1">
+@isset($invoice)
+{{ $invoice->subSupplyDesc }}
+@endisset
+</textarea>
                         </div>
 
                         <div class="form-group">
@@ -194,6 +209,34 @@
                                     ODC(Over Dimentional Cargo)</option>
                             </select>
                         </div>
+
+                        @isset($invoice->ewayBillNo)
+                            <div class="form-group">
+                                &nbsp
+                                <pre> EWayBill No: <br> <strong>{{ $invoice->ewayBillNo }}</strong></pre>
+                            </div>
+                        @endisset
+
+                        @isset($invoice->ewayBillDate)
+                            <div class="form-group">
+                                &nbsp
+                                <pre> EWayBill Date: <br> <strong>{{ $invoice->ewayBillDate }}</strong></pre>
+                            </div>
+                        @endisset
+
+                        @isset($invoice->validUpto)
+                            <div class="form-group">
+                                &nbsp
+                                <pre> EWayBill Valid Upto: <br> <strong>{{ $invoice->validUpto }}</strong></pre>
+                            </div>
+                        @endisset
+
+                        @isset($invoice->alert)
+                            <div class="form-group cols-6">
+                                &nbsp
+                                <pre> EWayBill Alert: <br> <strong>{{ $invoice->alert }}</strong></pre>
+                            </div>
+                        @endisset
 
                     </div>
                 </div>
@@ -314,7 +357,7 @@
 
     <x-jet-section-border></x-jet-section-border>
 
-    
+
     <x-jet-section-title>
         <x-slot name="title"> Payments</x-slot>
     </x-jet-section-title>

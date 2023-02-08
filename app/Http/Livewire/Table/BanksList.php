@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Table;
 
+use App\Models\Banks;
 use App\Traits\WithDataTable;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -34,7 +35,7 @@ class BanksList extends Component
     public function delete_item($id)
     {
 
-        $data = $this->model::find($id);
+        $data = Banks::find($id);
 
         if (!$data) {
             $this->emit("deleteResult", [
@@ -45,6 +46,7 @@ class BanksList extends Component
         }
         
         $data->delete();
+        
         $this->emit("deleteResult", [
             "status" => true,
             "message" => "Record Deleted Successfull !"

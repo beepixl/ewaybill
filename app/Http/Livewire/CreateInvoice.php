@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Banks;
 use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\InvoicePayments;
@@ -18,6 +19,7 @@ class CreateInvoice extends Component
     public $customers;
     public $payments;
     public $invoiceId;
+    public $banks;
     public $action;
     public $button;
     public $invNo;
@@ -68,6 +70,7 @@ class CreateInvoice extends Component
         // }
 
         $this->customers =  Customer::get()->toArray();
+        $this->banks =  Banks::get()->toArray();
         $this->invNo = settingData()->invNoStart  + Invoice::count();
         $this->button = create_button($this->action, "Invoice");
     }
@@ -78,6 +81,7 @@ class CreateInvoice extends Component
         if (Route::currentRouteName() == 'showInv') {
             return view('livewire.create-invoice', ['show' => true]);
         }
+
 
         return view('livewire.create-invoice');
     }

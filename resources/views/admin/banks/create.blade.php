@@ -1,13 +1,16 @@
 <x-app-layout>
+    
     <x-slot name="header_content">
-        <h1>{{ __('Invoices') }} {{ __('cruds.lists') }}</h1>
+        <h1>{{ __('cruds.create') }} {{ __('cruds.new') }} {{ __('Bank') }}</h1>
+
         <div class="section-header-breadcrumb">
             {{ Breadcrumbs::render() }}
         </div>
+
     </x-slot>
 
     <div>
-        <livewire:table.invoice-list name="invoices" :model="$invoice" />
+        <livewire:banks-crud action="createBank" />
     </div>
 
 </x-app-layout>

@@ -112,6 +112,13 @@
                 'y': 'button'
             }
         });
+
+        $(document).ready(function() {
+            @if (Session::has('status'))
+                notyf['{{ Session::get("status") }}']('{{ Session::get("message") }}');
+            @endif
+        });
+
     </script>
 
     @stack('additional-sctipt')

@@ -47,7 +47,7 @@ Route::group(["middleware" => ['auth:sanctum', 'verified']], function () {
     Route::post('removeItem', [ProductMasterController::class, "removeItem"])->name('removeItem');
     Route::post('reloadProductsTbl', [ProductMasterController::class, "reloadProductsTbl"])->name('reloadProductsTbl');
     Route::get('showInv/{invoice}', [InvoiceController::class, "showInv"])->name('showInv');
-    Route::get('generate-ewaybill/{invoice}', [InvoiceController::class, "showInv"])->name('generate-ewaybill');
+    Route::get('generate-ewaybill/{invoice}', [InvoiceController::class, "generateEwayBill"])->name('generate-ewaybill');
 
     //Inv Payments
     Route::resource('inv-payment', InvoicePaymentsController::class);
