@@ -102,37 +102,44 @@ trait WithDataTable
                 $payments = $this->model::where('order_id', $this->orderId)->orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
                     ->paginate($this->perPage);
 
+                if (round($payments->sum('amount')) < round(Invoice::find($this->orderId)->totInvValue)) {
+                    return [
+                        "view" => 'livewire.table.invoice-payments-list',
+                        "payments" => $payments,
+                        "data" => array_to_object([
+                            'href' => [
+                                'create_new' => route('inv-payment.create', ['invId' => $this->orderId]),
+                                'create_new_text' => 'Add Payment',
+                            ]
+                        ])
+                    ];
+                }else{
+                    return [
+                        "view" => 'livewire.table.invoice-payments-list',
+                        "payments" => $payments,
+                        "data" => array_to_object([
+                        ])
+                    ];  
+                }
+
+                break;
+            case 'banks':
+                $banks = Banks::orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
+                    ->paginate($this->perPage);
+
                 return [
-                    "view" => 'livewire.table.invoice-payments-list',
-                    "payments" => $payments,
+                    "view" => 'livewire.table.banks-list',
+                    "banks" => $banks,
                     "data" => array_to_object([
-                        'showBtn' => number_format($payments->sum('amount'), 2) >= number_format(Invoice::find($this->orderId)->totInvValue,2) ? false : true,
                         'href' => [
-                            'create_new' => route('inv-payment.create', ['invId' => $this->orderId]),
-                            'create_new_text' => 'Add Payment',
+                            'create_new' => route('banks.create'),
+                            'create_new_text' => 'Add Bank',
                             'export' => '#',
                             'export_text' => 'Export'
                         ]
                     ])
                 ];
                 break;
-                case 'banks':
-                    $banks = Banks::orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
-                        ->paginate($this->perPage);
-    
-                    return [
-                        "view" => 'livewire.table.banks-list',
-                        "banks" => $banks,
-                        "data" => array_to_object([
-                            'href' => [
-                                'create_new' => route('banks.create'),
-                                'create_new_text' => 'Add Bank',
-                                'export' => '#',
-                                'export_text' => 'Export'
-                            ]
-                        ])
-                    ];
-                    break;
             default:
                 # code...
                 break;

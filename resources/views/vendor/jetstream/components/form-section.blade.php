@@ -10,7 +10,7 @@
         <form wire:submit.prevent="{{ $submit }}">
             <div class="shadow overflow-hidden sm:rounded-md" {{ $submit }}>
                 <div class="px-4 bg-white sm:p-6">
-                    <div class="col-auto md:grid grid-cols-2 gap-2">
+                    <div class="col-auto md:grid grid-cols-4 gap-2">
                         {{ $form }}
                     </div>
                 </div>

@@ -3,7 +3,7 @@
         <div class=" md:mt-0 md:col-span-2">
             <div class="shadow overflow-hidden sm:rounded-md">
                 <div class="px-4 bg-white sm:p-6">
-                    <div class="col-auto md:grid grid-cols-2 gap-2">
+                    <div class="col-auto md:grid grid-cols-4 gap-2">
 
                         @isset($invoice)
                             <input type="hidden" name="type" value="update">
@@ -209,7 +209,7 @@
                 <div class="shadow overflow-hidden sm:rounded-md">
 
                     <div class="px-4 bg-white sm:p-6">
-                        <div class="col-auto md:grid grid-cols-2 gap-2">
+                        <div class="col-auto md:grid grid-cols-3 gap-2">
 
                             <div class="form-group  productDiv" wire:ignore>
                                 <x-jet-label for="name" value="{{ __('Select Product') }}" />

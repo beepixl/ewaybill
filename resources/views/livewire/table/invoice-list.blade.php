@@ -46,17 +46,18 @@
                     </td>
                     <td>{{ number_format($invoice->totInvValue, 2) }}</td>
                     <td>{{ number_format( optional($invoice->payments)->sum('amount'), 2) }}</td>
-       
                     <td>{{ date('d M Y', strtotime($invoice->invDate)) }}</td>
                     <td class="whitespace-no-wrap row-action--icon">
-                        <a role="button" target="_blank" href="{{ route('invoice.show', [$invoice->id]) }}"
+                        <a role="button" class="btn btn-sm btn-primary" title="Print" target="_blank" href="{{ route('invoice.show', [$invoice->id]) }}"
                             class="mr-3 text-black"><i class="fa fa-16px fa-print"></i></a>
-                        <a role="button" x-on:click.prevent="deleteItem"><i
-                                class="fa fa-16px fa-trash text-red-500 mr-3"></i></a>
-                        <a role="button" class="text-warning" href="{{ route('invoice.edit', [$invoice->id]) }}"><i
-                                class="fa fa-16px fa-edit mr-3"></i></a>
-                        <a role="button" class="text-info" href="{{ route('showInv', [$invoice->id]) }}"><i
-                                class="fa fa-16px fa-credit-card"></i></a>
+                        <a role="button" class="btn btn-sm btn-danger" title="Trash" x-on:click.prevent="deleteItem"><i
+                                class="fa fa-16px fa-trash"></i></a>
+                        <a role="button" class="btn btn-sm btn-warning" title="Edit"  href="{{ route('invoice.edit', [$invoice->id]) }}"><i
+                                class="fa fa-16px fa-edit"></i></a>
+                        <a role="button" class="btn btn-sm btn-info" title="Payments" href="{{ route('showInv', [$invoice->id]) }}"><i
+                                class="fa fa-16px fa-inr"></i></a>
+                        <a role="button" class="btn btn-sm btn-dark" title="Generate EWayBill" href="{{ route('generate-ewaybill', [$invoice->id]) }}"><i
+                                class="fa fa-16px fa-send-o"></i> Generate EWayBill </a>
                     </td>
                 </tr>
             @endforeach

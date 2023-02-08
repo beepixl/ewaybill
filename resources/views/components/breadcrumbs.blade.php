@@ -5,6 +5,5 @@
             @else
                 <div class="breadcrumb-item active">{{ $breadcrumb->title }}</div>
             @endif
-
     @endforeach
 @endif

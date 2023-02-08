@@ -21,15 +21,13 @@ class InvoicePaymentCrud extends Component
 
     protected function getRules()
     {
-
         $rules = [
             'amount' => ['required', 'numeric', function ($attribute, $value, $fail) {
-                if ((number_format($this->paymentSum + (is_numeric($value) ? $value : 0))) >  $this->inv->totInvValue || $value <= 0) {
+                if (($this->paymentSum + (is_numeric($value) ? $value : 0)) >  $this->inv->totInvValue || $value <= 0) {
                     $fail("The :attribute must be less then or equal to " . (number_format($this->inv->totInvValue - $this->paymentSum, 2)));
                 }
             }],
             'rec_date' => 'required|date',
-            'remarks' => 'string',
         ];
 
         return  $rules;
@@ -56,7 +54,9 @@ class InvoicePaymentCrud extends Component
         $payment->remarks = $this->remarks;
         $payment->save();
 
-        if ($this->paymentSum == $this->inv->totInvValue || $this->paymentSum > $this->inv->totInvValue)
+        // dd($this->paymentSum == $this->inv->totInvValue || $this->paymentSum > $this->inv->totInvValue);
+
+        if ($this->paymentSum == $this->inv->totInvValue)
             $this->inv->status = 1;
         elseif ($this->paymentSum < $this->inv->totInvValue)
             $this->inv->status = 2;
@@ -79,14 +79,13 @@ class InvoicePaymentCrud extends Component
 
         $this->order_id = request()->invId;
         $this->paymentSum =   InvoicePayments::where('order_id', $this->order_id)->sum('amount');
-        $this->inv =  Invoice::find($this->order_id);
+        $this->inv =  Invoice::with('customer')->find($this->order_id);
         $this->rec_date = date('Y-m-d');
         $this->button = create_button($this->action, "Payment");
     }
 
     public function render()
     {
-
 
         return view('livewire.invoice-payment-crud');
     }

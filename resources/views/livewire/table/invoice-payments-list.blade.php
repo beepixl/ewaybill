@@ -29,8 +29,8 @@
                     <td>{{ $payment->remarks }}</td>
                     <td>{{ date('M d,Y', strtotime($payment->rec_date)) }}</td>
                     <td class="whitespace-no-wrap row-action--icon">
-                        <a role="button" x-on:click.prevent="deleteItem" href="#"><i
-                                class="fa fa-16px fa-trash text-red-500"></i></a>
+                        <a role="button" class="btn btn-sm btn-danger" x-on:click.prevent="deleteItem" href="#"><i
+                                class="fa fa-16px fa-trash"></i></a>
                     </td>
                 </tr>
             @endforeach
