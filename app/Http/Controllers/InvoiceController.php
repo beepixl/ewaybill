@@ -186,7 +186,7 @@ class InvoiceController extends Controller
         }
 
         $svg = view('admin.invoice.payments.signimg')->render();
-        $sign = '<img src="https://phplaravel-615318-3229789.cloudwaysapps.com/sign.png"  width="250"  />';
+        $sign = '<img src="https://phplaravel-615318-3229789.cloudwaysapps.com/sign.png"  width="150"  />';
 
         // dd($invoice);
 

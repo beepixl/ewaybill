@@ -309,7 +309,7 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
                     <table style="padding-top: 150px;">
                         <tr>
                             <td style="text-align: right;align-content:flex-end">
-                                {!! $sign !!}
+                               
                             </td>
 
                         </tr>
@@ -317,7 +317,7 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
                 </td>
             </tr>
         </table>
-
+        {!! $sign !!}
         <footer>
         This is computer generated invoice.
         </footer>
