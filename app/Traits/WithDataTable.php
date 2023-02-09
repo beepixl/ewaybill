@@ -24,8 +24,6 @@ trait WithDataTable
                         'href' => [
                             'create_new' => route('users.create'),
                             'create_new_text' => 'Create New User',
-                            'export' => '#',
-                            'export_text' => 'Export'
                         ]
                     ])
                 ];
@@ -58,8 +56,6 @@ trait WithDataTable
                         'href' => [
                             'create_new' => route('product-master.create'),
                             'create_new_text' => 'Create Product Master',
-                            'export' => '#',
-                            'export_text' => 'Export'
                         ]
                     ])
                 ];
@@ -75,8 +71,6 @@ trait WithDataTable
                         'href' => [
                             'create_new' => route('customer.create'),
                             'create_new_text' => 'Create Customer',
-                            'export' => '#',
-                            'export_text' => 'Export'
                         ]
                     ])
                 ];
@@ -133,8 +127,6 @@ trait WithDataTable
                         'href' => [
                             'create_new' => route('banks.create'),
                             'create_new_text' => 'Add Bank',
-                            'export' => '#',
-                            'export_text' => 'Export'
                         ]
                     ])
                 ];

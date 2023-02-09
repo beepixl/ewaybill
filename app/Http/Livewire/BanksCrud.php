@@ -19,6 +19,7 @@ class BanksCrud extends Component
             'bank.account_name' => 'required',
             'bank.account_no' => 'required|max:15',
             'bank.ifsc_code' => 'required|max:11',
+            'bank.bank_name' => 'required',
             'bank.branch_name' => 'required',
         ];
 

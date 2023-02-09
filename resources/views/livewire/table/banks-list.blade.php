@@ -22,9 +22,9 @@
                         Branch Name
                         @include('components.sort-icon', ['field' => 'branch_name'])
                     </a></th>
-                <th><a wire:click.prevent="sortBy('created_at')" role="button" href="#">
-                        Registered Date
-                        @include('components.sort-icon', ['field' => 'created_at'])
+                <th><a wire:click.prevent="sortBy('bank_name')" role="button" href="#">
+                        Bank Name
+                        @include('components.sort-icon', ['field' => 'bank_name'])
                     </a></th>
                 <th>Action</th>
             </tr>
@@ -37,7 +37,7 @@
                     <td>{{ $bank->account_no }}</td>
                     <td>{{ $bank->ifsc_code }}</td>
                     <td>{{ $bank->branch_name }}</td>
-                    <td>{{ $bank->created_at->format('d M Y h:i') }}</td>
+                    <td>{{ $bank->bank_name }}</td>
                     <td class="whitespace-no-wrap row-action--icon">
                         <a role="button" href="{{ route('banks.edit', [$bank->id]) }}" class="mr-3"><i
                                 class="fa fa-16px fa-pen"></i></a>

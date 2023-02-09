@@ -16,6 +16,13 @@
                 <x-jet-input id="account_no" type="text" class="mt-1 block w-full form-control shadow-none" wire:model.defer="bank.account_no" />
                 <x-jet-input-error for="bank.account_no" class="mt-2" />
             </div>
+            
+            <div class="form-group ">
+                <x-jet-label for="bank_name" value="{{ __('Bank Name') }}" />
+                <x-jet-input id="bank_name" type="text" class="mt-1 block w-full form-control shadow-none" wire:model.defer="bank.bank_name" />
+                <x-jet-input-error for="bank.bank_name" class="mt-2" />
+            </div>
+
             <div class="form-group ">
                 <x-jet-label for="ifsc_code" value="{{ __('IFSC Code') }}" />
                 <x-jet-input id="ifsc_code" type="text" class="mt-1 block w-full form-control shadow-none" wire:model.defer="bank.ifsc_code" />
@@ -27,6 +34,8 @@
                 <x-jet-input id="branch_name" type="text" class="mt-1 block w-full form-control shadow-none" wire:model.defer="bank.branch_name" />
                 <x-jet-input-error for="bank.branch_name" class="mt-2" />
             </div>
+
+     
 
         </x-slot>
 

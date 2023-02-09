@@ -20,9 +20,9 @@ class SettingInv extends Component
             'setting.fromAddr1' => 'required',
             'setting.fromAddr2' => 'required',
             'setting.fromPlace' => 'required',
-            'setting.fromPincode' => 'required|numeric',
-            'setting.actFromStateCode' => 'required|numeric',
-            'setting.fromStateCode' => 'required',
+            'setting.fromPincode' => 'required',
+            'setting.actFromStateCode' => 'sometimes|nullable',
+            'setting.fromStateCode' => 'sometimes|nullable',
         ];
 
         return  $rules;

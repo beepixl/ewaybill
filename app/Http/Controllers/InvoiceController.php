@@ -90,7 +90,7 @@ class InvoiceController extends Controller
                 }
 
                 $data = $request->all();
-                $data['invNo'] = settingData()->invNoStart  + Invoice::count();
+                $data['invNo'] = settingData()->invPrefix.'-'.settingData()->invNoStart  + Invoice::count();
                 $data['totalValue'] = $productsSubTot;
                 $data['cgstValue'] = $productscgstValue;
                 $data['sgstValue'] = $productssGstVal;
@@ -116,8 +116,7 @@ class InvoiceController extends Controller
                 $data['actToStateCode'] = $customer->actToStateCode;
                 $data['toStateCode'] = $customer->toStateCode;
 
-                // dd($data);
-
+   
                 if (is_numeric($invId)) {
                     $inv  =  Invoice::find($invId);
                     $orgInv = $inv;
@@ -174,6 +173,8 @@ class InvoiceController extends Controller
             $q->type(1);
         }, 'customer', 'bank'])->find($id)->toArray();
 
+        //dd($invoice);
+
         $paidAmt =  InvoicePayments::where('order_id', $id)->sum('amount');
         $status = 'Pending';
 
@@ -186,7 +187,7 @@ class InvoiceController extends Controller
         }
 
         $svg = view('admin.invoice.payments.signimg')->render();
-        $sign = '<img src="https://phplaravel-615318-3229789.cloudwaysapps.com/sign.png"  width="150"  />';
+        $sign = '<img src="https://phplaravel-615318-3229789.cloudwaysapps.com/sign.png"  width="250"  />';
 
         // dd($invoice);
 

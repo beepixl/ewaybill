@@ -8,7 +8,7 @@
                 {{ __('Edit') }}
             @else
                 {{ __('cruds.create') }} {{ __('cruds.new') }}
-            @endif {{ __('Profoma Invoice') }} 
+            @endif {{ __('Proforma Invoice') }} 
         </h1>
         <div class="section-header-breadcrumb">
             {{ Breadcrumbs::render() }}

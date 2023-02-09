@@ -41,7 +41,7 @@ $links = [
 [
 "href" => "invoice-performa.index",
 "icon" => "file",
-"text" => "Profoma Invoices",
+"text" => "Proforma Invoices",
 "is_multi" => false,
 ],
 ];
