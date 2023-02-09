@@ -182,19 +182,7 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
         <table width="100%">
             <tr>
                 <td width="100%">
-                    <table width="50%" style="padding-top: 70px;">
-                        <tr>
-                            <td valign="top"><strong>Notes/Terms</strong></td>
-                        </tr>
-                        <tr>
-                            <td align="left">
-                                <span class="fontGrey">Please Make Payments To :- </span>
-                            </td>
-                            <td align="right">
-                            </td>
-                        </tr>
-                    
-                    </table>
+                  
                 </td>
                 <td width="100px">
                     <table style="padding-top: 150px;">
