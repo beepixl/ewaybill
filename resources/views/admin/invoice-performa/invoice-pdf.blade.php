@@ -198,9 +198,7 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
         </table>
 
         <footer>
-            This is computer
-            generated invoice no
-            signature required.
+            This is computer generated proforma invoice.
         </footer>
 
     </body>
