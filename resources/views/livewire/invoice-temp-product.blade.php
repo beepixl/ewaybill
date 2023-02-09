@@ -41,11 +41,11 @@
                                             <td><input type="number" @if (!isset($show)) onfocusout="updateTbl(this)" @endif
                                                     productId="{{ $product['productId'] }}"
                                                     productPrice="{{ $product['productPrice'] }}"
-                                                    productNote="{{ $product['notes'] }}"
+                                                    productNote="{{ nl2br($product['notes']) }}"
                                                     productUnit="{{ $product['unit'] }}" class="form-control"
                                                     value="{{ $product['qty'] }}" id=""></td>
                                             <td>{{ $product['unit'] }}</td>
-                                            <td>{{ $product['notes'] }}</td>
+                                            <td>{!! nl2br($product['notes']) !!}</td>
                                             <td>{{ $product['hsnCode'] ?? '' }}</td>
                                             <td>{{ number_format($subTot, 2) }}</td>
                                             <td>

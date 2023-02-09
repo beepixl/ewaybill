@@ -190,7 +190,7 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
             @foreach ($invoice['bill_products'] as $item)
                 <tr>
                     <td align="left"> <b>{{ $item['productName'] }}</b> <br>
-                        @isset($item['productNotes']) <span class="fontGrey"> ({!! $item['productNotes'] !!})
+                        @isset($item['productNotes']) <span class="fontGrey"> ({!! nl2br($item['productNotes']) !!})
                             </span>
                 @endif
                 </td>
