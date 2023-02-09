@@ -7,8 +7,7 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>{{ $setting->invPrefix }}-{{ $invoice['invNo'] }}-{{ $invoice['customer']['toTrdName'] }}-{{ $status }}
-    </title>
+    <title>{{ $setting->invPrefix }}-{{ $invoice['invDate'] }}-{{ $invoice['customer']['toTrdName'] }} </title>
 
     <style type="text/css">
         * {
@@ -105,7 +104,7 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
                     width="250" />
             </td>
             <td align="right" class="borderBottom">
-                <span class="mr-0 mainHeading">TAX INVOICE</span> <br>
+                <span class="mr-0 mainHeading">PROFOMA INVOICE</span> <br>
                 <span class="fontGrey">GSTIN:{{ $setting->fromGstin }}</span>
                 <pre class="mr-0">
                 <span class="font-800">{{ config('app.name') }}</span>
@@ -118,54 +117,13 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
     </table>
     <table width="100%" class="addressTable">
         <tr>
-            <td align="left" class="toAddress">
-                <table>
-                    <tr>
-                        <td> <span> BILL TO</span></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <strong>{{ $invoice['toTrdName'] }}</strong>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="fontGrey">
-                            GSTIN: {{ $invoice['toGstin'] }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            {{ $invoice['toAddr1'] }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            {{ $invoice['toAddr2'] }}
-                        </td>
-                    </tr>
-                </table>
-            </td>
+   
             <td align="right">
                 <table align="right">
-                    <tr>
-                        <td><strong>Invoice Number</strong></td>
-                        <td>:</td>
-                        <td>{{ $setting->invPrefix }}-{{ $invoice['invNo'] }}</td>
-                    </tr>
                     <tr>
                         <td><strong>Invoice Date</strong></td>
                         <td>:</td>
                         <td>{{ date('M d,Y', strtotime($invoice['invDate'])) }}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Payment Due</strong></td>
-                        <td>:</td>
-                        <td>{{ date('M d,Y', strtotime($invoice['invDate'])) }}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Amount Due(INR)</strong></td>
-                        <td>:</td>
-                        <td>{!! $inrSym !!} {{ number_format($invoice['totInvValue'] - $paidAmt, 2) }}</td>
                     </tr>
                 </table>
             </td>
@@ -213,37 +171,7 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
                     <td align="right">Subtotal </td>
                     <td align="right">{!! $inrSym !!} {{ number_format($mainTot, 2) }}</td>
                 </tr>
-                @if ($invoice['cgstValue'] > 0)
-                    <tr>
-                        <td colspan="3"></td>
-                        <td align="right">CGST 9%</td>
-                        <td align="right">{!! $inrSym !!} {{ number_format($invoice['cgstValue'], 2) }}</td>
-                    </tr>
-                    @php
-                        $mainTot += $invoice['cgstValue'];
-                    @endphp
-                @endif
-                @if ($invoice['sgstValue'] > 0)
-                    <tr>
-                        <td colspan="3"></td>
-                        <td align="right">SGST 9%</td>
-                        <td align="right">{!! $inrSym !!} {{ number_format($invoice['sgstValue'], 2) }}</td>
-                    </tr>
-                    @php
-                        $mainTot += $invoice['sgstValue'];
-                    @endphp
-                @endif
-                @if ($invoice['igstValue'] > 0)
-                    <tr>
-                        <td colspan="3"></td>
-                        <td align="right">IGST 18%</td>
-                        <td align="right">{!! $inrSym !!} {{ number_format($invoice['igstValue'], 2) }}</td>
-                    </tr>
-                    @php
-                        $mainTot += $invoice['igstValue'];
-                    @endphp
-                @endif
-
+        
                 <tr>
                     <td colspan="3"></td>
                     <td align="right" class="mainTotTr">Total </td>
@@ -260,49 +188,12 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
                         </tr>
                         <tr>
                             <td align="left">
-                                <span class="fontGrey">INCOTERMS :- {{ $invoice['incoterms'] }}</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="left">
                                 <span class="fontGrey">Please Make Payments To :- </span>
                             </td>
                             <td align="right">
                             </td>
                         </tr>
-                        <tr>
-                            <td align="left">
-                                <span class="fontGrey"><b>Bank Details:</b></span>
-                            </td>
-                            <td align="right">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="left">
-                                <span class="fontGrey"><b>A/C Name - {{ optional($invoice['bank'])['account_name'] }}</b></span>
-                            </td>
-
-                        </tr>
-                        <tr>
-                            <td align="left">
-                                <span class="fontGrey"><b>A/c - {{ optional($invoice['bank'])['account_no'] }}</b></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="left">
-                                <span class="fontGrey"><b>IFSC Code - {{ optional($invoice['bank'])['ifsc_code'] }}</b></span>
-                            </td>
-                            <td>
-
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="left">
-                                <span class="fontGrey"><b>Bank :- {{ optional($invoice['bank'])['branch_name'] }}</b></span>
-                            </td>
-                            <td align="right">
-                            </td>
-                        </tr>
+                    
                     </table>
                 </td>
                 <td width="100px">

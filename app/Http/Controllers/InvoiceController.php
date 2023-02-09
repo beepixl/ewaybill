@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\InvoicePayments;
@@ -35,7 +34,6 @@ class InvoiceController extends Controller
         // $pdf = Pdf::loadView('admin.invoice.invoice-pdf');
 
         // return $pdf->stream('invoice.pdf');
-
 
         return view('admin.invoice.create');
     }
@@ -124,7 +122,7 @@ class InvoiceController extends Controller
                     $inv  =  Invoice::find($invId);
                     $orgInv = $inv;
                     $inv->update($data);
-                    Product::where('invID', $invId)->delete();;
+                    Product::where([['invID',$invId],['type',1]])->delete();;
                 } else {
                     $inv  =  Invoice::create($data);
                 }
@@ -147,6 +145,7 @@ class InvoiceController extends Controller
 
                     $newProduct->cessRate = 0;
                     $newProduct->cessNonadvol = 0;
+                    $newProduct->type = 1;
                     $newProduct->save();
                 }
 
@@ -171,7 +170,10 @@ class InvoiceController extends Controller
     public function show($id)
     {
 
-        $invoice =  Invoice::with('billProducts', 'customer','bank')->find($id)->toArray();
+        $invoice =  Invoice::with(['billProducts' => function ($q) {
+            $q->type(1);
+        }, 'customer', 'bank'])->find($id)->toArray();
+
         $paidAmt =  InvoicePayments::where('order_id', $id)->sum('amount');
         $status = 'Pending';
 
@@ -184,7 +186,7 @@ class InvoiceController extends Controller
         }
 
         $svg = view('admin.invoice.payments.signimg')->render();
-        $sign = '<img src="data:image/svg+xml;base64,' . base64_encode($svg) . '"  width="350"  />';
+        $sign = '<img src="data:image/svg+xml;base64,' . base64_encode($svg) . '"  width="320"  />';
 
         // dd($invoice);
 
@@ -205,7 +207,9 @@ class InvoiceController extends Controller
     public function edit($id)
     {
 
-        $invoice =  Invoice::with('billProducts')->find($id);
+        $invoice =  Invoice::with(['billProducts' => function ($q) {
+            $q->type(1);
+        }])->find($id);
         Session::put('invSelectedCustomer', $invoice->customerId);
         $customerId = Session::get('invSelectedCustomer');
 
@@ -259,7 +263,9 @@ class InvoiceController extends Controller
 
     public function showInv($id)
     {
-        $invoice =  Invoice::with('billProducts')->find($id);
+        $invoice =  Invoice::with(['billProducts' => function ($q) {
+            $q->type(1);
+        }])->find($id);
 
         if (!isset($invoice))
             return back();

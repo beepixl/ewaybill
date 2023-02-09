@@ -139,6 +139,22 @@ trait WithDataTable
                     ])
                 ];
                 break;
+            case 'performa-invoices':
+                $invoices = $this->model::orderBy($this->sortField, $this->sortAsc ? 'asc' : 'desc')
+                    ->paginate($this->perPage);
+                return [
+                    "view" => 'livewire.table.invoice-performa',
+                    "invoices" => $invoices,
+                    "data" => array_to_object([
+                        'href' => [
+                            'create_new' => route('invoice-performa.create'),
+                            'create_new_text' => 'Create Invoice',
+                            'export' => '#',
+                            'export_text' => 'Export'
+                        ]
+                    ])
+                ];
+                break;
             default:
                 # code...
                 break;

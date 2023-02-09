@@ -16,12 +16,18 @@ class InvoiceTempProduct extends Component
 
         $products = collect();
 
-        if (Cache::has("$customerId-invProducts")) {
-            $products = Cache::get("$customerId-invProducts");
+        if (Route::currentRouteName() == 'invoice-performa.edit') {
+            if (Cache::has("$customerId-pInvProducts")) {
+                $products = Cache::get("$customerId-pInvProducts");
+            }
+        } else {
+            if (Cache::has("$customerId-invProducts")) {
+                $products = Cache::get("$customerId-invProducts");
+            }
         }
 
         if (Route::currentRouteName() == 'showInv') {
-            return view('livewire.invoice-temp-product', ['products' => $products->all(),'show' => true]);
+            return view('livewire.invoice-temp-product', ['products' => $products->all(), 'show' => true]);
         }
 
         return view('livewire.invoice-temp-product', ['products' => $products->all()]);

@@ -38,6 +38,12 @@ $links = [
 "text" => "Invoices",
 "is_multi" => false,
 ],
+[
+"href" => "invoice-performa.index",
+"icon" => "file",
+"text" => "Profoma Invoices",
+"is_multi" => false,
+],
 ];
 $navigation_links = array_to_object($links);
 

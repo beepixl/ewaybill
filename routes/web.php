@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{BanksController, CustomerController, InvoiceController, ProductMasterController, UserController, SettingController,InvoicePaymentsController};
+use App\Http\Controllers\{BanksController, CustomerController, InvoiceController, ProductMasterController, UserController, SettingController,InvoicePaymentsController, InvoicePerformaController};
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -55,4 +55,6 @@ Route::group(["middleware" => ['auth:sanctum', 'verified']], function () {
     //Banks
     Route::resource('banks', BanksController::class);
 
+    //Invoice Performa
+    Route::resource('invoice-performa',InvoicePerformaController::class);
 });

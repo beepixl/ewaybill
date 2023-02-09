@@ -1,7 +1,15 @@
 <x-app-layout>
-    
+
     <x-slot name="header_content">
-        <h1> @if(Route::currentRouteName() == 'showInv') {{ __('View') }} @elseif(Route::currentRouteName() == 'invoice.edit') {{ __('Edit') }}  @else {{ __('cruds.create') }} {{ __('cruds.new') }} @endif {{ __('Invoice') }}</h1>
+        <h1>
+            @if (Route::currentRouteName() == 'showInv')
+                {{ __('View') }}
+            @elseif(Route::currentRouteName() == 'invoice-performa.edit')
+                {{ __('Edit') }}
+            @else
+                {{ __('cruds.create') }} {{ __('cruds.new') }}
+            @endif {{ __('Profoma Invoice') }} 
+        </h1>
         <div class="section-header-breadcrumb">
             {{ Breadcrumbs::render() }}
         </div>
@@ -12,7 +20,7 @@
         <input type="hidden" id="redirectType">
 
         <div>
-            <livewire:create-invoice action="createInvoice" :invoiceId="request()->invoice" />
+            <livewire:invoice-performa-crud action="createInvoice" :invoiceId="request()->invoice_performa" />
         </div>
 
     </form>
@@ -25,13 +33,15 @@
 
                 $('select[name="customerId"]').on('change', function(e) {
                     livewire.emit('setCustomerId', e.target.value, 0);
-                    console.log('called');
                     setTimeout(() => {
                         $.ajax({
                             type: "POST",
                             url: "{{ route('reloadProductsTbl') }}",
                             headers: {
                                 'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                            },
+                            data: {
+                                type: 'performa'
                             },
                             dataType: "json",
                             success: function(response) {
@@ -95,7 +105,7 @@
                         type: "POST",
                         processData: false,
                         contentType: false,
-                        url: "{{ route('invoice.store') }}",
+                        url: "{{ route('invoice-performa.store') }}",
                         data: new FormData(this),
                         dataType: "json",
                         success: function(response) {
@@ -104,10 +114,10 @@
                             // window.location.href = "{{ route('invoice.index') }}";
 
                             if ($('input[id="redirectType"]').val() == 'print') {
-                                window.open(`${path}/invoice/${response.data}`, '_blank');
-                                window.location.href = `${path}/invoice`;
+                                window.open(`${path}/invoice-performa/${response.data}`, '_blank');
+                                window.location.href = `${path}/invoice-performa`;
                             } else
-                                window.location.href = `${path}/invoice`;
+                                window.location.href = `${path}/invoice-performa`;
 
                         },
                         error: function(xhr) {
@@ -152,6 +162,7 @@
                             price: price,
                             unit: unit,
                             notes: notes,
+                            type: 'performa'
                         },
                         dataType: "json",
                         success: function(response) {
@@ -187,6 +198,7 @@
                     },
                     data: {
                         productId: itemId,
+                        type: 'performa'
                     },
                     dataType: "json",
                     success: function(response) {

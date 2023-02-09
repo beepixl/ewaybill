@@ -7,7 +7,7 @@ Breadcrumbs::for('dashboard', function ($trail) {
     $trail->push('Dashboard', route('dashboard'));
 });
 
-$modelsArray = ['users', 'customer', 'invoice', 'product-master', 'setting','banks'];
+$modelsArray = ['users', 'customer', 'invoice', 'product-master', 'setting','banks','invoice-performa'];
 $breadCrumbsArray = ['index', 'create', 'show', 'edit'];
 
 foreach ($modelsArray as $model) {

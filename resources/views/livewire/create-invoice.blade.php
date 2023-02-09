@@ -210,6 +210,11 @@
                             </select>
                         </div>
 
+                        <div class="form-group">
+                            <x-jet-label for="incoterms" value="{{ __('Inco Terms') }}" />
+                         <textarea  name="incoterms" class="mt-1 block w-full form-control shadow-none" id="incoterms" >{{  $invoice->incoterms ?? '' }}</textarea>
+                        </div>
+
                         @isset($invoice->ewayBillNo)
                             <div class="form-group">
                                 &nbsp
@@ -232,7 +237,7 @@
                         @endisset
 
                         @isset($invoice->alert)
-                            <div class="form-group cols-6">
+                            <div class="form-group">
                                 &nbsp
                                 <pre> EWayBill Alert: <br> <strong>{{ $invoice->alert }}</strong></pre>
                             </div>
@@ -329,8 +334,7 @@
 
                             <div class="form-group col-span-1 sm:col-span-1">
                                 <x-jet-label for="notes" value="{{ __('Notes') }}" />
-                                <input id="notes" type="text"
-                                    class="mt-1 block w-full form-control shadow-none" />
+                                <textarea id="notes" type="text" class="mt-1 block w-full form-control shadow-none" ></textarea>
                             </div>
 
                             <div class="form-group col-span-2 sm:col-span-2">

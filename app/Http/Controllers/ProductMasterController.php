@@ -115,8 +115,8 @@ class ProductMasterController extends Controller
 
     public function addItem(Request $request)
     {
-        if ($request->ajax()) {
 
+        if ($request->ajax()) {
             $product =  ProductMaster::find($request->productId);
             $customerId = Session::get('invSelectedCustomer');
 
@@ -134,20 +134,37 @@ class ProductMasterController extends Controller
                 return comJsRes(true, $validator->messages()->first());
 
             $subTot = $request->price * $request->qty;
-            if (Cache::has("$customerId-invProducts")) {
-                $customerProducts = Cache::get("$customerId-invProducts");
-                $customerProducts->put($request->productId, ['productId' => $request->productId, 'productName' => $product->productName, 'productPrice' => $request->price, 'qty' => $request->qty, 'unit' => $request->unit, 'notes' => $request->notes, 'hsnCode' => $product->hsnCode, 'cgst' => $product->cgst, 'sgst' => $product->sgst, 'igst' => $product->igst, 'subTot' => $subTot, 'sGstVal' => (($subTot * $product->sgst) / 100), 'cGstVal' => (($subTot * $product->cgst) / 100), 'iGstVal' => (($subTot * $product->igst) / 100)]);
-                Cache::put("$customerId-invProducts", $customerProducts, 6000);
-            } else {
-                $customerProducts = collect();
-                $customerProducts->put($request->productId, ['productId' => $request->productId, 'productName' => $product->productName, 'productPrice' => $request->price, 'qty' => $request->qty, 'unit' => $request->unit, 'notes' => $request->notes, 'hsnCode' => $product->hsnCode, 'cgst' => $product->cgst, 'sgst' => $product->sgst, 'igst' => $product->igst, 'subTot' => $subTot, 'sGstVal' => (($subTot * $product->sgst) / 100), 'cGstVal' => (($subTot * $product->cgst) / 100), 'iGstVal' => (($subTot * $product->igst) / 100)]);
-                Cache::put("$customerId-invProducts", $customerProducts, 6000);
-            }
 
             $products = collect();
 
-            if (Cache::has("$customerId-invProducts")) {
-                $products = Cache::get("$customerId-invProducts");
+            if ($request->type == 'performa') {
+                if (Cache::has("$customerId-pInvProducts")) {
+                    $customerProducts = Cache::get("$customerId-pInvProducts");
+                    $customerProducts->put($request->productId, ['productId' => $request->productId, 'productName' => $product->productName, 'productPrice' => $request->price, 'qty' => $request->qty, 'unit' => $request->unit, 'notes' => $request->notes, 'hsnCode' => $product->hsnCode, 'cgst' => $product->cgst, 'sgst' => $product->sgst, 'igst' => $product->igst, 'subTot' => $subTot, 'sGstVal' => (($subTot * $product->sgst) / 100), 'cGstVal' => (($subTot * $product->cgst) / 100), 'iGstVal' => (($subTot * $product->igst) / 100)]);
+                    Cache::put("$customerId-pInvProducts", $customerProducts, 6000);
+                } else {
+                    $customerProducts = collect();
+                    $customerProducts->put($request->productId, ['productId' => $request->productId, 'productName' => $product->productName, 'productPrice' => $request->price, 'qty' => $request->qty, 'unit' => $request->unit, 'notes' => $request->notes, 'hsnCode' => $product->hsnCode, 'cgst' => $product->cgst, 'sgst' => $product->sgst, 'igst' => $product->igst, 'subTot' => $subTot, 'sGstVal' => (($subTot * $product->sgst) / 100), 'cGstVal' => (($subTot * $product->cgst) / 100), 'iGstVal' => (($subTot * $product->igst) / 100)]);
+                    Cache::put("$customerId-pInvProducts", $customerProducts, 6000);
+                }
+
+                if (Cache::has("$customerId-pInvProducts")) {
+                    $products = Cache::get("$customerId-pInvProducts");
+                }
+            } else {
+                if (Cache::has("$customerId-invProducts")) {
+                    $customerProducts = Cache::get("$customerId-invProducts");
+                    $customerProducts->put($request->productId, ['productId' => $request->productId, 'productName' => $product->productName, 'productPrice' => $request->price, 'qty' => $request->qty, 'unit' => $request->unit, 'notes' => $request->notes, 'hsnCode' => $product->hsnCode, 'cgst' => $product->cgst, 'sgst' => $product->sgst, 'igst' => $product->igst, 'subTot' => $subTot, 'sGstVal' => (($subTot * $product->sgst) / 100), 'cGstVal' => (($subTot * $product->cgst) / 100), 'iGstVal' => (($subTot * $product->igst) / 100)]);
+                    Cache::put("$customerId-invProducts", $customerProducts, 6000);
+                } else {
+                    $customerProducts = collect();
+                    $customerProducts->put($request->productId, ['productId' => $request->productId, 'productName' => $product->productName, 'productPrice' => $request->price, 'qty' => $request->qty, 'unit' => $request->unit, 'notes' => $request->notes, 'hsnCode' => $product->hsnCode, 'cgst' => $product->cgst, 'sgst' => $product->sgst, 'igst' => $product->igst, 'subTot' => $subTot, 'sGstVal' => (($subTot * $product->sgst) / 100), 'cGstVal' => (($subTot * $product->cgst) / 100), 'iGstVal' => (($subTot * $product->igst) / 100)]);
+                    Cache::put("$customerId-invProducts", $customerProducts, 6000);
+                }
+
+                if (Cache::has("$customerId-invProducts")) {
+                    $products = Cache::get("$customerId-invProducts");
+                }
             }
 
             $data = view('livewire.invoice-temp-product', ['products' => $products->all()])->render();
@@ -158,7 +175,7 @@ class ProductMasterController extends Controller
 
     public function removeItem(Request $request)
     {
-
+  
         if ($request->ajax()) {
             if (!Session::has('invSelectedCustomer')) {
                 return comJsRes(true, 'Please Select Customer');
@@ -172,18 +189,29 @@ class ProductMasterController extends Controller
                 return comJsRes(true, $validator->messages()->first());
 
             $customerId = Session::get('invSelectedCustomer');
-
-            if (Cache::has("$customerId-invProducts")) {
-                $customerProducts = Cache::get("$customerId-invProducts");
-                $customerProducts->forget($request->productId);
-                Cache::put("$customerId-invProducts", $customerProducts, 6000);
-            }
-
             $products = collect();
-
-            if (Cache::has("$customerId-invProducts")) {
-                $products = Cache::get("$customerId-invProducts");
+           
+            if ($request->type == 'performa') {
+                if (Cache::has("$customerId-pInvProducts")) {
+                    $customerProducts = Cache::get("$customerId-pInvProducts");
+                    $customerProducts->forget($request->productId);
+                    Cache::put("$customerId-pInvProducts", $customerProducts, 6000);
+                }
+                if (Cache::has("$customerId-pInvProducts")) {
+                    $products = Cache::get("$customerId-pInvProducts");
+                }
+            } else {
+                if (Cache::has("$customerId-invProducts")) {
+                    $customerProducts = Cache::get("$customerId-invProducts");
+                    $customerProducts->forget($request->productId);
+                    Cache::put("$customerId-invProducts", $customerProducts, 6000);
+                }
+                if (Cache::has("$customerId-invProducts")) {
+                    $products = Cache::get("$customerId-invProducts");
+                }
             }
+
+           // dd($products);
 
             $data = view('livewire.invoice-temp-product', ['products' => $products->all()])->render();
 
@@ -191,14 +219,21 @@ class ProductMasterController extends Controller
         }
     }
 
-    public function reloadProductsTbl()
+    public function reloadProductsTbl(Request $request)
     {
 
         $customerId = Session::get('invSelectedCustomer');
         $products = collect();
-        // dd($customerId);
-        if (Cache::has("$customerId-invProducts")) {
-            $products = Cache::get("$customerId-invProducts");
+
+        if ($request->type == 'performa') {
+            if (Cache::has("$customerId-pInvProducts")) {
+                $products = Cache::get("$customerId-pInvProducts");
+            }
+        } else {
+            // dd($customerId);
+            if (Cache::has("$customerId-invProducts")) {
+                $products = Cache::get("$customerId-invProducts");
+            }
         }
 
         $data = view('livewire.invoice-temp-product', ['products' => $products->all()])->render();
