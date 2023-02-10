@@ -7,7 +7,7 @@ $inrSym = $invoice['customer']['currency_symbol']['symbol'];
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>{{ $setting->invPrefix }}-{{ $invoice['invNo'] }}-{{ $invoice['customer']['toTrdName'] }}-{{ $status }}
+    <title>{{ $invoice['invNo'] }}-{{ $invoice['customer']['toTrdName'] }}-{{ $status }}
     </title>
 
     <style type="text/css">
@@ -88,16 +88,12 @@ $inrSym = $invoice['customer']['currency_symbol']['symbol'];
             borde
         } */
         footer {
-            position: fixed;
-            bottom: -60px;
+            position: relative;
             left: 0px;
             right: 0px;
-            height: 50px;
             color: #000;
             text-align: center;
-            line-height: 35px;
         }
-
         .signature {
             bottom: -60px;
             margin-left: 389px;

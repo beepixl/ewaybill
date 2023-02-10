@@ -86,7 +86,7 @@ trait WithDataTable
                         'href' => [
                             'create_new' => route('invoice.create'),
                             'create_new_text' => 'Create Invoice',
-                            'export' => '#',
+                            'export' => route('export-invoices'),
                             'export_text' => 'Export'
                         ]
                     ])

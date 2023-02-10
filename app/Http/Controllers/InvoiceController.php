@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Exports\TaxInvoiceExport;
 use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\InvoicePayments;
@@ -10,7 +12,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
+use Maatwebsite\Excel\Facades\Excel;
 
 class InvoiceController extends Controller
 {
@@ -352,5 +356,12 @@ class InvoiceController extends Controller
 
         Session::flash('status', $jsonResponse->success ? 'success' : 'error');
         return redirect()->route('invoice.index');
+    }
+
+    public function exportInvoices()
+    {
+      
+
+        return Excel::download(new TaxInvoiceExport, 'invoices.xlsx');
     }
 }
