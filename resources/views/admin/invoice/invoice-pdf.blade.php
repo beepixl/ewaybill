@@ -302,13 +302,7 @@ $inrSym = $invoice['customer']['currency_symbol']['symbol'];
                         <tr></tr>
                         <tr></tr>
                         <tr></tr>
-                        <tr>
-                            <td align="left">
-                                <span class="fontGrey">Please Make Payments To :</span>
-                            </td>
-                            <td align="right">
-                            </td>
-                        </tr>
+                       
                         <tr>
                             <td align="left">
                                 <span class="fontGrey"><b>Bank Details:</b></span>
