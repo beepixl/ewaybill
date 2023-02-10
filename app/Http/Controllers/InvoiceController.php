@@ -323,12 +323,12 @@ class InvoiceController extends Controller
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => '{"supplyType":"' . $invoice->supplyType . '","subSupplyType":' . $invoice->subSupplyType . ',"subSupplyDesc":"' . $invoice->subSupplyDesc . '","docType":"INV","docNo":"INV/' . $invoice->docNo . '","docDate":"' . date('d/m/Y', strtotime($invoice->docDate)) . '","fromGstin":"05AAACG2115R1ZN","fromTrdName":"","fromAddr1":"","fromAddr2":"","fromPlace":"SURAT","fromPincode":395002,"actFromStateCode":24,"fromStateCode":24,"toGstin":"05AAACG2140A1ZL","toTrdName":"MAGHALAKSHMI PLAAZAA","toAddr1":"NO-716 NEHRUJI ROAD","toAddr2":"PIN CODE 605602","toPlace":"VILUPURAM","toPincode":605602,"actToStateCode":33,"toStateCode":33,"transactionType":"1","dispatchFromGSTIN":"","dispatchFromTradeName":"","shipToGSTIN":"","shipToTradeName":"","otherValue":0,"totalvalue":17029,"cgstValue":0,"sgstValue":0,"igstValue":810.8999999999999772626324556767940521240234375,"cessValue":0,"cessNonAdvolValue":0,"totInvValue":17839.9000000000014551915228366851806640625,"transporterId":"05AAACG2140A1ZL","transporterName":"LAXMI CARGO MOVERS PVT LTD","transDocNo":"","transMode":"","transDistance":1527,"transDocDate":"","vehicleNo":"","vehicleType":"R","itemList":[{"productName":"KAMALINE.","productDesc":"KAMALINE.","hsnCode":5407,"quantity":3,"qtyUnit":"NOS","cgstRate":0,"sgstRate":0,"igstRate":5,"cessRate":0,"cessAdvol":0,"taxableAmount":1980},{"productName":"KANCHAN.","productDesc":"KANCHAN.","hsnCode":5407,"quantity":20,"qtyUnit":"NOS","cgstRate":0,"sgstRate":0,"igstRate":5,"cessRate":0,"cessAdvol":0,"taxableAmount":13800},{"productName":"KATRINA.","productDesc":"KATRINA.","hsnCode":5407,"quantity":4,"qtyUnit":"NOS","cgstRate":0,"sgstRate":0,"igstRate":5,"cessRate":0,"cessAdvol":0,"taxableAmount":2640},{"productName":"KOSTUB SILK","productDesc":"KOSTUB SILK","hsnCode":5407,"quantity":1,"qtyUnit":"NOS","cgstRate":0,"sgstRate":0,"igstRate":5,"cessRate":0,"cessAdvol":0,"taxableAmount":660}]} ',
             CURLOPT_HTTPHEADER => array(
-                'aspid: 191920',
-                'clientid: 1991',
-                'ewbuser: 05AAACG2115R1ZN',
-                'ewbpwd: abc123@@',
-                'gstin: 05AAACG2115R1ZN',
-                'ttype: test',
+                'aspid: 51362911',
+                'clientid: rajeshwariinternational',
+                'ewbuser: karanjagan_API_rji',
+                'ewbpwd: Rji@2411',
+                'gstin: 24AUTPJ3310R1Z6',
+                'ttype: live',
                 'Content-Type: application/json'
             ),
         ));
