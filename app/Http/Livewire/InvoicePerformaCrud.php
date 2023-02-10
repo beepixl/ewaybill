@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Banks;
 use App\Models\Customer;
 use App\Models\InvoicePerforma;
 use Illuminate\Support\Facades\Cache;
@@ -18,6 +19,8 @@ class InvoicePerformaCrud extends Component
     public $action;
     public $button;
     public $pPrice;
+    public $banks;
+    public $invNo;
 
     protected $listeners = [
         'setCustomerId',
@@ -49,10 +52,11 @@ class InvoicePerformaCrud extends Component
     {
         if (!$this->invoice && $this->invoiceId) {
             //dd(Cache::get("2-invProducts"));
-            $this->invoice = InvoicePerforma::with(['billProducts'=> function ($q) {
+            $this->invoice = InvoicePerforma::with(['billProducts' => function ($q) {
                 $q->type(2);
             }])->find($this->invoiceId);
         } else {
+     
             $customerId = Session::get('invSelectedCustomer');
             if (Cache::has("$customerId-pInvProducts")) {
                 Cache::delete("$customerId-pInvProducts");
@@ -60,18 +64,14 @@ class InvoicePerformaCrud extends Component
             //  Artisan::call('optimize:clear');
         }
 
+        $this->banks =  Banks::get()->toArray();
+        $this->invNo = settingData()->invPrefix."-".settingData()->invNoStart + InvoicePerforma::count();
         $this->customers =  Customer::get()->toArray();
         $this->button = create_button($this->action, "Invoice");
     }
 
-
-
     public function render()
     {
-        if (Route::currentRouteName() == 'showInv') {
-            return view('livewire.invoice-performa-crud', ['show' => true]);
-        }
-
         return view('livewire.invoice-performa-crud');
     }
 }

@@ -48,7 +48,11 @@ class InvoicePerformaController extends Controller
 
         $validator = Validator::make($request->all(), [
             'customerId' => 'required|numeric',
+            'invNo' => "required|unique:invoice_performa" . $request->type == 'update' ? ',' . $request->invId : '',
             'invDate' => 'required|date',
+            'supplyType' => 'required',
+            'subSupplyType' => 'required',
+            'docType' => 'required',
         ]);
 
         if ($validator->fails())
@@ -56,20 +60,67 @@ class InvoicePerformaController extends Controller
 
         try {
 
+
             $customerId = $request->customerId;
+            $type = $request->type;
             $invId = $request->invId;
+            $request->request->remove('type');
             $request->request->remove('invId');
-            // dd(Cache::get("$customerId-pInvProducts"));
 
-            if (Cache::has("$customerId-pInvProducts") && count(Cache::get("$customerId-pInvProducts")) > 0) {
+            //  dd(Cache::get("$customerId-pInvProducts"));
 
+            if (Cache::has("$customerId-pInvProducts")) {
+
+                $customer =   Customer::find($customerId);
+                $setting = settingData();
                 $products = Cache::get("$customerId-pInvProducts");
 
+                $productsSubTot = $products->sum('subTot');
+
+                $productsigstValue = 0;
+                $productscgstValue =  0;
+                $productssGstVal = 0;
+
+                if ($customer->toStateCode == $setting->fromStateCode) {
+                    $productscgstValue =  $products->sum('cGstVal');
+                    $productssGstVal = $products->sum('sGstVal');
+                } else {
+                    $productsigstValue = $products->sum('iGstVal');
+                }
+
                 $data = $request->all();
+                $data['invNo'] = settingData()->invPrefix . '-' . settingData()->invNoStart  + InvoicePerforma::count();
+                $data['totalValue'] = $productsSubTot;
+                $data['cgstValue'] = $productscgstValue;
+                $data['sgstValue'] = $productssGstVal;
+                $data['igstValue'] = $productsigstValue;
+
+                $data['totInvValue'] = $productsSubTot + $productscgstValue + $productssGstVal + $productsigstValue;
+
+                $data['fromGstin'] = $setting->fromGstin;
+                $data['fromTrdName'] = $setting->fromTrdName;
+                $data['fromAddr1'] = $setting->fromAddr1;
+                $data['fromAddr2'] = $setting->fromAddr2;
+                $data['fromPlace'] = $setting->fromPlace;
+                $data['fromPincode'] = $setting->fromPincode;
+                $data['actFromStateCode'] = $setting->actFromStateCode;
+                $data['fromStateCode'] = $setting->fromStateCode;
+
+                $data['toGstin'] = $customer->toGstin;
+                $data['toTrdName'] = $customer->toTrdName;
+                $data['toAddr1'] = $customer->toAddr1;
+                $data['toAddr2'] = $customer->toAddr2;
+                $data['toPlace'] = $customer->toPlace;
+                $data['toPincode'] = $customer->toPincode;
+                $data['actToStateCode'] = $customer->actToStateCode;
+                $data['toStateCode'] = $customer->toStateCode;
+
+
                 if (is_numeric($invId)) {
                     $inv  =  InvoicePerforma::find($invId);
+                    $orgInv = $inv;
                     $inv->update($data);
-                    Product::where([['invID', $invId], ['type', 2]])->delete();
+                    Product::where([['invID', $invId], ['type', 2]])->delete();;
                 } else {
                     $inv  =  InvoicePerforma::create($data);
                 }
@@ -119,7 +170,9 @@ class InvoicePerformaController extends Controller
     {
         $invoice =  InvoicePerforma::with(['billProducts' => function ($q) {
             $q->type(2);
-        }, 'customer'])->find($id)->toArray();
+        }, 'customer' => function ($q) {
+            $q->with('currencySymbol:name,code,symbol');
+        }, 'bank'])->find($id)->toArray();
 
 
         $svg = view('admin.invoice.payments.signimg')->render();
@@ -128,7 +181,7 @@ class InvoicePerformaController extends Controller
         // dd($invoice);
 
         // dd( storage_path('fonts/pdf-fonts.ttf'));
-        // return view('admin.performa-invoice.invoice-pdf', ['invoice' => $invoice, 'setting' => settingData(),'sign'=>$sign]);
+        return view('admin.invoice-performa.invoice-pdf', ['invoice' => $invoice, 'setting' => settingData(),  'sign' => $sign]);
 
 
         $pdf = Pdf::loadView('admin.invoice-performa.invoice-pdf', ['invoice' => $invoice, 'setting' => settingData(),  'sign' => $sign]);

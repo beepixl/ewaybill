@@ -55,7 +55,7 @@
                             <select name="bankId" class="mt-1 block w-full form-control shadow-none">
                                 <option value="">Select Bank</option>
                                 @foreach($banks as $bank)
-                                <option value="{{ $bank['id'] }}" @isset($invoice) {{ $invoice->bankId == $bank['id'] ? 'selected' : '' }}  @endisset>{{ $bank['account_name'] }}</option>
+                                <option value="{{ $bank['id'] }}" @isset($invoice) {{ $invoice->bankId == $bank['id'] ? 'selected' : '' }}  @endisset>{{ $bank['bank_name'] }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -106,11 +106,7 @@
                         <div class="form-group">
                             <x-jet-label for="subSupplyDesc" value="{{ __('Sub Supply Desc') }}" />
                             <textarea name="subSupplyDesc" id=""
-                                class="mt-1 block w-full form-control shadow-none"cols="5"rows="1">
-@isset($invoice)
-{{ $invoice->subSupplyDesc }}
-@endisset
-</textarea>
+                                class="mt-1 block w-full form-control shadow-none"cols="5"rows="1">@isset($invoice){{ $invoice->subSupplyDesc }}@endisset</textarea>
                         </div>
 
                         <div class="form-group">

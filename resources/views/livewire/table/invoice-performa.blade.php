@@ -11,6 +11,10 @@
                         @include('components.sort-icon', ['field' => 'invNo'])
                     </a></th>
 
+                <th><a wire:click.prevent="sortBy('transactionType')" role="button" href="#">
+                        Total Amount
+                        @include('components.sort-icon', ['field' => 'transactionType'])
+                    </a></th>
                 <th><a wire:click.prevent="sortBy('invDate')" role="button" href="#">
                         Inv date
                         @include('components.sort-icon', ['field' => 'invDate'])
@@ -24,6 +28,9 @@
                 <tr x-data="window.__controller.dataTableController({{ $invoice->id }})">
                     <td>{{ $invoice->id }}</td>
                     <td>{{ optional($invoice->customer)->toTrdName }}</td>
+                 
+                    <td>{{ number_format($invoice->totInvValue, 2) }}</td>
+                
                     <td>{{ date('d M Y', strtotime($invoice->invDate)) }}</td>
                     <td class="whitespace-no-wrap row-action--icon">
                         <a role="button" class="btn btn-sm btn-primary" title="Print" target="_blank"

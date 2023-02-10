@@ -13,10 +13,9 @@ class InvoiceTempProduct extends Component
     public function render()
     {
         $customerId = Session::get('invSelectedCustomer');
-
         $products = collect();
 
-        if (Route::currentRouteName() == 'invoice-performa.edit') {
+        if (Route::currentRouteName() == 'invoice-performa.edit' || Route::currentRouteName() == 'invoice-performa.create') {
             if (Cache::has("$customerId-pInvProducts")) {
                 $products = Cache::get("$customerId-pInvProducts");
             }
