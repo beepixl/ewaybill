@@ -286,7 +286,7 @@
                         <select id="currency" class="mt-1 block w-full form-control shadow-none"  wire:model.defer="customer.currency">
                             <option>select currency</option>
                             @foreach ($currencySymbols as $currency)
-                                <option value="{{ $currency->code }}">{{ $currency->name }}</option>
+                                <option value="{{ $currency['code'] }}">{{ $currency['name'] }}</option>
                             @endforeach
                         </select>
                         <x-jet-input-error for="customer.currency" class="mt-2" />

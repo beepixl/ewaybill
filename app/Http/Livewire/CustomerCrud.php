@@ -78,7 +78,7 @@ class CustomerCrud extends Component
             $this->customer = Customer::find($this->customerId);
         }
 
-        $this->currencySymbols = Currency::toBase()->get();
+        $this->currencySymbols = Currency::get()->toArray();
         $this->button = create_button($this->action, "customer");
     }
 
