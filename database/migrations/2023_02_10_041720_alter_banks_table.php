@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('customers', function (Blueprint $table) {
-            $table->enum('customer_type',['local','global'])->default('local')->nullable()->after('toStateCode');
+        Schema::table('banks', function (Blueprint $table) {
+            $table->string('swift_code',250)->nullable()->after('branch_name');
         });
     }
 

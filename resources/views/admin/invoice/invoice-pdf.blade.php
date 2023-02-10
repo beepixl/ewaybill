@@ -1,5 +1,5 @@
 <?php
-$inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
+$inrSym = $invoice['customer']['currency_symbol']['symbol'];
 ?>
 
 <!doctype html>
@@ -11,6 +11,10 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
     </title>
 
     <style type="text/css">
+    @page {
+    size: 7in 9.25in;
+    margin: 27mm 16mm 27mm 16mm;
+}
         * {
             font-family: Verdana, Arial, sans-serif;
         }
@@ -95,9 +99,8 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
         }
 
         .signature {
-            position: fixed;
-            bottom: 20px;
-            right: 0px;
+            bottom: -60px;
+            margin-left: 389px;
         }
     </style>
 
@@ -112,14 +115,16 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
             </td>
             <td align="right" class="borderBottom">
                 <span class="mr-0 mainHeading">TAX INVOICE</span> <br>
+                @if ($invoice['customer']['customer_type'] == 'local')
                 <span class="fontGrey">GSTIN:{{ $setting->fromGstin }}</span> <br>
+                @endif
                 <span class="font-800">{{ config('app.name') }}</span> <br>
-              <span class="fontGrey"> {{ $setting->fromAddr1 }}</span> <br>
-              <span class="fontGrey"> {{ $setting->fromAddr2 }}</span> <br>
-              <span class="fontGrey"> {{ $setting->fromPlace }}</span> <br>
-              <span class="fontGrey"> {{ $setting->fromPincode }}</span> <br>
+                <span class="fontGrey"> {{ $setting->fromAddr1 }}</span> <br>
+                <span class="fontGrey"> {{ $setting->fromAddr2 }}</span> <br>
+                <span class="fontGrey"> {{ $setting->fromPlace }}</span> <br>
+                <span class="fontGrey"> {{ $setting->fromPincode }}</span> <br>
                 <p class="mr-0">+919978052575</p>
-                <p class="mr-0">www.rajeshwariinternational.in</p>
+                <p class="mr-0">www.rajeshwariinternational.in </p>
             </td>
         </tr>
     </table>
@@ -135,29 +140,31 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
                             <strong>{{ optional($invoice['customer'])['toTrdName'] }}</strong>
                         </td>
                     </tr>
+                    @if ($invoice['customer']['customer_type'] == 'local')
                     <tr>
                         <td class="fontGrey">
                             GSTIN: {{ optional($invoice['customer'])['toGstin'] }}
                         </td>
                     </tr>
+                   @endif
                     <tr>
                         <td class="fontGrey">
-                            {{  optional($invoice['customer'])['toAddr1'] }}
+                            {{ optional($invoice['customer'])['toAddr1'] }}
                         </td>
                     </tr>
                     <tr>
                         <td class="fontGrey">
-                            {{  optional($invoice['customer'])['toAddr2'] }}
+                            {{ optional($invoice['customer'])['toAddr2'] }}
                         </td>
                     </tr>
                     <tr>
                         <td class="fontGrey">
-                            {{  optional($invoice['customer'])['toPlace'] }}
+                            {{ optional($invoice['customer'])['toPlace'] }}
                         </td>
                     </tr>
                     <tr>
                         <td class="fontGrey">
-                            {{  optional($invoice['customer'])['toPincode'] }}
+                            {{ optional($invoice['customer'])['toPincode'] }}
                         </td>
                     </tr>
                 </table>
@@ -167,18 +174,20 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
                     <tr>
                         <td><strong>Invoice No</strong></td>
                         <td>:</td>
-                        <td align="right">{{ $setting->invPrefix }}-{{ $invoice['invNo'] }}</td>
+                        <td align="right">{{ $invoice['invNo'] }}</td>
                     </tr>
                     <tr>
                         <td><strong>Invoice Date</strong></td>
                         <td>:</td>
                         <td align="right">{{ date('M d,Y', strtotime($invoice['invDate'])) }}</td>
                     </tr>
+                    @if ($invoice['customer']['customer_type'] == 'local')
                     <tr>
                         <td><strong>Vehicle No</strong></td>
                         <td>:</td>
                         <td align="right">{{ $invoice['vehicleNo'] }}</td>
                     </tr>
+                    @endif
                     <tr>
                         <td><strong>Payment Due</strong></td>
                         <td>:</td>
@@ -187,7 +196,7 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
                     <tr>
                         <td><strong>Amount Due(INR)</strong></td>
                         <td>:</td>
-                        <td align="right">{!! $inrSym !!}
+                        <td align="right">{{ $inrSym }}
                             {{ number_format($invoice['totInvValue'] - $paidAmt, 2) }}</td>
                     </tr>
                 </table>
@@ -222,8 +231,8 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
                         ({{ $item['qtyUnit'] }})
                     @endisset
                 </td>
-                <td align="center">{!! $inrSym !!} {{ $item['taxableAmount'] }}</td>
-                <td align="right">{!! $inrSym !!} {{ $item['taxableAmount'] * $item['quantity'] }}</td>
+                <td align="center">{{ $inrSym }} {{ $item['taxableAmount'] }}</td>
+                <td align="right">{{ $inrSym }} {{ $item['taxableAmount'] * $item['quantity'] }}</td>
                 @php
                     $mainTot += $item['taxableAmount'] * $item['quantity'];
                 @endphp
@@ -234,13 +243,13 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
                 <tr>
                     <td colspan="3"></td>
                     <td align="right">Subtotal </td>
-                    <td align="right">{!! $inrSym !!} {{ number_format($mainTot, 2) }}</td>
+                    <td align="right">{{ $inrSym }} {{ number_format($mainTot, 2) }}</td>
                 </tr>
                 @if ($invoice['cgstValue'] > 0)
                     <tr>
                         <td colspan="3"></td>
                         <td align="right">CGST 9%</td>
-                        <td align="right">{!! $inrSym !!} {{ number_format($invoice['cgstValue'], 2) }}</td>
+                        <td align="right">{{ $inrSym }} {{ number_format($invoice['cgstValue'], 2) }}</td>
                     </tr>
                     @php
                         $mainTot += $invoice['cgstValue'];
@@ -250,7 +259,7 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
                     <tr>
                         <td colspan="3"></td>
                         <td align="right">SGST 9%</td>
-                        <td align="right">{!! $inrSym !!} {{ number_format($invoice['sgstValue'], 2) }}</td>
+                        <td align="right">{{ $inrSym }} {{ number_format($invoice['sgstValue'], 2) }}</td>
                     </tr>
                     @php
                         $mainTot += $invoice['sgstValue'];
@@ -260,7 +269,7 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
                     <tr>
                         <td colspan="3"></td>
                         <td align="right">IGST 18%</td>
-                        <td align="right">{!! $inrSym !!} {{ number_format($invoice['igstValue'], 2) }}</td>
+                        <td align="right">{{ $inrSym }} {{ number_format($invoice['igstValue'], 2) }}</td>
                     </tr>
                     @php
                         $mainTot += $invoice['igstValue'];
@@ -270,10 +279,10 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
                 <tr>
                     <td colspan="3"></td>
                     <td align="right" class="mainTotTr">Total </td>
-                    <td align="right" class="gray mainTotTr">{!! $inrSym !!} {{ number_format($mainTot, 2) }}</td>
+                    <td align="right" class="gray mainTotTr">{{ $inrSym }} {{ number_format($mainTot, 2) }}</td>
                 </tr>
                 <tr>
-                    <td align="left" colspan="5"> {{ strtoupper( getIndianCurrency($mainTot)) }}</td>
+                    <td align="left" colspan="5"> {{ strtoupper("Amount In Words: ".convert_number_to_words($mainTot)) }}</td>
                 </tr>
             </tfoot>
         </table>
@@ -309,17 +318,20 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
                         </tr>
                         <tr>
                             <td align="left">
-                                <span class="fontGrey"><b>A/C Name : {{ optional($invoice['bank'])['account_name'] }}</b></span>
+                                <span class="fontGrey"><b>A/C Name :
+                                        {{ optional($invoice['bank'])['account_name'] }}</b></span>
                             </td>
                         </tr>
                         <tr>
                             <td align="left">
-                                <span class="fontGrey"><b>A/C No : {{ optional($invoice['bank'])['account_no'] }}</b></span>
+                                <span class="fontGrey"><b>A/C No :
+                                        {{ optional($invoice['bank'])['account_no'] }}</b></span>
                             </td>
                         </tr>
                         <tr>
                             <td align="left">
-                                <span class="fontGrey"><b>Bank Name : {{ optional($invoice['bank'])['bank_name'] }}</b></span>
+                                <span class="fontGrey"><b>Bank Name :
+                                        {{ optional($invoice['bank'])['bank_name'] }}</b></span>
                             </td>
                             <td>
 
@@ -327,7 +339,8 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
                         </tr>
                         <tr>
                             <td align="left">
-                                <span class="fontGrey"><b>IFSC Code : {{ optional($invoice['bank'])['ifsc_code'] }}</b></span>
+                                <span class="fontGrey"><b>IFSC Code :
+                                        {{ optional($invoice['bank'])['ifsc_code'] }}</b></span>
                             </td>
                             <td>
 
@@ -342,15 +355,15 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
                             </td>
                         </tr>
 
-                        @if($invoice['customer']['customer_type'] == 'global' && isset($invoice['customer']['swift_code']))
-                        <tr>
-                            <td align="left">
-                                <span class="fontGrey"><b>Swift Code :
-                                        {{ optional($invoice['customer'])['swift_code'] }}</b></span>
-                            </td>
-                            <td align="right">
-                            </td>
-                        </tr>
+                        @if ($invoice['customer']['customer_type'] == 'global' && !empty($invoice['bank']['swift_code']))
+                            <tr>
+                                <td align="left">
+                                    <span class="fontGrey"><b>Swift Code :
+                                            {{ optional($invoice['bank'])['swift_code'] }}</b></span>
+                                </td>
+                                <td align="right">
+                                </td>
+                            </tr>
                         @endif
 
                     </table>
@@ -380,4 +393,7 @@ $inrSym = '<span style="font-family: DejaVu Sans; sans-serif;">&#8377;</span>';
 
     </body>
 
+    <script>
+       window.print();
+    </script>
     </html>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Currency;
 use App\Models\Customer;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +16,7 @@ class CustomerCrud extends Component
     public $action;
     public $button;
     public $columns;
+    public $currencySymbols;
 
     protected function getRules()
     {
@@ -37,6 +39,8 @@ class CustomerCrud extends Component
             'customer.toStateCode' => 'nullable',
             'customer.swift_code' => 'nullable',
             'customer.customer_type' => 'nullable',
+            'customer.country' => 'required',
+            'customer.currency' => 'required',
         ];
 
         return $rules;
@@ -70,11 +74,11 @@ class CustomerCrud extends Component
     public function mount()
     {
         $this->columns = Schema::getColumnListing('customers');
-// dd($this->columns);
         if (!$this->customer && $this->customerId) {
             $this->customer = Customer::find($this->customerId);
         }
 
+        $this->currencySymbols = Currency::toBase()->get();
         $this->button = create_button($this->action, "customer");
     }
 

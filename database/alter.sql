@@ -9,6 +9,14 @@ ALTER TABLE `customers` CHANGE `toPincode` `toPincode` VARCHAR(250) NULL DEFAULT
 ALTER TABLE `settings` CHANGE `actFromStateCode` `actFromStateCode` VARCHAR(250) NULL DEFAULT NULL, CHANGE `fromStateCode` `fromStateCode` VARCHAR(250) NULL DEFAULT NULL;
 ALTER TABLE `invoices` CHANGE `fromPincode` `fromPincode` VARCHAR(100) NULL DEFAULT NULL, CHANGE `actFromStateCode` `actFromStateCode` VARCHAR(100) NULL DEFAULT NULL, CHANGE `fromStateCode` `fromStateCode` VARCHAR(100) NULL DEFAULT NULL, CHANGE `toPincode` `toPincode` VARCHAR(100) NULL DEFAULT NULL, CHANGE `actToStateCode` `actToStateCode` VARCHAR(100) NULL DEFAULT NULL, CHANGE `toStateCode` `toStateCode` VARCHAR(100) NULL DEFAULT NULL;
 ALTER TABLE `customers` CHANGE `actToStateCode` `actToStateCode` VARCHAR(250) NULL DEFAULT NULL, CHANGE `toStateCode` `toStateCode` VARCHAR(250) NULL DEFAULT NULL;
+ALTER TABLE `customers` DROP `swift_code`;
+
+//10-02-23
+ALTER TABLE `customers` CHANGE `toAddr2` `toAddr2` VARCHAR(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
+ALTER TABLE `customers` CHANGE `toGstin` `toGstin` VARCHAR(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
+ALTER TABLE `customers` CHANGE `toGstin` `toGstin` VARCHAR(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
+
+
 
 
 

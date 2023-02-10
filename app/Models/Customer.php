@@ -23,9 +23,15 @@ class Customer extends Model
     //     return trim($rules, ',');
     // }
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->fillable(Schema::getColumnListing('customers'));
-   }
+    }
 
-   // protected $fillable = $data;
+    public function currencySymbol()
+    {
+        return $this->belongsTo(Currency::class, 'currency','code');
+    }
+
+    // protected $fillable = $data;
 }

@@ -5,8 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Banks extends Model
-{   
+class Currency extends Model
+{
     use HasFactory;
-    protected $fillable = ['account_name','account_no','ifsc_code','bank_name','branch_name','swift_code'];
+    protected $table = 'currency';
 }

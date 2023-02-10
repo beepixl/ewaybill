@@ -14,7 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::table('customers', function (Blueprint $table) {
-            $table->enum('customer_type',['local','global'])->default('local')->nullable()->after('toStateCode');
+            $table->string('country',250)->nullable()->after('customer_type');
+            $table->string('currency',250)->nullable()->after('country');
         });
     }
 
@@ -25,7 +26,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('banks', function (Blueprint $table) {
+        Schema::table('customers', function (Blueprint $table) {
             //
         });
     }

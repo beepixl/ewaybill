@@ -21,6 +21,7 @@ class BanksCrud extends Component
             'bank.ifsc_code' => 'required|max:11',
             'bank.bank_name' => 'required',
             'bank.branch_name' => 'required',
+            'bank.swift_code' => 'nullable',
         ];
 
         return $rules;

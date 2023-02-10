@@ -171,9 +171,11 @@ class InvoiceController extends Controller
 
         $invoice =  Invoice::with(['billProducts' => function ($q) {
             $q->type(1);
-        }, 'customer', 'bank'])->find($id)->toArray();
+        }, 'customer'=>function($q){
+            $q->with('currencySymbol:name,code,symbol');
+        }, 'bank'])->find($id)->toArray();
 
-        //dd($invoice);
+     //   dd($invoice);
 
         $paidAmt =  InvoicePayments::where('order_id', $id)->sum('amount');
         $status = 'Pending';
@@ -192,7 +194,7 @@ class InvoiceController extends Controller
         // dd($invoice);
 
         // dd( storage_path('fonts/pdf-fonts.ttf'));
-        // return view('admin.invoice.invoice-pdf', ['invoice' => $invoice, 'setting' => settingData(), 'status' => $status, 'paidAmt' => $paidAmt,'sign'=>$sign]);
+         return view('admin.invoice.invoice-pdf', ['invoice' => $invoice, 'setting' => settingData(), 'status' => $status, 'paidAmt' => $paidAmt,'sign'=>$sign]);
 
 
         $pdf = Pdf::loadView('admin.invoice.invoice-pdf', ['invoice' => $invoice, 'setting' => settingData(), 'status' => $status, 'paidAmt' => $paidAmt, 'sign' => $sign]);

@@ -35,8 +35,13 @@
                 <x-jet-input-error for="bank.branch_name" class="mt-2" />
             </div>
 
-     
+            <div class="form-group ">
+                <x-jet-label for="swift_code" value="{{ __('Swift Code') }}" />
+                <x-jet-input id="swift_code" type="text" class="mt-1 block w-full form-control shadow-none" wire:model.defer="bank.swift_code" />
+                <x-jet-input-error for="bank.swift_code" class="mt-2" />
+            </div>
 
+    
         </x-slot>
 
         <x-slot name="actions">

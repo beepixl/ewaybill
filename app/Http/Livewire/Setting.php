@@ -15,7 +15,6 @@ class Setting extends Component
     protected function getRules()
     {
         $rules =  [
-            'setting.appName' => 'required',
             'setting.invPrefix' => 'required|string',
             'setting.invNoStart' => 'required|numeric',
         ];
@@ -28,7 +27,6 @@ class Setting extends Component
         $this->resetErrorBag();
         $this->validate();
 
-    
 
      //   dd($this->setting->toArray());
         ModelsSetting::updateOrCreate(['id' => 1],$this->setting->toArray());
