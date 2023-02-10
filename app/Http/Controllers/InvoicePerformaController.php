@@ -89,7 +89,7 @@ class InvoicePerformaController extends Controller
                 }
 
                 $data = $request->all();
-                $data['invNo'] = settingData()->invPrefix . '-' . settingData()->invNoStart  + InvoicePerforma::count();
+                $data['invNo'] = settingData()->invPrefix . '/PI-' . 75  + InvoicePerforma::count();
                 $data['totalValue'] = $productsSubTot;
                 $data['cgstValue'] = $productscgstValue;
                 $data['sgstValue'] = $productssGstVal;

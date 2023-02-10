@@ -64,9 +64,9 @@ $inrSym = $invoice['customer']['currency_symbol']['symbol'];
             font-size: 28px;
         }
 
-        .fontGrey {
+        /* .fontGrey {
             color: grey;
-        }
+        } */
 
         .breakLine {
             word-wrap: break-word;
@@ -98,6 +98,12 @@ $inrSym = $invoice['customer']['currency_symbol']['symbol'];
             bottom: -60px;
             margin-left: 389px;
         }
+        .blue{
+            color:#123456;
+        }
+        .bankdetails{
+            color: #2c3539;
+        }
     </style>
 
 </head>
@@ -112,15 +118,15 @@ $inrSym = $invoice['customer']['currency_symbol']['symbol'];
             <td align="right" class="borderBottom">
                 <span class="mr-0 mainHeading">TAX INVOICE</span> <br>
                 @if ($invoice['customer']['customer_type'] == 'local')
-                <span class="fontGrey">GSTIN:{{ $setting->fromGstin }}</span> <br>
+                <span class="bankdetails">GSTIN:{{ $setting->fromGstin }}</span> <br>
                 @endif
                 <span class="font-800">{{ config('app.name') }}</span> <br>
-                <span class="fontGrey"> {{ $setting->fromAddr1 }}</span> <br>
-                <span class="fontGrey"> {{ $setting->fromAddr2 }}</span> <br>
-                <span class="fontGrey"> {{ $setting->fromPlace }}</span> <br>
-                <span class="fontGrey"> {{ $setting->fromPincode }}</span> <br>
-                <p class="mr-0">+919978052575</p>
-                <p class="mr-0">www.rajeshwariinternational.in </p>
+                <span class="blue"> {{ $setting->fromAddr1 }}</span> <br>
+                <span class="blue"> {{ $setting->fromAddr2 }}</span> <br>
+                <span class="blue"> {{ $setting->fromPlace }}</span> <br>
+                <span class="blue"> {{ $setting->fromPincode }}</span> <br>
+                <p class="mr-0 blue">+919978052575</p>
+                <p class="mr-0 blue">www.rajeshwariinternational.in </p>
             </td>
         </tr>
     </table>
@@ -278,7 +284,12 @@ $inrSym = $invoice['customer']['currency_symbol']['symbol'];
                     <td align="right" class="gray mainTotTr">{{ $inrSym }} {{ number_format($mainTot, 2) }}</td>
                 </tr>
                 <tr>
-                    <td align="left" colspan="5"> {{ strtoupper("Amount In Words: ".convert_number_to_words($mainTot)) }}</td>
+                    <?php $number = number_format($mainTot, 2, '.', '');
+                    
+                    list($whole, $decimal) = explode('.', $number);
+
+                    ?>
+                    <td align="left" colspan="5"> {{ strtoupper("Amount In Words: ".getIndianCurrency($whole))." AND ".strtoupper(str_replace("Rupees","",getIndianCurrency($decimal)))." PAISE ONLY" }}</td>
                 </tr>
             </tfoot>
         </table>
@@ -291,7 +302,7 @@ $inrSym = $invoice['customer']['currency_symbol']['symbol'];
                         </tr>
                         <tr>
                             <td align="left">
-                                <span class="fontGrey">INCOTERMS :- {{ $invoice['incoterms'] }}</span>
+                                <span class="black">INCOTERMS :- {{ $invoice['incoterms'] }}</span>
                             </td>
                         </tr>
                         <tr></tr>
@@ -301,26 +312,26 @@ $inrSym = $invoice['customer']['currency_symbol']['symbol'];
                        
                         <tr>
                             <td align="left">
-                                <span class="fontGrey"><b>Bank Details:</b></span>
+                                <span class="bankdetails"><b>Bank Details:</b></span>
                             </td>
                             <td align="right">
                             </td>
                         </tr>
                         <tr>
                             <td align="left">
-                                <span class="fontGrey"><b>A/C Name :
+                                <span class="bankdetails"><b>A/C Name :
                                         {{ optional($invoice['bank'])['account_name'] }}</b></span>
                             </td>
                         </tr>
                         <tr>
                             <td align="left">
-                                <span class="fontGrey"><b>A/C No :
+                                <span class="bankdetails"><b>A/C No :
                                         {{ optional($invoice['bank'])['account_no'] }}</b></span>
                             </td>
                         </tr>
                         <tr>
                             <td align="left">
-                                <span class="fontGrey"><b>Bank Name :
+                                <span class="bankdetails"><b>Bank Name :
                                         {{ optional($invoice['bank'])['bank_name'] }}</b></span>
                             </td>
                             <td>
@@ -329,7 +340,7 @@ $inrSym = $invoice['customer']['currency_symbol']['symbol'];
                         </tr>
                         <tr>
                             <td align="left">
-                                <span class="fontGrey"><b>IFSC Code :
+                                <span class="bankdetails"><b>IFSC Code :
                                         {{ optional($invoice['bank'])['ifsc_code'] }}</b></span>
                             </td>
                             <td>
@@ -338,7 +349,7 @@ $inrSym = $invoice['customer']['currency_symbol']['symbol'];
                         </tr>
                         <tr>
                             <td align="left">
-                                <span class="fontGrey"><b>Branch Name :
+                                <span class="bankdetails"><b>Branch Name :
                                         {{ optional($invoice['bank'])['branch_name'] }}</b></span>
                             </td>
                             <td align="right">
@@ -348,7 +359,7 @@ $inrSym = $invoice['customer']['currency_symbol']['symbol'];
                         @if ($invoice['customer']['customer_type'] == 'global' && !empty($invoice['bank']['swift_code']))
                             <tr>
                                 <td align="left">
-                                    <span class="fontGrey"><b>Swift Code :
+                                    <span class="bankdetails"><b>Swift Code :
                                             {{ optional($invoice['bank'])['swift_code'] }}</b></span>
                                 </td>
                                 <td align="right">

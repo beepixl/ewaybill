@@ -65,7 +65,7 @@ class InvoicePerformaCrud extends Component
         }
 
         $this->banks =  Banks::get()->toArray();
-        $this->invNo = settingData()->invPrefix."-".settingData()->invNoStart + InvoicePerforma::count();
+        $this->invNo = settingData()->invPrefix."/PI-".(75 + InvoicePerforma::count());
         $this->customers =  Customer::get()->toArray();
         $this->button = create_button($this->action, "Invoice");
     }

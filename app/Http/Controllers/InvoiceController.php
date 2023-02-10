@@ -94,7 +94,7 @@ class InvoiceController extends Controller
                 }
 
                 $data = $request->all();
-                $data['invNo'] = settingData()->invPrefix.'-'.settingData()->invNoStart  + Invoice::count();
+                $data['invNo'] = settingData()->invPrefix.'/INV-'.settingData()->invNoStart  + Invoice::count();
                 $data['totalValue'] = $productsSubTot;
                 $data['cgstValue'] = $productscgstValue;
                 $data['sgstValue'] = $productssGstVal;
