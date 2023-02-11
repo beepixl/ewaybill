@@ -145,6 +145,8 @@
                                 name="docDate" />
                         </div>
 
+                       
+
                         <div class="form-group">
                             <x-jet-label for="transMode" value="{{ __('Select Transportation Type') }}" />
                             <select name="transMode" class="mt-1 block w-full form-control shadow-none">
@@ -166,6 +168,38 @@
                                     inTransit</option>
                             </select>
                         </div>
+                        <div class="form-group">
+                            <x-jet-label for="transDistance" value="{{ __('Transport Distance') }}" />
+                            <input type="text" class="mt-1 block w-full form-control shadow-none"
+                                @isset($invoice->transDistance) value="{{ $invoice->transDistance }}"  @else value=""  @endisset
+                                name="transDistance" />
+                        </div>
+                        <div class="form-group">
+                            <x-jet-label for="transporterName" value="{{ __('Transporter Name') }}" />
+                            <input type="text" class="mt-1 block w-full form-control shadow-none"
+                                @isset($invoice->transporterName) value="{{ $invoice->transporterName }}"  @else value=""  @endisset
+                                name="transporterName" />
+                        </div>
+                        <div class="form-group">
+                            <x-jet-label for="transDocNo" value="{{ __('Transporter DocNo') }}" />
+                            <input type="text" class="mt-1 block w-full form-control shadow-none"
+                                @isset($invoice) value="{{ $invoice->transDocNo }}"  @else value=""  @endisset
+                                name="transDocNo" />
+                        </div>
+
+                        <div class="form-group">
+                            <x-jet-label for="transporterId" value="{{ __('Transporter Id') }}" />
+                            <input type="text" class="mt-1 block w-full form-control shadow-none"
+                                @isset($invoice) value="{{ $invoice->transporterId }}"  @else value=""  @endisset
+                                name="transporterId" />
+                        </div>
+                        <div class="form-group">
+                            <x-jet-label for="transDocDate" value="{{ __('Trans Doc Date') }}" />
+                            <input type="date" class="mt-1 block w-full form-control shadow-none"
+                                @isset($invoice) value="{{ $invoice->transDocDate }}"  @else value=""  @endisset
+                                name="transDocDate" />
+                        </div>
+                        
 
                         <div class="form-group">
                             <x-jet-label for="transactionType" value="{{ __('Select Transaction Type') }}" />

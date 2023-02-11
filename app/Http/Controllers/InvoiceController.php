@@ -51,6 +51,7 @@ class InvoiceController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
 
         $validator = Validator::make($request->all(), [
             'customerId' => 'required|numeric',
@@ -119,6 +120,11 @@ class InvoiceController extends Controller
                 $data['toPincode'] = $customer->toPincode;
                 $data['actToStateCode'] = $customer->actToStateCode;
                 $data['toStateCode'] = $customer->toStateCode;
+                // $data['transMode'] = $customer->transMode;
+                // $data['transDistance'] = $customer->transDistance;
+                // $data['transporterName'] = $customer->transporterName;
+                // $data['transDocNo'] = $customer->transDocNo;
+                // $data['transporterId'] = $customer->transporterId;
 
    
                 if (is_numeric($invId)) {
@@ -312,8 +318,71 @@ class InvoiceController extends Controller
             return back();
         }
 
-        $invoice =  Invoice::find($invId);
-        // dd($invoice);
+        $invoice =  Invoice::with('billProducts','customer')->find($invId);
+        
+        $docdate  = date('d/m/Y',strtotime($invoice->docDate));
+        $products = [];
+        // dd($invoice->billProducts);
+        foreach($invoice->billProducts as $product){
+            $taxamt = $product->taxableAmount*$product->quantity + $product->cgstRate + $product->sgstRate + $product->sgstRate;
+            $products[] = ["productName" => "$product->productName", 
+            "productDesc" => "$product->productName", 
+            "hsnCode" => $product->hsnCode, 
+            "quantity" => $product->quantity, 
+            "qtyUnit" => "$product->qtyUnit", 
+            "cgstRate" => $product->cgstRate, 
+            "sgstRate" => $product->sgstRate, 
+            "igstRate" => $product->igstRate, 
+            "cessRate" => $product->cessRate, 
+            "cessAdvol" => $product->cessNonadvol, 
+            "taxableAmount" => $taxamt ];
+        }
+
+        $postdata = [
+          "supplyType" => "$invoice->supplyType", 
+          "subSupplyType" => "$invoice->subSupplyType", 
+          "subSupplyDesc" => "$invoice->subSupplyDesc", 
+          "docType" => "$invoice->docType", 
+          "docNo" => "$invoice->docNo", 
+          "docDate" => "$docdate", 
+          "fromGstin" => "05AAACG2115R1ZN", 
+          "fromTrdName" => "$invoice->fromTrdName", 
+          "fromAddr1" => "$invoice->fromAddr1", 
+          "fromAddr2" => "$invoice->fromAddr2", 
+          "fromPlace" => "$invoice->fromPlace", 
+          "fromPincode" => $invoice->fromPincode, 
+          "actFromStateCode" => $invoice->actFromStateCode, 
+          "fromStateCode" => $invoice->fromStateCode, 
+          "toGstin" => "05AAACG2140A1ZL", 
+          "toTrdName" => "$invoice->toTrdName", 
+          "toAddr1" => "$invoice->toAddr1", 
+          "toAddr2" => "$invoice->toAddr2", 
+          "toPlace" => "$invoice->toPlace", 
+          "toPincode" => $invoice->toPincode, 
+          "actToStateCode" => $invoice->actToStateCode, 
+          "toStateCode" => $invoice->toStateCode, 
+          "totalValue" => $invoice->totalValue, 
+          "cgstValue" => $invoice->cgstValue, 
+          "sgstValue" => $invoice->sgstValue, 
+          "igstValue" => $invoice->igstValue, 
+          "cessValue" => $invoice->cessValue, 
+          "totInvValue" => $invoice->totInvValue, 
+          "transporterId" => "$invoice->transporterId", 
+          "transporterName" => "$invoice->transporterName", 
+          "transDocNo" => "$invoice->transDocNo", 
+          "transMode" => "$invoice->transMode", 
+          "transDistance" => "$invoice->transDistance", 
+          "transDocDate" => "$invoice->transDocDate", 
+          "vehicleNo" => "$invoice->vehicleNo", 
+          "vehicleType" => "$invoice->vehicleType", 
+          "itemList" => $products
+             
+       ]; 
+        
+        
+//  
+  $postfields = json_encode($postdata);
+  dd(json_encode($postfields));
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
@@ -325,14 +394,20 @@ class InvoiceController extends Controller
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => '{"supplyType":"' . $invoice->supplyType . '","subSupplyType":' . $invoice->subSupplyType . ',"subSupplyDesc":"' . $invoice->subSupplyDesc . '","docType":"INV","docNo":"INV/' . $invoice->docNo . '","docDate":"' . date('d/m/Y', strtotime($invoice->docDate)) . '","fromGstin":"05AAACG2115R1ZN","fromTrdName":"","fromAddr1":"","fromAddr2":"","fromPlace":"SURAT","fromPincode":395002,"actFromStateCode":24,"fromStateCode":24,"toGstin":"05AAACG2140A1ZL","toTrdName":"MAGHALAKSHMI PLAAZAA","toAddr1":"NO-716 NEHRUJI ROAD","toAddr2":"PIN CODE 605602","toPlace":"VILUPURAM","toPincode":605602,"actToStateCode":33,"toStateCode":33,"transactionType":"1","dispatchFromGSTIN":"","dispatchFromTradeName":"","shipToGSTIN":"","shipToTradeName":"","otherValue":0,"totalvalue":17029,"cgstValue":0,"sgstValue":0,"igstValue":810.8999999999999772626324556767940521240234375,"cessValue":0,"cessNonAdvolValue":0,"totInvValue":17839.9000000000014551915228366851806640625,"transporterId":"05AAACG2140A1ZL","transporterName":"LAXMI CARGO MOVERS PVT LTD","transDocNo":"","transMode":"","transDistance":1527,"transDocDate":"","vehicleNo":"","vehicleType":"R","itemList":[{"productName":"KAMALINE.","productDesc":"KAMALINE.","hsnCode":5407,"quantity":3,"qtyUnit":"NOS","cgstRate":0,"sgstRate":0,"igstRate":5,"cessRate":0,"cessAdvol":0,"taxableAmount":1980},{"productName":"KANCHAN.","productDesc":"KANCHAN.","hsnCode":5407,"quantity":20,"qtyUnit":"NOS","cgstRate":0,"sgstRate":0,"igstRate":5,"cessRate":0,"cessAdvol":0,"taxableAmount":13800},{"productName":"KATRINA.","productDesc":"KATRINA.","hsnCode":5407,"quantity":4,"qtyUnit":"NOS","cgstRate":0,"sgstRate":0,"igstRate":5,"cessRate":0,"cessAdvol":0,"taxableAmount":2640},{"productName":"KOSTUB SILK","productDesc":"KOSTUB SILK","hsnCode":5407,"quantity":1,"qtyUnit":"NOS","cgstRate":0,"sgstRate":0,"igstRate":5,"cessRate":0,"cessAdvol":0,"taxableAmount":660}]} ',
+            CURLOPT_POSTFIELDS => $postfields,
             CURLOPT_HTTPHEADER => array(
-                'aspid: 51362911',
-                'clientid: rajeshwariinternational',
-                'ewbuser: karanjagan_API_rji',
-                'ewbpwd: Rji@2411',
-                'gstin: 24AUTPJ3310R1Z6',
-                'ttype: live',
+               'aspid : 191920',
+               'clientid : 1991',
+               'ewbuser : 05AAACG2115R1ZN',
+               'ewbpwd : abc123@@',
+               'gstin : 05AAACG2115R1ZN',
+               'ttype : test',
+                // 'aspid: 51362911',
+                // 'clientid: rajeshwariinternational',
+                // 'ewbuser: karanjagan_API_rji',
+                // 'ewbpwd: Rji@2411',
+                // 'gstin: 24AUTPJ3310R1Z6',
+                // 'ttype: live',
                 'Content-Type: application/json'
             ),
         ));
