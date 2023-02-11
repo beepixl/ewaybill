@@ -120,7 +120,7 @@ $inrSym = $invoice['customer']['currency_symbol']['symbol'];
                 @if ($invoice['customer']['customer_type'] == 'local')
                 <span class="bankdetails">GSTIN:{{ $setting->fromGstin }}</span> <br>
                 @endif
-                <span class="font-800">{{ config('app.name') }}</span> <br>
+                <span class="font-800 blue">{{ config('app.name') }}</span> <br>
                 <span class="blue"> {{ $setting->fromAddr1 }}</span> <br>
                 <span class="blue"> {{ $setting->fromAddr2 }}</span> <br>
                 <span class="blue"> {{ $setting->fromPlace }}</span> <br>
@@ -302,7 +302,7 @@ $inrSym = $invoice['customer']['currency_symbol']['symbol'];
                         </tr>
                         <tr>
                             <td align="left">
-                                <span class="black">INCOTERMS :- {{ $invoice['incoterms'] }}</span>
+                            <span class="black">INCOTERMS :- {!! nl2br($invoice['incoterms']) !!}</span>
                             </td>
                         </tr>
                         <tr></tr>
