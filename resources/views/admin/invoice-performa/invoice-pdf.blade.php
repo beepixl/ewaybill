@@ -64,9 +64,9 @@ $inrSym = $invoice['customer']['currency_symbol']['symbol'];
             font-size: 28px;
         }
 
-        .fontGrey {
+        /* .fontGrey {
             color: grey;
-        }
+        } */
 
         .breakLine {
             word-wrap: break-word;
@@ -120,11 +120,11 @@ $inrSym = $invoice['customer']['currency_symbol']['symbol'];
                     width="250" />
             </td>
             <td align="right" class="borderBottom">
-                <span class="mr-0 mainHeading">PROFORA INVOICE</span> <br>
+                <span class="mr-0 mainHeading">PROFORMA INVOICE</span> <br>
                 @if ($invoice['customer']['customer_type'] == 'local')
                 <span class="bankdetails">GSTIN:{{ $setting->fromGstin }}</span> <br>
                 @endif
-                <span class="font-800">{{ config('app.name') }}</span> <br>
+                <span class="font-800 blue">{{ config('app.name') }}</span> <br>
                 <span class="blue"> {{ $setting->fromAddr1 }}</span> <br>
                 <span class="blue"> {{ $setting->fromAddr2 }}</span> <br>
                 <span class="blue"> {{ $setting->fromPlace }}</span> <br>
@@ -291,7 +291,7 @@ $inrSym = $invoice['customer']['currency_symbol']['symbol'];
                         </tr>
                         <tr>
                             <td align="left">
-                                <span class="black">INCOTERMS :- {{ $invoice['incoterms'] }}</span>
+                                <span class="black">INCOTERMS :- {!! nl2br($invoice['incoterms']) !!}</span>
                             </td>
                         </tr>
                         <tr></tr>
@@ -378,7 +378,7 @@ $inrSym = $invoice['customer']['currency_symbol']['symbol'];
         </div>
 
         <footer>
-            This is a computer generated performa invoice.
+            This is a computer generated proforma invoice.
         </footer>
 
     </body>
