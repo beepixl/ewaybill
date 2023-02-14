@@ -103,14 +103,14 @@ class InvoiceController extends Controller
 
                 $data['totInvValue'] = $productsSubTot + $productscgstValue + $productssGstVal + $productsigstValue;
 
-                $data['fromGstin'] = $setting->fromGstin;
-                $data['fromTrdName'] = $setting->fromTrdName;
-                $data['fromAddr1'] = $setting->fromAddr1;
-                $data['fromAddr2'] = $setting->fromAddr2;
-                $data['fromPlace'] = $setting->fromPlace;
-                $data['fromPincode'] = $setting->fromPincode;
-                $data['actFromStateCode'] = $setting->actFromStateCode;
-                $data['fromStateCode'] = $setting->fromStateCode;
+                // $data['fromGstin'] = $setting->fromGstin;
+                // $data['fromTrdName'] = $setting->fromTrdName;
+                // $data['fromAddr1'] = $setting->fromAddr1;
+                // $data['fromAddr2'] = $setting->fromAddr2;
+                // $data['fromPlace'] = $setting->fromPlace;
+                // $data['fromPincode'] = $setting->fromPincode;
+                // $data['actFromStateCode'] = $setting->actFromStateCode;
+                // $data['fromStateCode'] = $setting->fromStateCode;
 
                 $data['toGstin'] = $customer->toGstin;
                 $data['toTrdName'] = $customer->toTrdName;
@@ -322,17 +322,42 @@ class InvoiceController extends Controller
         
         $docdate  = date('d/m/Y',strtotime($invoice->docDate));
         $products = [];
-        // dd($invoice->billProducts);
+        $setting = settingData();
+       
+        $cgstvalue = 0;
+        $sgstvalue = 0;
+        $igstvalue = 0;
         foreach($invoice->billProducts as $product){
-            $taxamt = $product->taxableAmount*$product->quantity + $product->cgstRate + $product->sgstRate + $product->sgstRate;
+            $subTot = $product->taxableAmount * $product->quantity;
+            if($invoice->fromStateCode == $invoice->toStateCode){
+                $cgstrate =  $product->cgstRate;
+                $sgstrate =  $product->sgstRate;
+                $igstrate =  0;
+                $cgst = (($subTot * $product->cgstRate) / 100);
+                $sgst = (($subTot * $product->sgstRate) / 100);
+                $igst = 0;
+            }else{
+                $cgstrate =  0;
+                $sgstrate =  0;
+                $igstrate =  $product->igstRate;
+                $cgst = 0;
+                $sgst = 0;
+                $igst = (($subTot * $product->igstRate) / 100);
+            }
+         
+          
+            $taxamt = $subTot;
+            $cgstvalue = $cgstvalue+ $cgst;
+            $sgstvalue = $sgstvalue+ $sgst;
+            $igstvalue = $igstvalue + $igst;
             $products[] = ["productName" => "$product->productName", 
             "productDesc" => "$product->productName", 
             "hsnCode" => $product->hsnCode, 
             "quantity" => $product->quantity, 
             "qtyUnit" => "$product->qtyUnit", 
-            "cgstRate" => $product->cgstRate, 
-            "sgstRate" => $product->sgstRate, 
-            "igstRate" => $product->igstRate, 
+            "cgstRate" => $cgstrate, 
+            "sgstRate" => $sgstrate, 
+            "igstRate" => $igstrate, 
             "cessRate" => $product->cessRate, 
             "cessAdvol" => $product->cessNonadvol, 
             "taxableAmount" => $taxamt ];
@@ -345,15 +370,15 @@ class InvoiceController extends Controller
           "docType" => "$invoice->docType", 
           "docNo" => "$invoice->docNo", 
           "docDate" => "$docdate", 
-          "fromGstin" => "05AAACG2115R1ZN", 
+          "fromGstin" => "$invoice->fromGstin", 
           "fromTrdName" => "$invoice->fromTrdName", 
           "fromAddr1" => "$invoice->fromAddr1", 
           "fromAddr2" => "$invoice->fromAddr2", 
-          "fromPlace" => "$invoice->fromPlace", 
-          "fromPincode" => $invoice->fromPincode, 
+          "fromPlace" => "$setting->fromPlace", 
+          "fromPincode" => $setting->fromPincode, 
           "actFromStateCode" => $invoice->actFromStateCode, 
           "fromStateCode" => $invoice->fromStateCode, 
-          "toGstin" => "05AAACG2140A1ZL", 
+          "toGstin" => "$invoice->toGstin", 
           "toTrdName" => "$invoice->toTrdName", 
           "toAddr1" => "$invoice->toAddr1", 
           "toAddr2" => "$invoice->toAddr2", 
@@ -362,11 +387,11 @@ class InvoiceController extends Controller
           "actToStateCode" => $invoice->actToStateCode, 
           "toStateCode" => $invoice->toStateCode, 
           "totalValue" => $invoice->totalValue, 
-          "cgstValue" => $invoice->cgstValue, 
-          "sgstValue" => $invoice->sgstValue, 
-          "igstValue" => $invoice->igstValue, 
+          "cgstValue" => $cgstvalue, 
+          "sgstValue" => $sgstvalue, 
+          "igstValue" => $igstvalue, 
           "cessValue" => $invoice->cessValue, 
-          "totInvValue" => $invoice->totInvValue, 
+          "totInvValue" => $invoice->totalValue+$cgstvalue+$sgstvalue+$igstvalue, 
           "transporterId" => "$invoice->transporterId", 
           "transporterName" => "$invoice->transporterName", 
           "transDocNo" => "$invoice->transDocNo", 
@@ -375,6 +400,7 @@ class InvoiceController extends Controller
           "transDocDate" => "$invoice->transDocDate", 
           "vehicleNo" => "$invoice->vehicleNo", 
           "vehicleType" => "$invoice->vehicleType", 
+          "transactionType" => "$invoice->transactionType",
           "itemList" => $products
              
        ]; 
@@ -382,7 +408,7 @@ class InvoiceController extends Controller
         
 //  
   $postfields = json_encode($postdata);
-  dd(json_encode($postfields));
+//  dd(json_encode($postfields));
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
@@ -396,18 +422,18 @@ class InvoiceController extends Controller
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => $postfields,
             CURLOPT_HTTPHEADER => array(
-               'aspid : 191920',
-               'clientid : 1991',
-               'ewbuser : 05AAACG2115R1ZN',
-               'ewbpwd : abc123@@',
-               'gstin : 05AAACG2115R1ZN',
-               'ttype : test',
-                // 'aspid: 51362911',
-                // 'clientid: rajeshwariinternational',
-                // 'ewbuser: karanjagan_API_rji',
-                // 'ewbpwd: Rji@2411',
-                // 'gstin: 24AUTPJ3310R1Z6',
-                // 'ttype: live',
+            //    'aspid : 191920',
+            //    'clientid : 1991',
+            //    'ewbuser : 05AAACG2115R1ZN',
+            //    'ewbpwd : abc123@@',
+            //    'gstin : 05AAACG2115R1ZN',
+            //    'ttype : test',
+                'aspid: 51362911',
+                'clientid: rajeshwariinternational',
+                'ewbuser: karanjagan_API_rji',
+                'ewbpwd: Rji@2411',
+                'gstin: 24AUTPJ3310R1Z6',
+                'ttype: live',
                 'Content-Type: application/json'
             ),
         ));
@@ -435,8 +461,7 @@ class InvoiceController extends Controller
 
     public function exportInvoices()
     {
-      
-
+    
         return Excel::download(new TaxInvoiceExport, 'invoices.xlsx');
     }
 }
