@@ -349,7 +349,13 @@
 
                     <div class="form-group">
                         <x-jet-label for="reasonCode" value="{{ __('Reason Code') }}" />
-                        <input id="reasonCode" type="text"  name="reasonCode" value="{{ $invoice->reasonCode ?? '' }}" class="mt-1 block w-full form-control shadow-none" />
+                            <select name="reasonCode"  class="mt-1 block w-full form-control shadow-none" id="">
+                                <option value="">Select Reason</option>
+                                <option value="1"  @isset($invoice) {{ $invoice->reasonCode == 1 ? 'selected' : '' }}  @endisset>Due to Break Down</option>
+                                <option value="2"  @isset($invoice) {{ $invoice->reasonCode == 2 ? 'selected' : '' }}  @endisset >Due to Transshipment</option>
+                                <option value="3"  @isset($invoice) {{ $invoice->reasonCode == 3 ? 'selected' : '' }}  @endisset >Others (Pls. Specify)</option>
+                                <option value="4"  @isset($invoice) {{ $invoice->reasonCode == 4 ? 'selected' : '' }}  @endisset >First Time</option>
+                            </select>
                     </div>
 
                     <div class="form-group">
