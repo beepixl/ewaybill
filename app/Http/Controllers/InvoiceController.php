@@ -55,7 +55,7 @@ class InvoiceController extends Controller
 
         $validator = Validator::make($request->all(), [
             'customerId' => 'required|numeric',
-            'invNo' => "required|unique:invoices" . $request->type == 'update' ? ',' . $request->invId : '',
+            'invNo' => "required",
             'invDate' => 'required|date',
             'supplyType' => 'required',
             'subSupplyType' => 'required',
@@ -95,7 +95,7 @@ class InvoiceController extends Controller
                 }
 
                 $data = $request->all();
-                $data['invNo'] = settingData()->invPrefix.'/INV-'.settingData()->invNoStart  + Invoice::count();
+                //$data['invNo'] = settingData()->invPrefix.'/INV-'.settingData()->invNoStart  + Invoice::count();
                 $data['totalValue'] = $productsSubTot;
                 $data['cgstValue'] = $productscgstValue;
                 $data['sgstValue'] = $productssGstVal;
@@ -375,8 +375,8 @@ class InvoiceController extends Controller
           "fromTrdName" => "$invoice->fromTrdName", 
           "fromAddr1" => "$invoice->fromAddr1", 
           "fromAddr2" => "$invoice->fromAddr2", 
-          "fromPlace" => "$setting->fromPlace", 
-          "fromPincode" => $setting->fromPincode, 
+          "fromPlace" => "$invoice->fromPlace", 
+          "fromPincode" => $invoice->fromPincode, 
           "actFromStateCode" => $invoice->actFromStateCode, 
           "fromStateCode" => $invoice->fromStateCode, 
           "toGstin" => $invoice->toGstin, 

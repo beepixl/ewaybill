@@ -26,8 +26,8 @@
                         <div class="form-group">
                             <x-jet-label for="invNo" value="{{ __('Invoice No') }}" />
                             <input type="text" name="invNo" class="mt-1 block w-full form-control shadow-none"
-                                readonly
-                                @isset($invoice) value="{{ $invoice->invNo }}" @else value="{{ $invNo }}" @endif id="invNo">
+                            
+                                @isset($invoice) value="{{ $invoice->invNo }}" @else value="{{ $invoice->invNo }}" @endif id="invNo">
                         </div>
 
                         <div class="form-group">

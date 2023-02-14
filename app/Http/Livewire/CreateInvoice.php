@@ -76,7 +76,7 @@ class CreateInvoice extends Component
         $this->customers =  Customer::get()->toArray();
         $this->setting =  Setting::first()->toArray();
         $this->banks =  Banks::get()->toArray();
-        $this->invNo  = settingData()->invPrefix."/INV-".settingData()->invNoStart  + Invoice::count();
+        $this->invNo  = settingData()->invPrefix."/INV-";
         $this->button = create_button($this->action, "Invoice");
     }
 
