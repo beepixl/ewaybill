@@ -54,8 +54,10 @@
                             <x-jet-label for="bankId" value="{{ __('Select Bank') }}" />
                             <select name="bankId" class="mt-1 block w-full form-control shadow-none">
                                 <option value="">Select Bank</option>
-                                @foreach($banks as $bank)
-                                <option value="{{ $bank['id'] }}" @isset($invoice) {{ $invoice->bankId == $bank['id'] ? 'selected' : '' }}  @endisset>{{ $bank['bank_name'] }}</option>
+                                @foreach ($banks as $bank)
+                                    <option value="{{ $bank['id'] }}"
+                                        @isset($invoice) {{ $invoice->bankId == $bank['id'] ? 'selected' : '' }}  @endisset>
+                                        {{ $bank['bank_name'] }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -106,7 +108,9 @@
                         <div class="form-group">
                             <x-jet-label for="subSupplyDesc" value="{{ __('Sub Supply Desc') }}" />
                             <textarea name="subSupplyDesc" id=""
-                                class="mt-1 block w-full form-control shadow-none"cols="5"rows="1">@isset($invoice){{ $invoice->subSupplyDesc }}@endisset</textarea>
+                                class="mt-1 block w-full form-control shadow-none"cols="5"rows="1">
+@isset($invoice){{ $invoice->subSupplyDesc }}@endisset
+</textarea>
                         </div>
 
                         <div class="form-group">
@@ -145,8 +149,6 @@
                                 name="docDate" />
                         </div>
 
-                       
-
                         <div class="form-group">
                             <x-jet-label for="transMode" value="{{ __('Select Transportation Type') }}" />
                             <select name="transMode" class="mt-1 block w-full form-control shadow-none">
@@ -168,18 +170,21 @@
                                     inTransit</option>
                             </select>
                         </div>
+
                         <div class="form-group">
                             <x-jet-label for="transDistance" value="{{ __('Transport Distance') }}" />
                             <input type="text" class="mt-1 block w-full form-control shadow-none"
                                 @isset($invoice->transDistance) value="{{ $invoice->transDistance }}"  @else value=""  @endisset
                                 name="transDistance" />
                         </div>
+
                         <div class="form-group">
                             <x-jet-label for="transporterName" value="{{ __('Transporter Name') }}" />
                             <input type="text" class="mt-1 block w-full form-control shadow-none"
                                 @isset($invoice->transporterName) value="{{ $invoice->transporterName }}"  @else value=""  @endisset
                                 name="transporterName" />
                         </div>
+
                         <div class="form-group">
                             <x-jet-label for="transDocNo" value="{{ __('Transporter DocNo') }}" />
                             <input type="text" class="mt-1 block w-full form-control shadow-none"
@@ -199,7 +204,7 @@
                                 @isset($invoice) value="{{ $invoice->transDocDate }}"  @else value=""  @endisset
                                 name="transDocDate" />
                         </div>
-                        
+
 
                         <div class="form-group">
                             <x-jet-label for="transactionType" value="{{ __('Select Transaction Type') }}" />
@@ -228,176 +233,282 @@
                         </div>
 
                         <div class="form-group">
-                            <x-jet-label for="vehicleType" value="{{ __('Select Vehicle Type') }}" />
-                            <select name="vehicleType" class="mt-1 block w-full form-control shadow-none">
-                                <option value="">Select Vehicle Type</option>
-                                <option value="R"
-                                    @isset($invoice) {{ $invoice->vehicleType == 'R' ? 'selected' : '' }}  @endisset>
-                                    Regular</option>
-                                <option value="O"
-                                    @isset($invoice) {{ $invoice->vehicleType == 'O' ? 'selected' : '' }}  @endisset>
-                                    ODC(Over Dimentional Cargo)</option>
-                            </select>
-                        </div>
+                            <x-jet-label for="fromGstin" value="{{ __('From Gstin') }}" />
+                            <input type="text" class="mt-1 block w-full form-control shadow-none"
+                         @isset($invoice)
+                                value="{{ $invoice->fromGstin }}"
+                        @else
+                                @isset($setting) value="{{ $setting['fromGstin'] }}"  @endisset
+                         @endisset 
+                         name="fromGstin" />
+                    </div>
 
-                        <div class="form-group">
-                            <x-jet-label for="incoterms" value="{{ __('Inco Terms') }}" />
-                         <textarea  name="incoterms" class="mt-1 block w-full form-control shadow-none" id="incoterms" >{{  $invoice->incoterms ?? '' }}</textarea>
-                        </div>
+                    <div class="form-group">
+                        <x-jet-label for="fromTrdName" value="{{ __('From Trade Name') }}" />
+                        <input type="text" class="mt-1 block w-full form-control shadow-none"
+                            @isset($invoice)
+                                    value="{{ $invoice->fromTrdName }}"
+                            @else
+                                    @isset($setting) value="{{ $setting['fromTrdName'] }}"  @endisset
+                            @endisset 
+                            name="fromTrdName" />
+                    </div>
 
-                        @isset($invoice->ewayBillNo)
-                            <div class="form-group">
-                                &nbsp
-                                <pre> EWayBill No: <br> <strong>{{ $invoice->ewayBillNo }}</strong></pre>
-                            </div>
-                        @endisset
-
-                        @isset($invoice->ewayBillDate)
-                            <div class="form-group">
-                                &nbsp
-                                <pre> EWayBill Date: <br> <strong>{{ $invoice->ewayBillDate }}</strong></pre>
-                            </div>
-                        @endisset
-
-                        @isset($invoice->validUpto)
-                            <div class="form-group">
-                                &nbsp
-                                <pre> EWayBill Valid Upto: <br> <strong>{{ $invoice->validUpto }}</strong></pre>
-                            </div>
-                        @endisset
-
-                        @isset($invoice->alert)
-                            <div class="form-group">
-                                &nbsp
-                                <pre> EWayBill Alert: <br> <strong>{{ $invoice->alert }}</strong></pre>
-                            </div>
-                        @endisset
+                    <div class="form-group">
+                        <x-jet-label for="fromAddr1" value="{{ __('Address 1') }}" />
+                        <input id="fromAddr1" type="text"
+                            class="mt-1 block w-full form-control shadow-none"
+                            @isset($invoice)
+                            value="{{ $invoice->fromAddr1 }}"
+                    @else
+                            @isset($setting) value="{{ $setting['fromAddr1'] }}"  @endisset
+                    @endisset 
+                    name="fromAddr1"  />
 
                     </div>
+
+                    <div class="form-group">
+                        <x-jet-label for="fromAddr2" value="{{ __('Address 2') }}" />
+                        <input id="fromAddr2" type="text"   name="fromAddr2"
+                @isset($invoice)
+                        value="{{ $invoice->fromAddr2 }}"
+                @else
+                        @isset($setting) value="{{ $setting['fromAddr2'] }}"  @endisset
+                @endisset 
+                            class="mt-1 block w-full form-control shadow-none" />
+
+                    </div>
+
+                    <div class="form-group">
+                        <x-jet-label for="fromPlace" value="{{ __('Place') }}" />
+                        <input id="fromPlace" type="text"   name="fromPlace"
+                        @isset($invoice)
+                        value="{{ $invoice->fromPlace }}"
+                @else
+                        @isset($setting) value="{{ $setting['fromPlace'] }}"  @endisset
+                @endisset 
+                            class="mt-1 block w-full form-control shadow-none" />
+
+                    </div>
+
+                    <div class="form-group">
+                        <x-jet-label for="fromPincode" value="{{ __('Pincode') }}" />
+                        <input id="fromPincode" type="text"   name="fromPincode"
+                        @isset($invoice)
+                        value="{{ $invoice->fromPincode }}"
+                @else
+                        @isset($setting) value="{{ $setting['fromPincode'] }}"  @endisset
+                @endisset 
+                            class="mt-1 block w-full form-control shadow-none" />
+
+                    </div>
+
+                    <div class="form-group">
+                        <x-jet-label for="actFromStateCode" value="{{ __('Act StateCode') }}" />
+                        <input id="actFromStateCode" type="text"   name="actFromStateCode"
+                 @isset($invoice)
+                        value="{{ $invoice->actFromStateCode }}"
+                @else
+                        @isset($setting) value="{{ $setting['actFromStateCode'] }}"  @endisset
+                @endisset 
+                            class="mt-1 block w-full form-control shadow-none" />
+
+                    </div>
+
+                    <div class="form-group">
+                        <x-jet-label for="fromStateCode" value="{{ __('StateCode') }}" />
+                        <input id="fromStateCode" type="text"   name="fromStateCode"
+                        @isset($invoice)
+                        value="{{ $invoice->fromStateCode }}"
+                @else
+                        @isset($setting) value="{{ $setting['fromStateCode'] }}"  @endisset
+                @endisset
+                            class="mt-1 block w-full form-control shadow-none" />
+
+                    </div>
+
+                    <div class="form-group">
+                        <x-jet-label for="vehicleType" value="{{ __('Select Vehicle Type') }}" />
+                        <select name="vehicleType" class="mt-1 block w-full form-control shadow-none">
+                            <option value="">Select Vehicle Type</option>
+                            <option value="R"
+                                @isset($invoice) {{ $invoice->vehicleType == 'R' ? 'selected' : '' }}  @endisset>
+                                Regular</option>
+                            <option value="O"
+                                @isset($invoice) {{ $invoice->vehicleType == 'O' ? 'selected' : '' }}  @endisset>
+                                ODC(Over Dimentional Cargo)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <x-jet-label for="incoterms" value="{{ __('Inco Terms') }}" />
+                        <textarea name="incoterms" class="mt-1 block w-full form-control shadow-none" id="incoterms">{{ $invoice->incoterms ?? '' }}</textarea>
+                    </div>
+
+                    @isset($invoice->ewayBillNo)
+
+                    <div class="form-group">
+                        <x-jet-label for="reasonCode" value="{{ __('Reason Code') }}" />
+                        <input id="reasonCode" type="text"  name="reasonCode" value="{{ $invoice->reasonCode ?? '' }}" class="mt-1 block w-full form-control shadow-none" />
+                    </div>
+
+                    <div class="form-group">
+                        <x-jet-label for="reasonRem" value="{{ __('ReasonRem') }}" />
+                        <textarea name="reasonRem" class="mt-1 block w-full form-control shadow-none" id="reasonRem">{{ $invoice->reasonRem ?? '' }}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        &nbsp
+                        <pre> EWayBill No: <br> <strong>{{ $invoice->ewayBillNo }}</strong></pre>
+                    </div>
+                    @endisset
+
+                    @isset($invoice->ewayBillDate)
+                        <div class="form-group">
+                            &nbsp
+                            <pre> EWayBill Date: <br> <strong>{{ $invoice->ewayBillDate }}</strong></pre>
+                        </div>
+                    @endisset
+
+                    @isset($invoice->validUpto)
+                        <div class="form-group">
+                            &nbsp
+                            <pre> EWayBill Valid Upto: <br> <strong>{{ $invoice->validUpto }}</strong></pre>
+                        </div>
+                    @endisset
+
+                    @isset($invoice->alert)
+                        <div class="form-group">
+                            &nbsp
+                            <pre> EWayBill Alert: <br> <strong>{{ $invoice->alert }}</strong></pre>
+                        </div>
+                    @endisset
+
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    @if (!isset($show))
-        <x-jet-section-border></x-jet-section-border>
+@if (!isset($show))
+    <x-jet-section-border></x-jet-section-border>
 
-        <div class="md:grid md:grid-cols-2">
-            <div class=" md:mt-0 md:col-span-2">
-                <div class="shadow overflow-hidden sm:rounded-md">
+    <div class="md:grid md:grid-cols-2">
+        <div class=" md:mt-0 md:col-span-2">
+            <div class="shadow overflow-hidden sm:rounded-md">
 
-                    <div class="px-4 bg-white sm:p-6">
-                        <div class="col-auto md:grid grid-cols-3 gap-2">
+                <div class="px-4 bg-white sm:p-6">
+                    <div class="col-auto md:grid grid-cols-3 gap-2">
 
-                            <div class="form-group  productDiv" wire:ignore>
-                                <x-jet-label for="name" value="{{ __('Select Product') }}" />
-                                <select id="productId" class="mt-1 block w-full form-control shadow-none select2">
-                                    <option value="">Search Product</option>
-                                </select>
-                                <span class="help-text" id="productPrice"></span>
-                                <input-error for="productId" class="mt-2" />
-                            </div>
-
-                            <div class="form-group md:col-1">
-                                <x-jet-label for="price" value="{{ __('Price') }}" />
-                                <input min="1" type="text" id="pPrice"
-                                    class="mt-1 block w-full form-control shadow-none productPrice" />
-                            </div>
-
-                            <div class="form-group md:col-1">
-                                <x-jet-label for="qty" value="{{ __('Quantity') }}" />
-                                <input id="qty" value="1" min="1" type="number"
-                                    class="mt-1 block w-full form-control shadow-none" />
-                            </div>
-
-                            <div class="form-group col-span-1 sm:col-span-1" wire:ignore>
-                                <x-jet-label for="unit" value="{{ __('Unit') }}" />
-                                <select id="unit" class="mt-1 block w-full form-control shadow-none select2">
-                                    <option value="">Select Unit</option>
-                                    <option value="BAG">Bag</option>
-                                    <option value="BDL">Bundles</option>
-                                    <option value="BAL">Bale</option>
-                                    <option value="BKL">Buckles</option>
-                                    <option value="BOU">Billions Of Units</option>
-                                    <option value="BOX">Box</option>
-                                    <option value="BTL">Bottles</option>
-                                    <option value="BUN">Bunches</option>
-                                    <option value="CAN">Cans</option>
-                                    <option value="CTN">Cartons</option>
-                                    <option value="DOZ">Dozen</option>
-                                    <option value="DRM">Drum</option>
-                                    <option value="GGR">Great Gross</option>
-                                    <option value="GRS">Gross</option>
-                                    <option value="NOS">Numbers</option>
-                                    <option value="PAC">Packs</option>
-                                    <option value="PCS">Pieces</option>
-                                    <option value="PRS">Pairs</option>
-                                    <option value="ROL">Rolls</option>
-                                    <option value="SET">Sets</option>
-                                    <option value="TBS">Tablets</option>
-                                    <option value="TGM">Ten Gross</option>
-                                    <option value="THD">Thousands</option>
-                                    <option value="TUB">Tubes</option>
-                                    <option value="UNT">Units</option>
-                                    <option value="CBM">Cubic Meter</option>
-                                    <option value="CCM">Cubic Centimeter</option>
-                                    <option value="KLR">Kilo Liter</option>
-                                    <option value="MLT">Milliliter</option>
-                                    <option value="UGS">US Gallons</option>
-                                    <option value="SQF">Square Feet</option>
-                                    <option value="SQM">Square Meters</option>
-                                    <option value="SQY">Square Yards</option>
-                                    <option value="GYD">Gross Yards</option>
-                                    <option value="KME">Kilo Meter</option>
-                                    <option value="MTR">Meters</option>
-                                    <option value="YDS">Yards</option>
-                                    <option value="CMS">Centimeter</option>
-                                    <option value="TON">Tonnes</option>
-                                    <option value="QTL">Quintal</option>
-                                    <option value="GMS">Grams</option>
-                                    <option value="KGS">Kilo Grams</option>
-                                    <option value="OTH">Others</option>
-
-
-                                </select>
-                            </div>
-
-                            <div class="form-group col-span-1 sm:col-span-1">
-                                <x-jet-label for="notes" value="{{ __('Notes') }}" />
-                                <textarea id="notes" type="text" class="mt-1 block w-full form-control shadow-none" ></textarea>
-                            </div>
-
-                            <div class="form-group col-span-2 sm:col-span-2">
-                                <button type="button" id="addItemToCart"
-                                    class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25 transition ease-in-out duration-150">
-                                    <i class="fas fa-plus" aria-hidden="true"></i> Add To Order</button>
-                            </div>
-
+                        <div class="form-group  productDiv" wire:ignore>
+                            <x-jet-label for="name" value="{{ __('Select Product') }}" />
+                            <select id="productId" class="mt-1 block w-full form-control shadow-none select2">
+                                <option value="">Search Product</option>
+                            </select>
+                            <span class="help-text" id="productPrice"></span>
+                            <input-error for="productId" class="mt-2" />
                         </div>
-                    </div>
 
+                        <div class="form-group md:col-1">
+                            <x-jet-label for="price" value="{{ __('Price') }}" />
+                            <input min="1" type="text" id="pPrice"
+                                class="mt-1 block w-full form-control shadow-none productPrice" />
+                        </div>
+
+                        <div class="form-group md:col-1">
+                            <x-jet-label for="qty" value="{{ __('Quantity') }}" />
+                            <input id="qty" value="1" min="1" type="number"
+                                class="mt-1 block w-full form-control shadow-none" />
+                        </div>
+
+                        <div class="form-group col-span-1 sm:col-span-1" wire:ignore>
+                            <x-jet-label for="unit" value="{{ __('Unit') }}" />
+                            <select id="unit" class="mt-1 block w-full form-control shadow-none select2">
+                                <option value="">Select Unit</option>
+                                <option value="BAG">Bag</option>
+                                <option value="BDL">Bundles</option>
+                                <option value="BAL">Bale</option>
+                                <option value="BKL">Buckles</option>
+                                <option value="BOU">Billions Of Units</option>
+                                <option value="BOX">Box</option>
+                                <option value="BTL">Bottles</option>
+                                <option value="BUN">Bunches</option>
+                                <option value="CAN">Cans</option>
+                                <option value="CTN">Cartons</option>
+                                <option value="DOZ">Dozen</option>
+                                <option value="DRM">Drum</option>
+                                <option value="GGR">Great Gross</option>
+                                <option value="GRS">Gross</option>
+                                <option value="NOS">Numbers</option>
+                                <option value="PAC">Packs</option>
+                                <option value="PCS">Pieces</option>
+                                <option value="PRS">Pairs</option>
+                                <option value="ROL">Rolls</option>
+                                <option value="SET">Sets</option>
+                                <option value="TBS">Tablets</option>
+                                <option value="TGM">Ten Gross</option>
+                                <option value="THD">Thousands</option>
+                                <option value="TUB">Tubes</option>
+                                <option value="UNT">Units</option>
+                                <option value="CBM">Cubic Meter</option>
+                                <option value="CCM">Cubic Centimeter</option>
+                                <option value="KLR">Kilo Liter</option>
+                                <option value="MLT">Milliliter</option>
+                                <option value="UGS">US Gallons</option>
+                                <option value="SQF">Square Feet</option>
+                                <option value="SQM">Square Meters</option>
+                                <option value="SQY">Square Yards</option>
+                                <option value="GYD">Gross Yards</option>
+                                <option value="KME">Kilo Meter</option>
+                                <option value="MTR">Meters</option>
+                                <option value="YDS">Yards</option>
+                                <option value="CMS">Centimeter</option>
+                                <option value="TON">Tonnes</option>
+                                <option value="QTL">Quintal</option>
+                                <option value="GMS">Grams</option>
+                                <option value="KGS">Kilo Grams</option>
+                                <option value="OTH">Others</option>
+
+
+                            </select>
+                        </div>
+
+                        <div class="form-group col-span-1 sm:col-span-1">
+                            <x-jet-label for="notes" value="{{ __('Notes') }}" />
+                            <textarea id="notes" type="text" class="mt-1 block w-full form-control shadow-none"></textarea>
+                        </div>
+
+                        <div class="form-group col-span-2 sm:col-span-2">
+                            <button type="button" id="addItemToCart"
+                                class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25 transition ease-in-out duration-150">
+                                <i class="fas fa-plus" aria-hidden="true"></i> Add To Order</button>
+                        </div>
+
+                    </div>
                 </div>
+
             </div>
         </div>
-    @endif
+    </div>
+@endif
 
-    <x-jet-section-border></x-jet-section-border>
+<x-jet-section-border></x-jet-section-border>
 
-    <x-jet-section-title>
-        <x-slot name="title"> Products</x-slot>
-    </x-jet-section-title>
+<x-jet-section-title>
+    <x-slot name="title"> Products</x-slot>
+</x-jet-section-title>
 
-    <livewire:invoice-temp-product />
+<livewire:invoice-temp-product />
 
-    <x-jet-section-border></x-jet-section-border>
+<x-jet-section-border></x-jet-section-border>
 
 
-    <x-jet-section-title>
-        <x-slot name="title"> Payments</x-slot>
-    </x-jet-section-title>
+<x-jet-section-title>
+    <x-slot name="title"> Payments</x-slot>
+</x-jet-section-title>
 
-    @if (Route::currentRouteName() == 'showInv')
-        <livewire:table.invoice-payments-list name="invoicePayments" :model="$payments" :orderId="request()->invoice" />
-    @endif
+@if (Route::currentRouteName() == 'showInv')
+    <livewire:table.invoice-payments-list name="invoicePayments" :model="$payments" :orderId="request()->invoice" />
+@endif
 
 </div>

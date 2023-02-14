@@ -6,6 +6,7 @@ use App\Models\Banks;
 use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\InvoicePayments;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -19,6 +20,7 @@ class CreateInvoice extends Component
     public $customers;
     public $payments;
     public $invoiceId;
+    public $setting;
     public $banks;
     public $action;
     public $button;
@@ -72,6 +74,7 @@ class CreateInvoice extends Component
         // }
 
         $this->customers =  Customer::get()->toArray();
+        $this->setting =  Setting::first()->toArray();
         $this->banks =  Banks::get()->toArray();
         $this->invNo  = settingData()->invPrefix."/INV-".settingData()->invNoStart  + Invoice::count();
         $this->button = create_button($this->action, "Invoice");

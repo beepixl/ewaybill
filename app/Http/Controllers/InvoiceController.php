@@ -103,14 +103,14 @@ class InvoiceController extends Controller
 
                 $data['totInvValue'] = $productsSubTot + $productscgstValue + $productssGstVal + $productsigstValue;
 
-                $data['fromGstin'] = $setting->fromGstin;
-                $data['fromTrdName'] = $setting->fromTrdName;
-                $data['fromAddr1'] = $setting->fromAddr1;
-                $data['fromAddr2'] = $setting->fromAddr2;
-                $data['fromPlace'] = $setting->fromPlace;
-                $data['fromPincode'] = $setting->fromPincode;
-                $data['actFromStateCode'] = $setting->actFromStateCode;
-                $data['fromStateCode'] = $setting->fromStateCode;
+                // $data['fromGstin'] = $setting->fromGstin;
+                // $data['fromTrdName'] = $setting->fromTrdName;
+                // $data['fromAddr1'] = $setting->fromAddr1;
+                // $data['fromAddr2'] = $setting->fromAddr2;
+                // $data['fromPlace'] = $setting->fromPlace;
+                // $data['fromPincode'] = $setting->fromPincode;
+                // $data['actFromStateCode'] = $setting->actFromStateCode;
+                // $data['fromStateCode'] = $setting->fromStateCode;
 
                 $data['toGstin'] = $customer->toGstin;
                 $data['toTrdName'] = $customer->toTrdName;
@@ -125,6 +125,7 @@ class InvoiceController extends Controller
                 // $data['transporterName'] = $customer->transporterName;
                 // $data['transDocNo'] = $customer->transDocNo;
                 // $data['transporterId'] = $customer->transporterId;
+               // dd($request->all());
 
    
                 if (is_numeric($invId)) {
@@ -345,7 +346,7 @@ class InvoiceController extends Controller
           "docType" => "$invoice->docType", 
           "docNo" => "$invoice->docNo", 
           "docDate" => "$docdate", 
-          "fromGstin" => "05AAACG2115R1ZN", 
+          "fromGstin" => $invoice->fromGstin, 
           "fromTrdName" => "$invoice->fromTrdName", 
           "fromAddr1" => "$invoice->fromAddr1", 
           "fromAddr2" => "$invoice->fromAddr2", 
@@ -353,7 +354,7 @@ class InvoiceController extends Controller
           "fromPincode" => $invoice->fromPincode, 
           "actFromStateCode" => $invoice->actFromStateCode, 
           "fromStateCode" => $invoice->fromStateCode, 
-          "toGstin" => "05AAACG2140A1ZL", 
+          "toGstin" => $invoice->toGstin, 
           "toTrdName" => "$invoice->toTrdName", 
           "toAddr1" => "$invoice->toAddr1", 
           "toAddr2" => "$invoice->toAddr2", 
@@ -375,8 +376,7 @@ class InvoiceController extends Controller
           "transDocDate" => "$invoice->transDocDate", 
           "vehicleNo" => "$invoice->vehicleNo", 
           "vehicleType" => "$invoice->vehicleType", 
-          "itemList" => $products
-             
+          "itemList" => $products 
        ]; 
         
         
@@ -435,8 +435,6 @@ class InvoiceController extends Controller
 
     public function exportInvoices()
     {
-      
-
         return Excel::download(new TaxInvoiceExport, 'invoices.xlsx');
     }
 }
