@@ -33,15 +33,15 @@
         <x-slot name="body">
             @foreach ($invoices as $invoice)
                 <tr x-data="window.__controller.dataTableController({{ $invoice->id }})">
-                    <td>{{ $invoice->id }}</td>
+                    <td>{{ $invoice->invNo }}</td>
                     <td>{{ optional($invoice->customer)->toTrdName }}</td>
                     <td>
-                        @if ($invoice->status == 0)
-                            {{ __('Pending') }}
-                        @elseif($invoice->status == 2)
+                        @if (($invoice->totInvValue - optional($invoice->payments)->sum('amount')) == 0)
+                            {{ __('Paid') }}
+                        @elseif(optional($invoice->payments)->sum('amount') > 0)
                             {{ __('Partial') }}
                         @else
-                            {{ __('Paid') }}
+                            {{ __('Pending') }}
                         @endif
                     </td>
                     <td>{{ number_format($invoice->totInvValue, 2) }}</td>

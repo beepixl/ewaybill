@@ -7,7 +7,7 @@ $inrSym = $invoice['customer']['currency_symbol']['symbol'];
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>{{ $invoice['invNo'] }}-{{ $invoice['customer']['toTrdName'] }}-{{ $status }}
+    <title>{{ $invoice['invNo'] }}-{{ $invoice['customer']['toTrdName'] }}
     </title>
 
     <style type="text/css">
