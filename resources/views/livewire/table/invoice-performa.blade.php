@@ -26,7 +26,7 @@
         <x-slot name="body">
             @foreach ($invoices as $invoice)
                 <tr x-data="window.__controller.dataTableController({{ $invoice->id }})">
-                    <td>{{ $invoice->id }}</td>
+                    <td>{{ $invoice->invNo }}</td>
                     <td>{{ optional($invoice->customer)->toTrdName }}</td>
                  
                     <td>{{ number_format($invoice->totInvValue, 2) }}</td>
