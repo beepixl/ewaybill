@@ -330,7 +330,7 @@ class InvoiceController extends Controller
         $igstvalue = 0;
         foreach($invoice->billProducts as $product){
             $subTot = $product->taxableAmount * $product->quantity;
-            if($invoice->fromStateCode == $invoice->toStateCode){
+            if($setting->fromStateCode == $invoice->toStateCode){
                 $cgstrate =  $product->cgstRate;
                 $sgstrate =  $product->sgstRate;
                 $igstrate =  0;

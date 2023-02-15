@@ -27,7 +27,7 @@
                             <x-jet-label for="invNo" value="{{ __('Invoice No') }}" />
                             <input type="text" name="invNo" class="mt-1 block w-full form-control shadow-none"
                             
-                                @isset($invoice) value="{{ $invoice->invNo }}" @else value="{{ $invoice->invNo }}" @endif id="invNo">
+                                @isset($invoice->invNo) value="{{ $invoice->invNo }}" @else value="{{ $setting['invPrefix'].'/INV-'}}" @endif id="invNo">
                         </div>
 
                         <div class="form-group">
