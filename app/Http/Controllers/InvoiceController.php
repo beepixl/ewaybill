@@ -517,7 +517,7 @@ class InvoiceController extends Controller
 
         $validator = Validator::make($request->all(), [
             'from_gst' => 'required|min:15|max:15',
-            'to_gst' => 'required|min:15|max:15',
+            'transporterId' => 'required|min:15|max:15',
         ]);
 
         if ($validator->fails())
@@ -539,7 +539,7 @@ class InvoiceController extends Controller
                     'aspid: 51362911',
                     'clientid: rajeshwariinternational',
                     "FGSTIN:$request->from_gst",
-                    "SGSTIN:$request->to_gst",
+                    "SGSTIN:$request->transporterId",
                 ),
             ));
 
@@ -588,7 +588,7 @@ class InvoiceController extends Controller
                 CURLOPT_HTTPHEADER => array(
                     'aspid: 51362911',
                     'clientid: rajeshwariinternational',
-                    'ttype:test',
+                    'ttype:live',
                     "CLIENTGSTIN:$customer->toGstin",
                     "P1:$request->from_pincode",
                     "P2:$customer->toPincode",
@@ -597,7 +597,7 @@ class InvoiceController extends Controller
 
             $response = curl_exec($curl);
             $jsonResponse = json_decode($response);
-            dd($jsonResponse);
+        // dd($jsonResponse);
             if (!$jsonResponse->success)
                 return comJsRes(true, $jsonResponse->message);
 
@@ -606,6 +606,6 @@ class InvoiceController extends Controller
             return comJsRes(true, $e->getMessage());
         }
 
-        return comJsRes(false, 'Transporter Data Fetched Successfully');
+        return comJsRes(false, 'Transporter Data Fetched Successfully', $jsonResponse->result);
     }
 }

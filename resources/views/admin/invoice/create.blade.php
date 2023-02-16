@@ -131,62 +131,66 @@
                     const FGSTIN = $('input[name="fromGstin"]').val();
                     // console.log(SGSTIN);
                     // console.log(FGSTIN);
-                    $.ajax({
-                        type: "POST",
-                        url: "{{ route('transporter.deatil') }}",
-                        headers: {
-                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                        },
-                        data: {
-                            to_gst: SGSTIN,
-                            from_gst: FGSTIN
-                        },
-                        dataType: "json",
-                        success: function(response) {
-                            $('input[name="transporterName"]').val(response.data.tradeNam);
-                            console.log(response);
-                            notyf['success'](response.message);
-                        },
-                        error: function(xhr) {
-                            const response = xhr.responseJSON;
-                            notyf['error'](response.message);
-                            // location.hash = 'invSection'
-                        }
-                    });
-
+                    if (SGSTIN.length == 15 && FGSTIN.length == 15) {
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ route('transporter.deatil') }}",
+                            headers: {
+                                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                            },
+                            data: {
+                                transporterId: SGSTIN,
+                                from_gst: FGSTIN
+                            },
+                            dataType: "json",
+                            success: function(response) {
+                                $('input[name="transporterName"]').val(response.data.tradeNam);
+                                console.log(response);
+                                notyf['success'](response.message);
+                            },
+                            error: function(xhr) {
+                                const response = xhr.responseJSON;
+                                notyf['error'](response.message);
+                                // location.hash = 'invSection'
+                            }
+                        });
+                    }
 
                 });
 
-                // $('input[name="fromPincode"]').on('focusout', function() {
-                //     //transporter.deatil
-                //     const from_pincode = $(this).val();
-                //     const customerId = $('select[name="customerId"]').val();
-                //     // console.log(SGSTIN);
-                //     // console.log(FGSTIN);
-                //     $.ajax({
-                //         type: "POST",
-                //         url: "{{ route('distance.data') }}",
-                //         headers: {
-                //             'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                //         },
-                //         data: {
-                //             from_pincode: from_pincode,
-                //             customerId: customerId
-                //         },
-                //         dataType: "json",
-                //         success: function(response) {
-                //             // console.log(response);
-                //             notyf['success'](response.message);
-                //         },
-                //         error: function(xhr) {
-                //             const response = xhr.responseJSON;
-                //             notyf['error'](response.message);
-                //             // location.hash = 'invSection'
-                //         }
-                //     });
+                $('input[name="fromPincode"]').on('focusout', function() {
+                    //transporter.deatil
+                    const from_pincode = $(this).val();
+                    const customerId = $('select[name="customerId"]').val();
+                    // console.log(SGSTIN);
+                    // console.log(FGSTIN);
+                    if (from_pincode.length == 6) {
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ route('distance.data') }}",
+                            headers: {
+                                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                            },
+                            data: {
+                                from_pincode: from_pincode,
+                                customerId: customerId
+                            },
+                            dataType: "json",
+                            success: function(response) {
+                                // console.log(response);
+                                notyf['success'](response.message);
+                                $('input[name="transDistance"]').val(response.data.distance)
+                            },
+                            error: function(xhr) {
+                                const response = xhr.responseJSON;
+                                notyf['error'](response.message);
+                                // location.hash = 'invSection'
+                            }
+                        });
+                    }
 
 
-                // });
+                });
 
             });
 
