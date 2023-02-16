@@ -107,10 +107,7 @@
 
                         <div class="form-group">
                             <x-jet-label for="subSupplyDesc" value="{{ __('Sub Supply Desc') }}" />
-                            <textarea name="subSupplyDesc" id=""
-                                class="mt-1 block w-full form-control shadow-none"cols="5"rows="1">
-@isset($invoice){{ $invoice->subSupplyDesc }}@endisset
-</textarea>
+                            <textarea name="subSupplyDesc" id="" class="mt-1 block w-full form-control shadow-none"cols="5"rows="1">@isset($invoice){{ $invoice->subSupplyDesc }}@endisset</textarea>
                         </div>
 
                         <div class="form-group">
@@ -306,11 +303,11 @@
                     <div class="form-group">
                         <x-jet-label for="actFromStateCode" value="{{ __('Act StateCode') }}" />
                         <input id="actFromStateCode" type="text"   name="actFromStateCode"
-                 @isset($invoice)
+                                    @isset($invoice)
                         value="{{ $invoice->actFromStateCode }}"
-                @else
+                                  @else
                         @isset($setting) value="{{ $setting['actFromStateCode'] }}"  @endisset
-                @endisset 
+                                 @endisset 
                             class="mt-1 block w-full form-control shadow-none" />
 
                     </div>
@@ -318,13 +315,12 @@
                     <div class="form-group">
                         <x-jet-label for="fromStateCode" value="{{ __('StateCode') }}" />
                         <input id="fromStateCode" type="text"   name="fromStateCode"
-                        @isset($invoice)
+                          @isset($invoice)
                         value="{{ $invoice->fromStateCode }}"
-                @else
+                            @else
                         @isset($setting) value="{{ $setting['fromStateCode'] }}"  @endisset
-                @endisset
+                           @endisset
                             class="mt-1 block w-full form-control shadow-none" />
-
                     </div>
 
                     <div class="form-group">

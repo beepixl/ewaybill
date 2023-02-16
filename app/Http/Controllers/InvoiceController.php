@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
@@ -27,6 +28,7 @@ class InvoiceController extends Controller
      */
     public function index()
     {
+ 
         return view('admin.invoice.list', ['invoice' => Invoice::class]);
     }
 
@@ -37,6 +39,7 @@ class InvoiceController extends Controller
      */
     public function create()
     {
+        //dd( time());
         // $pdf = Pdf::loadView('admin.invoice.invoice-pdf');
 
         // return $pdf->stream('invoice.pdf');
@@ -127,14 +130,14 @@ class InvoiceController extends Controller
                 // $data['transporterName'] = $customer->transporterName;
                 // $data['transDocNo'] = $customer->transDocNo;
                 // $data['transporterId'] = $customer->transporterId;
-               // dd($request->all());
+                // dd($request->all());
 
-   
+
                 if (is_numeric($invId)) {
                     $inv  =  Invoice::find($invId);
                     $orgInv = $inv;
                     $inv->update($data);
-                    Product::where([['invID',$invId],['type',1]])->delete();;
+                    Product::where([['invID', $invId], ['type', 1]])->delete();;
                 } else {
                     $inv  =  Invoice::create($data);
                 }
@@ -184,11 +187,11 @@ class InvoiceController extends Controller
 
         $invoice =  Invoice::with(['billProducts' => function ($q) {
             $q->type(1);
-        }, 'customer'=>function($q){
+        }, 'customer' => function ($q) {
             $q->with('currencySymbol:name,code,symbol');
         }, 'bank'])->find($id)->toArray();
 
-     //   dd($invoice);
+        //   dd($invoice);
 
         $paidAmt =  InvoicePayments::where('order_id', $id)->sum('amount');
         $status = 'Pending';
@@ -207,7 +210,7 @@ class InvoiceController extends Controller
         // dd($invoice);
 
         // dd( storage_path('fonts/pdf-fonts.ttf'));
-         return view('admin.invoice.invoice-pdf', ['invoice' => $invoice, 'setting' => settingData(), 'status' => $status, 'paidAmt' => $paidAmt,'sign'=>$sign]);
+        return view('admin.invoice.invoice-pdf', ['invoice' => $invoice, 'setting' => settingData(), 'status' => $status, 'paidAmt' => $paidAmt, 'sign' => $sign]);
 
 
         $pdf = Pdf::loadView('admin.invoice.invoice-pdf', ['invoice' => $invoice, 'setting' => settingData(), 'status' => $status, 'paidAmt' => $paidAmt, 'sign' => $sign]);
@@ -321,25 +324,25 @@ class InvoiceController extends Controller
             return back();
         }
 
-        $invoice =  Invoice::with('billProducts','customer')->find($invId);
-        
-        $docdate  = date('d/m/Y',strtotime($invoice->docDate));
+        $invoice =  Invoice::with('billProducts', 'customer')->find($invId);
+
+        $docdate  = date('d/m/Y', strtotime($invoice->docDate));
         $products = [];
         $setting = settingData();
-       
+
         $cgstvalue = 0;
         $sgstvalue = 0;
         $igstvalue = 0;
-        foreach($invoice->billProducts as $product){
+        foreach ($invoice->billProducts as $product) {
             $subTot = $product->taxableAmount * $product->quantity;
-            if($setting->fromStateCode == $invoice->toStateCode){
+            if ($setting->fromStateCode == $invoice->toStateCode) {
                 $cgstrate =  $product->cgstRate;
                 $sgstrate =  $product->sgstRate;
                 $igstrate =  0;
                 $cgst = (($subTot * $product->cgstRate) / 100);
                 $sgst = (($subTot * $product->sgstRate) / 100);
                 $igst = 0;
-            }else{
+            } else {
                 $cgstrate =  0;
                 $sgstrate =  0;
                 $igstrate =  $product->igstRate;
@@ -347,71 +350,73 @@ class InvoiceController extends Controller
                 $sgst = 0;
                 $igst = (($subTot * $product->igstRate) / 100);
             }
-         
-          
+
+
             $taxamt = $subTot;
-            $cgstvalue = $cgstvalue+ $cgst;
-            $sgstvalue = $sgstvalue+ $sgst;
+            $cgstvalue = $cgstvalue + $cgst;
+            $sgstvalue = $sgstvalue + $sgst;
             $igstvalue = $igstvalue + $igst;
-            $products[] = ["productName" => "$product->productName", 
-            "productDesc" => "$product->productName", 
-            "hsnCode" => $product->hsnCode, 
-            "quantity" => $product->quantity, 
-            "qtyUnit" => "$product->qtyUnit", 
-            "cgstRate" => $cgstrate, 
-            "sgstRate" => $sgstrate, 
-            "igstRate" => $igstrate, 
-            "cessRate" => $product->cessRate, 
-            "cessAdvol" => $product->cessNonadvol, 
-            "taxableAmount" => $taxamt ];
+            $products[] = [
+                "productName" => "$product->productName",
+                "productDesc" => "$product->productName",
+                "hsnCode" => $product->hsnCode,
+                "quantity" => $product->quantity,
+                "qtyUnit" => "$product->qtyUnit",
+                "cgstRate" => $cgstrate,
+                "sgstRate" => $sgstrate,
+                "igstRate" => $igstrate,
+                "cessRate" => $product->cessRate,
+                "cessAdvol" => $product->cessNonadvol,
+                "taxableAmount" => $taxamt
+            ];
         }
 
         $postdata = [
-          "supplyType" => "$invoice->supplyType", 
-          "subSupplyType" => "$invoice->subSupplyType", 
-          "subSupplyDesc" => "$invoice->subSupplyDesc", 
-          "docType" => "$invoice->docType", 
-          "docNo" => "$invoice->docNo", 
-          "docDate" => "$docdate", 
-          "fromGstin" => $invoice->fromGstin, 
-          "fromTrdName" => "$invoice->fromTrdName", 
-          "fromAddr1" => "$invoice->fromAddr1", 
-          "fromAddr2" => "$invoice->fromAddr2", 
-          "fromPlace" => "$invoice->fromPlace", 
-          "fromPincode" => $invoice->fromPincode, 
-          "actFromStateCode" => $invoice->actFromStateCode, 
-          "fromStateCode" => $invoice->fromStateCode, 
-          "toGstin" => $invoice->toGstin, 
-          "toTrdName" => "$invoice->toTrdName", 
-          "toAddr1" => "$invoice->toAddr1", 
-          "toAddr2" => "$invoice->toAddr2", 
-          "toPlace" => "$invoice->toPlace", 
-          "toPincode" => $invoice->toPincode, 
-          "actToStateCode" => $invoice->actToStateCode, 
-          "toStateCode" => $invoice->toStateCode, 
-          "totalValue" => $invoice->totalValue, 
-          "cgstValue" => $cgstvalue, 
-          "sgstValue" => $sgstvalue, 
-          "igstValue" => $igstvalue, 
-          "cessValue" => $invoice->cessValue, 
-          "totInvValue" => $invoice->totalValue+$cgstvalue+$sgstvalue+$igstvalue, 
-          "transporterId" => "$invoice->transporterId", 
-          "transporterName" => "$invoice->transporterName", 
-          "transDocNo" => "$invoice->transDocNo", 
-          "transMode" => "$invoice->transMode", 
-          "transDistance" => "$invoice->transDistance", 
-          "transDocDate" => "$invoice->transDocDate", 
-          "vehicleNo" => "$invoice->vehicleNo", 
-          "vehicleType" => "$invoice->vehicleType", 
-          "transactionType" => "$invoice->transactionType",
-          "itemList" => $products
-             
-       ]; 
-        
-        
-//  
-  $postfields = json_encode($postdata);
-//  dd(json_encode($postfields));
+            "supplyType" => "$invoice->supplyType",
+            "subSupplyType" => "$invoice->subSupplyType",
+            "subSupplyDesc" => "$invoice->subSupplyDesc",
+            "docType" => "$invoice->docType",
+            "docNo" => "$invoice->docNo",
+            "docDate" => "$docdate",
+            "fromGstin" => $invoice->fromGstin,
+            "fromTrdName" => "$invoice->fromTrdName",
+            "fromAddr1" => "$invoice->fromAddr1",
+            "fromAddr2" => "$invoice->fromAddr2",
+            "fromPlace" => "$invoice->fromPlace",
+            "fromPincode" => $invoice->fromPincode,
+            "actFromStateCode" => $invoice->actFromStateCode,
+            "fromStateCode" => $invoice->fromStateCode,
+            "toGstin" => $invoice->toGstin,
+            "toTrdName" => "$invoice->toTrdName",
+            "toAddr1" => "$invoice->toAddr1",
+            "toAddr2" => "$invoice->toAddr2",
+            "toPlace" => "$invoice->toPlace",
+            "toPincode" => $invoice->toPincode,
+            "actToStateCode" => $invoice->actToStateCode,
+            "toStateCode" => $invoice->toStateCode,
+            "totalValue" => $invoice->totalValue,
+            "cgstValue" => $cgstvalue,
+            "sgstValue" => $sgstvalue,
+            "igstValue" => $igstvalue,
+            "cessValue" => $invoice->cessValue,
+            "totInvValue" => $invoice->totalValue + $cgstvalue + $sgstvalue + $igstvalue,
+            "transporterId" => "$invoice->transporterId",
+            "transporterName" => "$invoice->transporterName",
+            "transDocNo" => "$invoice->transDocNo",
+            "transMode" => "$invoice->transMode",
+            "transDistance" => "$invoice->transDistance",
+            "transDocDate" => "$invoice->transDocDate",
+            "vehicleNo" => "$invoice->vehicleNo",
+            "vehicleType" => "$invoice->vehicleType",
+            "transactionType" => "$invoice->transactionType",
+            "itemList" => $products
+
+        ];
+
+
+        //  
+        $postfields = json_encode($postdata);
+        //  dd(json_encode($postfields));
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
@@ -425,12 +430,12 @@ class InvoiceController extends Controller
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => $postfields,
             CURLOPT_HTTPHEADER => array(
-            //    'aspid : 191920',
-            //    'clientid : 1991',
-            //    'ewbuser : 05AAACG2115R1ZN',
-            //    'ewbpwd : abc123@@',
-            //    'gstin : 05AAACG2115R1ZN',
-            //    'ttype : test',
+                //    'aspid : 191920',
+                //    'clientid : 1991',
+                //    'ewbuser : 05AAACG2115R1ZN',
+                //    'ewbpwd : abc123@@',
+                //    'gstin : 05AAACG2115R1ZN',
+                //    'ttype : test',
                 'aspid: 51362911',
                 'clientid: rajeshwariinternational',
                 'ewbuser: karanjagan_API_rji',
@@ -466,47 +471,141 @@ class InvoiceController extends Controller
     {
 
         $ewayBillNo = $ewayBillNo;
-        $filename = $ewayBillNo.".pdf";
-        
+        $filename = $ewayBillNo . ".pdf";
+
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-          CURLOPT_URL => 'http://gstapi.digital18.in/ewbpdf/e/getPDFEINV.php?1='.time(),
-          CURLOPT_RETURNTRANSFER => true,
-          CURLOPT_ENCODING => '',
-          CURLOPT_MAXREDIRS => 10,
-          CURLOPT_TIMEOUT => 0,
-          CURLOPT_FOLLOWLOCATION => true,
-          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-          CURLOPT_CUSTOMREQUEST => 'GET',
-          CURLOPT_HTTPHEADER => array(
-            'aspid: 51362911',
-            'clientid: rajeshwariinternational',
-            'ewbuser: karanjagan_API_rji',
-            'ewbpwd: Rji@2411',
-            'gstin: 24AUTPJ3310R1Z6',
-            'ttype: live',
-            'data: '.$ewayBillNo,
-            'Content-Type: application/pdf'
-          ),
+            CURLOPT_URL => 'http://gstapi.digital18.in/ewbpdf/e/getPDFEINV.php?1=' . time(),
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => array(
+                'aspid: 51362911',
+                'clientid: rajeshwariinternational',
+                'ewbuser: karanjagan_API_rji',
+                'ewbpwd: Rji@2411',
+                'gstin: 24AUTPJ3310R1Z6',
+                'ttype: live',
+                'data: ' . $ewayBillNo,
+                'Content-Type: application/pdf'
+            ),
         ));
-        
+
         $response = curl_exec($curl);
-        
+
         curl_close($curl);
-        if(File::exists(public_path('ewaybill/$filename'))){
+        if (File::exists(public_path('ewaybill/$filename'))) {
             File::delete(public_path('ewaybill/$filename'));
         }
         file_put_contents("ewaybill/$filename", $response);
 
-     return redirect()->to("https://soft.rajeshwariinternational.in/ewaybill/$filename");
-
+        return redirect()->to("https://soft.rajeshwariinternational.in/ewaybill/$filename");
     }
-
-    
 
     public function exportInvoices()
     {
         return Excel::download(new TaxInvoiceExport, 'invoices.xlsx');
+    }
+
+    public function getTransporterDeatil(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'from_gst' => 'required|min:15|max:15',
+            'to_gst' => 'required|min:15|max:15',
+        ]);
+
+        if ($validator->fails())
+            return comJsRes(true, $validator->messages()->first());
+
+        try {
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'http://gstapi.digital18.in/ewb/v1GSTSearch.php?1=' . time(),
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET',
+                CURLOPT_HTTPHEADER => array(
+                    'aspid: 51362911',
+                    'clientid: rajeshwariinternational',
+                    "FGSTIN:$request->from_gst",
+                    "SGSTIN:$request->to_gst",
+                ),
+            ));
+
+            $response = curl_exec($curl);
+            $jsonResponse = json_decode($response);
+            // dd($jsonResponse->success);
+            curl_close($curl);
+
+            if (!$jsonResponse->success)
+                return comJsRes(true, $jsonResponse->message);
+
+        } catch (Exception $e) {
+            return comJsRes(true, $e->getMessage());
+        }
+
+        return comJsRes(false, 'Transporter Data Fetched Successfully', $jsonResponse->result);
+    }
+
+    public function getDistanceFromPincodes(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'from_pincode' => 'required|min:6|max:6',
+            'customerId' => 'required|numeric'
+        ]);
+
+        if ($validator->fails())
+            return comJsRes(true, $validator->messages()->first());
+
+        try {
+            $curl = curl_init();
+            $customer =   Customer::find($request->customerId);
+
+            if (empty($customer))
+                return comJsRes(true, 'Customer Not Exists');
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => "https://gstapi.digital18.in/ewb/v1P2PDist.php?1=" . time(),
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET',
+                CURLOPT_HTTPHEADER => array(
+                    'aspid: 51362911',
+                    'clientid: rajeshwariinternational',
+                    'ttype:test',
+                    "CLIENTGSTIN:$customer->toGstin",
+                    "P1:$request->from_pincode",
+                    "P2:$customer->toPincode",
+                ),
+            ));
+
+            $response = curl_exec($curl);
+            $jsonResponse = json_decode($response);
+            dd($jsonResponse);
+            if (!$jsonResponse->success)
+                return comJsRes(true, $jsonResponse->message);
+
+            curl_close($curl);
+        } catch (Exception $e) {
+            return comJsRes(true, $e->getMessage());
+        }
+
+        return comJsRes(false, 'Transporter Data Fetched Successfully');
     }
 }

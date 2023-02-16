@@ -1,7 +1,15 @@
 <x-app-layout>
-    
+
     <x-slot name="header_content">
-        <h1> @if(Route::currentRouteName() == 'showInv') {{ __('View') }} @elseif(Route::currentRouteName() == 'invoice.edit') {{ __('Edit') }}  @else {{ __('cruds.create') }} {{ __('cruds.new') }} @endif {{ __('Invoice') }}</h1>
+        <h1>
+            @if (Route::currentRouteName() == 'showInv')
+                {{ __('View') }}
+            @elseif(Route::currentRouteName() == 'invoice.edit')
+                {{ __('Edit') }}
+            @else
+                {{ __('cruds.create') }} {{ __('cruds.new') }}
+            @endif {{ __('Invoice') }}
+        </h1>
         <div class="section-header-breadcrumb">
             {{ Breadcrumbs::render() }}
         </div>
@@ -14,7 +22,6 @@
         <div>
             <livewire:create-invoice action="createInvoice" :invoiceId="request()->invoice" />
         </div>
-
     </form>
 
     @push('additional-sctipt')
@@ -117,6 +124,69 @@
                         }
                     });
                 });
+
+                $('input[name="transporterId"]').on('focusout', function() {
+                    //transporter.deatil
+                    const SGSTIN = $(this).val();
+                    const FGSTIN = $('input[name="fromGstin"]').val();
+                    // console.log(SGSTIN);
+                    // console.log(FGSTIN);
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('transporter.deatil') }}",
+                        headers: {
+                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                        },
+                        data: {
+                            to_gst: SGSTIN,
+                            from_gst: FGSTIN
+                        },
+                        dataType: "json",
+                        success: function(response) {
+                            $('input[name="transporterName"]').val(response.data.tradeNam);
+                            console.log(response);
+                            notyf['success'](response.message);
+                        },
+                        error: function(xhr) {
+                            const response = xhr.responseJSON;
+                            notyf['error'](response.message);
+                            // location.hash = 'invSection'
+                        }
+                    });
+
+
+                });
+
+                // $('input[name="fromPincode"]').on('focusout', function() {
+                //     //transporter.deatil
+                //     const from_pincode = $(this).val();
+                //     const customerId = $('select[name="customerId"]').val();
+                //     // console.log(SGSTIN);
+                //     // console.log(FGSTIN);
+                //     $.ajax({
+                //         type: "POST",
+                //         url: "{{ route('distance.data') }}",
+                //         headers: {
+                //             'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                //         },
+                //         data: {
+                //             from_pincode: from_pincode,
+                //             customerId: customerId
+                //         },
+                //         dataType: "json",
+                //         success: function(response) {
+                //             // console.log(response);
+                //             notyf['success'](response.message);
+                //         },
+                //         error: function(xhr) {
+                //             const response = xhr.responseJSON;
+                //             notyf['error'](response.message);
+                //             // location.hash = 'invSection'
+                //         }
+                //     });
+
+
+                // });
 
             });
 

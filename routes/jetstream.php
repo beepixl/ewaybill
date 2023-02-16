@@ -10,8 +10,7 @@ use Laravel\Jetstream\Jetstream;
 Route::group(['middleware' => config('jetstream.middleware', ['web'])], function () {
     Route::group(['middleware' => ['auth', 'verified']], function () {
         // User & Profile...
-        Route::get('/user/profile', [UserProfileController::class, 'show'])
-                    ->name('profile.show');
+        Route::get('/user/profile', [UserProfileController::class, 'show'])->name('profile.show');
 
         // API...
         if (Jetstream::hasApiFeatures()) {

@@ -50,6 +50,8 @@ Route::group(["middleware" => ['auth:sanctum', 'verified']], function () {
     Route::get('generate-ewaybill/{invoice}', [InvoiceController::class, "generateEwayBill"])->name('generate-ewaybill');
     Route::get('download-ewaybill/{ewayBillNo}', [InvoiceController::class, "downloadEwayBill"])->name('download-ewaybill');
     Route::get('export-invoices', [InvoiceController::class, "exportInvoices"])->name('export-invoices');
+    Route::post('get-transporter-detail', [InvoiceController::class, "getTransporterDeatil"])->name('transporter.deatil');
+    Route::post('get-distance-pincodes', [InvoiceController::class, "getDistanceFromPincodes"])->name('distance.data');
 
     //Inv Payments
     Route::resource('inv-payment', InvoicePaymentsController::class);
