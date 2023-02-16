@@ -55,6 +55,13 @@
                                 Generate EWayBill </a>
                   
                         @endempty
+                        @if(isset($invoice->ewayBillNo))
+                            <a role="button" class="btn btn-sm btn-dark" title="Download EWayBill"
+                                href="{{ route('download-ewaybill', [$invoice->ewayBillNo]) }}" target="_blank"><i class="fa fa-16px fa-send-o"></i>
+                                Download EWayBill </a>
+                  
+                        @endif
+
                         <a role="button" class="btn btn-sm btn-primary" title="Print" target="_blank"
                         href="{{ route('invoice.show', [$invoice->id]) }}" class="mr-3 text-black"><i
                             class="fa fa-16px fa-print"></i></a>

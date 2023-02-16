@@ -12,9 +12,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
+
 
 class InvoiceController extends Controller
 {
@@ -459,6 +461,49 @@ class InvoiceController extends Controller
         Session::flash('status', $jsonResponse->success ? 'success' : 'error');
         return redirect()->route('invoice.index');
     }
+
+    public function downloadEwayBill($ewayBillNo)
+    {
+
+        $ewayBillNo = $ewayBillNo;
+        $filename = $ewayBillNo.".pdf";
+        
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => 'http://gstapi.digital18.in/ewbpdf/e/getPDFEINV.php?1='.time(),
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'GET',
+          CURLOPT_HTTPHEADER => array(
+            'aspid: 51362911',
+            'clientid: rajeshwariinternational',
+            'ewbuser: karanjagan_API_rji',
+            'ewbpwd: Rji@2411',
+            'gstin: 24AUTPJ3310R1Z6',
+            'ttype: live',
+            'data: '.$ewayBillNo,
+            'Content-Type: application/pdf'
+          ),
+        ));
+        
+        $response = curl_exec($curl);
+        
+        curl_close($curl);
+        if(File::exists(public_path('ewaybill/$filename'))){
+            File::delete(public_path('ewaybill/$filename'));
+        }
+        file_put_contents("ewaybill/$filename", $response);
+
+     return redirect()->to("https://soft.rajeshwariinternational.in/ewaybill/$filename");
+
+    }
+
+    
 
     public function exportInvoices()
     {
