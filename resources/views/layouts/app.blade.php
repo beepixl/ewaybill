@@ -107,7 +107,7 @@
 
     <script type="text/javascript">
         const notyf = new Notyf({
-            duration: 5000,
+            duration: 10000,
             position: {
                 x: 'center',
                 'y': 'button'
