@@ -59,6 +59,6 @@ Route::group(["middleware" => ['auth:sanctum', 'verified']], function () {
     //Banks
     Route::resource('banks', BanksController::class);
 
-    //Invoice Performa
+    //Invoice proforma
     Route::resource('invoice-performa',InvoicePerformaController::class);
 });

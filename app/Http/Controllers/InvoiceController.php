@@ -182,6 +182,7 @@ class InvoiceController extends Controller
      * @param  \App\Models\Invoice  $invoice
      * @return \Illuminate\Http\Response
      */
+
     public function show($id)
     {
 
@@ -191,7 +192,7 @@ class InvoiceController extends Controller
             $q->with('currencySymbol:name,code,symbol');
         }, 'bank'])->find($id)->toArray();
 
-        //   dd($invoice);
+     //  dd($invoice);
 
         $paidAmt =  InvoicePayments::where('order_id', $id)->sum('amount');
         $status = 'Pending';

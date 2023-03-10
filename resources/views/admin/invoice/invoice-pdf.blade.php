@@ -224,15 +224,10 @@ $inrSym = $invoice['customer']['currency_symbol']['symbol'];
             @foreach ($invoice['bill_products'] as $item)
                 <tr>
                     <td align="left"> <b>{{ $item['productName'] }}</b> <br>
-                        @isset($item['productNotes']) <span class="fontGrey"> ({!! nl2br($item['productNotes']) !!})
-                            </span>
-                @endif
+                        @isset($item['productNotes']) <span class="fontGrey"> ({!! nl2br($item['productNotes']) !!}) </span> @endif
                 </td>
                 <td align="left"> <span class="fontGrey">{{ $item['hsnCode'] }}</span> </td>
-                <td align="center">{{ $item['quantity'] }} @isset($item['qtyUnit'])
-                        ({{ $item['qtyUnit'] }})
-                    @endisset
-                </td>
+                <td align="center">{{ $item['quantity'] }} @isset($item['qtyUnit']) ({{ $item['qtyUnit'] }}) @endisset </td>
                 <td align="center">{{ $inrSym }} {{ $item['taxableAmount'] }}</td>
                 <td align="right">{{ $inrSym }} {{ $item['taxableAmount'] * $item['quantity'] }}</td>
                 @php
@@ -250,7 +245,7 @@ $inrSym = $invoice['customer']['currency_symbol']['symbol'];
                 @if ($invoice['cgstValue'] > 0)
                     <tr>
                         <td colspan="3"></td>
-                        <td align="right">CGST 9%</td>
+                        <td align="right">CGST {{ count($invoice['bill_products']) > 0 ?  number_format($invoice['bill_products'][0]['cgstRate']) : 9 }}%</td>
                         <td align="right">{{ $inrSym }} {{ number_format($invoice['cgstValue'], 2) }}</td>
                     </tr>
                     @php
@@ -260,7 +255,7 @@ $inrSym = $invoice['customer']['currency_symbol']['symbol'];
                 @if ($invoice['sgstValue'] > 0)
                     <tr>
                         <td colspan="3"></td>
-                        <td align="right">SGST 9%</td>
+                        <td align="right">SGST {{ count($invoice['bill_products']) > 0 ?  number_format($invoice['bill_products'][0]['sgstRate']) : 9 }}%</td>
                         <td align="right">{{ $inrSym }} {{ number_format($invoice['sgstValue'], 2) }}</td>
                     </tr>
                     @php
@@ -270,7 +265,7 @@ $inrSym = $invoice['customer']['currency_symbol']['symbol'];
                 @if ($invoice['igstValue'] > 0)
                     <tr>
                         <td colspan="3"></td>
-                        <td align="right">IGST 18%</td>
+                        <td align="right">IGST {{ count($invoice['bill_products']) > 0 ? number_format($invoice['bill_products'][0]['igstRate']) : 9 }}%</td>
                         <td align="right">{{ $inrSym }} {{ number_format($invoice['igstValue'], 2) }}</td>
                     </tr>
                     @php
